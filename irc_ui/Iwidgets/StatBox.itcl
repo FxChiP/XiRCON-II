@@ -1,0 +1,129 @@
+#------------------------------------------------------------------------
+#
+# StatBox class
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: StatBox.itcl,v 1.1 2003/11/14 10:36:20 davygrvy Exp $
+#------------------------------------------------------------------------
+
+package require Iwidgets
+
+itk::usual StatBox {
+    keep -title -height -width
+}
+
+itcl::class StatBox {
+    inherit ::itk::Toplevel
+
+    constructor {args} {}
+    destructor {}
+    public method echo {text}
+    private {
+	variable cmd_hist [list]
+	variable cmd_pos 0
+	variable path
+	method m_PressedReturn {}
+	method m_PressedUp {}
+	method m_PressedDown {}
+    }
+}
+
+itcl::body StatBox::constructor {args} {
+    set path [namespace tail $this]
+
+    # build a new status window.
+    entry $path.command_line \
+	-relief flat \
+	-takefocus yes \
+	-borderwidth 1 \
+	-font {GwdTE_437 9 normal}
+
+    pack $path.command_line -side bottom -fill x -padx 2
+    bind $path.command_line <Key-Return> [itcl::code $this m_PressedReturn]
+    bind $path.command_line <Up>         [itcl::code $this m_PressedUp]
+    bind $path.command_line <Down>       [itcl::code $this m_PressedDown]
+
+    iwidgets::menubar $path.mb -menubuttons {
+	menubutton server -text "Server" -menu {
+	    command connect -state normal -label "Connect..." -command {
+		.connectDialog activate
+	    }
+	    separator sep1
+	    command exit -label "Exit" -command {exit}
+	}
+	menubutton tools -text "Tools" -menu {
+	    command join_channel -state disabled -label "Join Channel..." -command {puts "selected: Join Channel"}
+	    command make_query -state disabled -label "Query..." -command {puts "selected: Query"}
+	    command dcc_chat -state disabled -label "DCC Chat..." -command {puts "selected: DCC Chat"}
+	    separator sep1
+	    command send_files -state disabled -label "Send Files..." -command {puts "selected: Send Files"}
+	    command finger -state disabled -label "Finger..." -command {puts "selected: Finger"}
+	    separator sep1
+	    command prefs -state disabled -label "Preferences..." -command {puts "selected: Preferences"}
+	    command users -state disabled -label "Users..." -command {puts "selected: Users"}
+	}
+	menubutton help -text "Help" -menu {
+	    command help_topics -state disabled -label "QuiRC Help Topics" -command {puts "selected: Topics"}
+	    separator sep1
+	    command about -state disabled -label "About" -command {puts "selected: About"}
+	}
+    }
+
+    pack $path.mb -side top -fill x -expand yes
+
+    ViewBox $path.channel_text \
+	-wrap word \
+	-vscrollmode static \
+	-hscrollmode none \
+	-textfont {GwdTE_437 9 normal} \
+	-scrollmargin 1
+
+    $path.channel_text insert end "\n"
+    $path.channel_text tag configure hangingindent \
+	-lmargin1 0.01i -lmargin2 0.35i
+    $path.channel_text tag add hangingindent 1.0 end
+    #$path.channel_text configure takefocus no
+    pack $path.channel_text -expand yes -fill both -padx 2 -pady 2
+
+    #
+    # Initialize the widget based on the command line options.
+    #
+    eval itk_initialize $args
+}
+
+itcl::body StatBox::m_PressedReturn {} {
+    set text [$path.command_line get]
+    if {$text != ""} {
+	IRC::raw $text
+	#puts $text
+	$path.command_line delete 0 end
+	lappend cmd_hist $text
+	set cmd_pos [llength $cmd_hist]
+    }
+}
+
+itcl::body StatBox::m_PressedUp {} {
+    if {$cmd_pos > 0} {
+	$path.command_line delete 0 end
+	$path.command_line insert end [lindex $cmd_hist [incr cmd_pos -1]]
+    }
+}
+
+itcl::body StatBox::m_PressedDown {} {
+    if {$cmd_pos < [llength $cmd_hist] - 1} {
+	$path.command_line delete 0 end
+	$path.command_line insert end [lindex $cmd_hist [incr cmd_pos]]
+    } elseif {$cmd_pos == [llength $cmd_hist] - 1} {
+	incr cmd_pos
+	$path.command_line delete 0 end
+    } else {
+	$path.command_line delete 0 end
+    }
+}
+
+itcl::body StatBox::echo {text} {
+    append newstring \n
+    append newstring $text
+    $path.channel_text insert end $newstring
+    $path.channel_text see end
+}

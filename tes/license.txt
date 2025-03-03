@@ -1,0 +1,10 @@
+Simple BSD.
+
+Don't sue if it doesn't work.  Copy and modify it as much as you like.
+There's no requirement to give me credit for it.  Fly away little bird,
+be free.  The user of this software understands that it is provided
+without warrantee.
+
+Be nice and send me patches for bugs fixed or, at least, reports.
+Please make sure reports have detail, not just "there's a memory
+leak" or "it crashes".  Please expound.

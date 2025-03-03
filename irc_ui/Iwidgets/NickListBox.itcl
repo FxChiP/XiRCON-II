@@ -1,0 +1,807 @@
+#------------------------------------------------------------------------
+#
+# NickListBox class
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: NickListBox.itcl,v 1.1 2003/11/14 10:36:20 davygrvy Exp $
+#------------------------------------------------------------------------
+
+#
+# IRCScrolledlistbox
+# ----------------------------------------------------------------------
+
+#
+# Usual options.
+#
+itk::usual NickListBox {
+    keep -activebackground -activerelief -background -borderwidth -cursor \
+     -elementborderwidth -foreground -highlightcolor -highlightthickness \
+     -jump -labelfont -selectbackground -selectborderwidth \
+     -selectforeground -textbackground -textfont -troughcolor 
+}
+
+# ------------------------------------------------------------------
+#                          SCROLLEDLISTBOX
+# ------------------------------------------------------------------
+itcl::class NickListBox {
+    inherit iwidgets::Scrolledwidget
+
+    constructor {args} {}
+    destructor {}
+
+    itk_option define -dblclickcommand dblClickCommand Command {}
+    itk_option define -selectioncommand selectionCommand Command {}
+    itk_option define -width width Width 0
+    itk_option define -height height Height 0
+    itk_option define -visibleitems visibleItems VisibleItems 20x10
+    itk_option define -state state State normal
+
+    public method curselection {}
+    public method activate {index}
+    public method bbox {index}
+    public method clear {}
+    public method see {index}
+    public method index {index}
+    public method delete {nickname}
+    public method get {first {last {}}}
+    public method getcurselection {}
+    public method insert {nicklist}
+    public method nearest {y}
+    public method scan {option args}
+    public method selection {option first {last {}}}
+    public method size {}
+    public method selecteditemcount {}
+    public method justify {direction}
+    public method xview {args}
+    public method yview {args}
+    public method modnick {dir modeChar nick}
+    public method changenick {oldnick newnick}
+
+    protected method _makeSelection {}
+    protected method _dblclick {}
+    protected method _fixIndex {index}
+    protected method _nickpos {newnick}
+
+    private variable oplen 0
+    private variable halfoplen 0
+    private variable voicelen 0
+
+    #
+    # List the event sequences that invoke single and double selection.
+    # Should these change in the underlying Tk listbox, then they must
+    # change here too.
+    #
+    common doubleSelectSeq { \
+    <Double-1> 
+    }
+
+    common singleSelectSeq { \
+        <Control-Key-backslash> \
+    <Control-Key-slash> \
+    <Key-Escape> \
+    <Shift-Key-Select> \
+    <Control-Shift-Key-space> \
+    <Key-Select> \
+    <Key-space> \
+    <Control-Shift-Key-End> \
+    <Control-Key-End> \
+    <Control-Shift-Key-Home> \
+    <Control-Key-Home> \
+    <Key-Down> \
+    <Key-Up> \
+    <Shift-Key-Down> \
+    <Shift-Key-Up> \
+    <Control-Button-1> \
+    <Shift-Button-1> \
+    <ButtonRelease-1> \
+    <B1-Motion>
+    }
+}
+
+#
+# Use option database to override default resources of base classes.
+#
+option add *NickListBox.labelPos n widgetDefault
+
+# ------------------------------------------------------------------
+#                        CONSTRUCTOR
+# ------------------------------------------------------------------
+itcl::body NickListBox::constructor {args} {
+    #
+    # Our -width and -height options are slightly different than
+    # those implemented by our base class, so we're going to
+    # remove them and redefine our own.
+    #
+    itk_option remove iwidgets::Scrolledwidget::width
+    itk_option remove iwidgets::Scrolledwidget::height
+
+    # 
+    # Create the listbox.
+    #
+    itk_component add listbox {
+    listbox $itk_interior.listbox \
+        -width 1 -height 1 \
+            -xscrollcommand \
+        [code $this _scrollWidget $itk_interior.horizsb] \
+        -yscrollcommand \
+        [code $this _scrollWidget $itk_interior.vertsb]
+    } {
+    usual
+
+    keep -borderwidth -exportselection -relief -selectmode
+    
+    rename -font -textfont textFont Font
+    rename -background -textbackground textBackground Background
+    rename -highlightbackground -background background Background
+    }
+    grid $itk_component(listbox) -row 0 -column 0 -sticky nsew
+    grid rowconfigure $_interior 0 -weight 1
+    grid columnconfigure $_interior 0 -weight 1
+    
+    # 
+    # Configure the command on the vertical scroll bar in the base class.
+    #
+    $itk_component(vertsb) configure \
+    -command [code $itk_component(listbox) yview]
+
+    #
+    # Configure the command on the horizontal scroll bar in the base class.
+    #
+    $itk_component(horizsb) configure \
+        -command [code $itk_component(listbox) xview]
+    
+    # 
+    # Create a set of bindings for monitoring the selection and install
+    # them on the listbox component.
+    #
+    foreach seq $singleSelectSeq {
+    bind SLBSelect$this $seq [code $this _makeSelection]
+    }
+
+    foreach seq $doubleSelectSeq {
+    bind SLBSelect$this $seq [code $this _dblclick]
+    }
+
+    bindtags $itk_component(listbox) \
+    [linsert [bindtags $itk_component(listbox)] end SLBSelect$this]
+
+    #
+    # Also create a set of bindings for disabling the scrolledlistbox.
+    # Since the command for it is "break", we can drop the $this since
+    # they don't need to be unique to the object level.
+    #
+    if {[bind SLBDisabled] == {}} {
+    foreach seq $singleSelectSeq {
+        bind SLBDisabled $seq break
+    }
+
+    bind SLBDisabled <Button-1> break
+
+    foreach seq $doubleSelectSeq {
+        bind SLBDisabled $seq break
+    }
+    }
+
+    #
+    # Initialize the widget based on the command line options.
+    #
+    eval itk_initialize $args
+}
+
+# ------------------------------------------------------------------
+#                           DESTURCTOR
+# ------------------------------------------------------------------
+itcl::body NickListBox::destructor {} {
+}
+
+# ------------------------------------------------------------------
+#                             OPTIONS
+# ------------------------------------------------------------------
+
+# ------------------------------------------------------------------
+# OPTION: -dblclickcommand
+#
+# Specify a command to be executed upon double click of a listbox 
+# item.  Also, create a couple of bindings used for specific
+# selection modes
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::dblclickcommand {}
+
+# ------------------------------------------------------------------
+# OPTION: -selectioncommand
+#
+# Specifies a command to be executed upon selection of a listbox 
+# item.  The command will be called upon each selection regardless 
+# of selection mode..
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::selectioncommand {}
+
+# ------------------------------------------------------------------
+# OPTION: -width
+#
+# Specifies the width of the scrolled list box as an entire unit.
+# The value may be specified in any of the forms acceptable to 
+# Tk_GetPixels.  Any additional space needed to display the other
+# components such as margins and scrollbars force the listbox
+# to be compressed.  A value of zero along with the same value for 
+# the height causes the value given for the visibleitems option 
+# to be applied which administers geometry constraints in a different
+# manner.
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::width {
+    if {$itk_option(-width) != 0} {
+    set shell [lindex [grid info $itk_component(listbox)] 1]
+
+    #
+    # Due to a bug in the tk4.2 grid, we have to check the 
+    # propagation before setting it.  Setting it to the same
+    # value it already is will cause it to toggle.
+    #
+    if {[grid propagate $shell]} {
+        grid propagate $shell no
+    }
+    
+    $itk_component(listbox) configure -width 1
+    $shell configure \
+        -width [winfo pixels $shell $itk_option(-width)] 
+    } else {
+    configure -visibleitems $itk_option(-visibleitems)
+    }
+}
+
+# ------------------------------------------------------------------
+# OPTION: -height
+#
+# Specifies the height of the scrolled list box as an entire unit.
+# The value may be specified in any of the forms acceptable to 
+# Tk_GetPixels.  Any additional space needed to display the other
+# components such as margins and scrollbars force the listbox
+# to be compressed.  A value of zero along with the same value for 
+# the width causes the value given for the visibleitems option 
+# to be applied which administers geometry constraints in a different
+# manner.
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::height {
+    if {$itk_option(-height) != 0} {
+    set shell [lindex [grid info $itk_component(listbox)] 1]
+
+    #
+    # Due to a bug in the tk4.2 grid, we have to check the 
+    # propagation before setting it.  Setting it to the same
+    # value it already is will cause it to toggle.
+    #
+    if {[grid propagate $shell]} {
+        grid propagate $shell no
+    }
+    
+    $itk_component(listbox) configure -height 1
+    $shell configure \
+        -height [winfo pixels $shell $itk_option(-height)] 
+    } else {
+    configure -visibleitems $itk_option(-visibleitems)
+    }
+}
+
+# ------------------------------------------------------------------
+# OPTION: -visibleitems
+#
+# Specified the widthxheight in characters and lines for the listbox.
+# This option is only administered if the width and height options
+# are both set to zero, otherwise they take precedence.  With the
+# visibleitems option engaged, geometry constraints are maintained
+# only on the listbox.  The size of the other components such as 
+# labels, margins, and scrollbars, are additive and independent, 
+# effecting the overall size of the scrolled list box.  In contrast,
+# should the width and height options have non zero values, they
+# are applied to the scrolled list box as a whole.  The listbox 
+# is compressed or expanded to maintain the geometry constraints.
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::visibleitems {
+    if {[regexp {^[0-9]+x[0-9]+$} $itk_option(-visibleitems)]} {
+    if {($itk_option(-width) == 0) && \
+        ($itk_option(-height) == 0)} {
+        set chars [lindex [split $itk_option(-visibleitems) x] 0]
+        set lines [lindex [split $itk_option(-visibleitems) x] 1]
+        
+        set shell [lindex [grid info $itk_component(listbox)] 1]
+
+        #
+        # Due to a bug in the tk4.2 grid, we have to check the 
+        # propagation before setting it.  Setting it to the same
+        # value it already is will cause it to toggle.
+        #
+        if {! [grid propagate $shell]} {
+        grid propagate $shell yes
+        }
+        
+        $itk_component(listbox) configure -width $chars -height $lines
+    }
+    
+    } else {
+    error "bad visibleitems option\
+        \"$itk_option(-visibleitems)\": should be\
+        widthxheight"
+    }
+}
+
+# ------------------------------------------------------------------
+# OPTION: -state
+#
+# Specifies the state of the scrolledlistbox which may be either
+# disabled or normal.  In a disabled state, the scrolledlistbox 
+# does not accept user selection.  The default is normal.
+# ------------------------------------------------------------------
+itcl::configbody NickListBox::state {
+    set tags [bindtags $itk_component(listbox)]
+
+    #
+    # If the state is normal, then we need to remove the disabled 
+    # bindings if they exist.  If the state is disabled, then we need
+    # to install the disabled bindings if they haven't been already.
+    #
+    switch -- $itk_option(-state) {
+    normal {
+        if {[set index [lsearch $tags SLBDisabled]] != -1} {
+        bindtags $itk_component(listbox) \
+            [lreplace $tags $index $index]
+        }
+    }
+
+    disabled {
+        if {[set index [lsearch $tags SLBDisabled]] == -1} {
+        bindtags $itk_component(listbox) \
+            [linsert $tags 1 SLBDisabled]
+        }
+    }
+    default {
+        error "bad state value \"$itk_option(-state)\":\
+                   must be normal or disabled"
+    }
+    }
+}
+
+# ------------------------------------------------------------------
+#                            METHODS
+# ------------------------------------------------------------------
+
+# ------------------------------------------------------------------
+# METHOD: curselection 
+#
+# Returns a list containing the indices of all the elements in the 
+# listbox that are currently selected.
+# ------------------------------------------------------------------
+itcl::body NickListBox::curselection {} {
+    return [$itk_component(listbox) curselection]
+}
+
+# ------------------------------------------------------------------
+# METHOD: activate index
+#
+# Sets the active element to the one indicated by index.
+# ------------------------------------------------------------------
+itcl::body NickListBox::activate {index} {
+    return [$itk_component(listbox) activate [_fixIndex $index]]
+}
+
+# ------------------------------------------------------------------
+# METHOD: bbox index
+#
+# Returns four element list describing the bounding box for the list
+# item at index
+# ------------------------------------------------------------------
+itcl::body NickListBox::bbox {index} {
+    return [$itk_component(listbox) bbox [_fixIndex $index]]
+}
+
+# ------------------------------------------------------------------
+# METHOD clear 
+#
+# Clear the listbox area of all items.
+# ------------------------------------------------------------------
+itcl::body NickListBox::clear {} {
+    $itk_component(listbox) delete 0 end
+    set oplen 0
+    set halfoplen 0
+    set voicelen 0
+}
+
+# ------------------------------------------------------------------
+# METHOD: see index
+#
+# Adjusts the view such that the element given by index is visible.
+# ------------------------------------------------------------------
+itcl::body NickListBox::see {index} {
+    $itk_component(listbox) see [_fixIndex $index]
+}
+
+# ------------------------------------------------------------------
+# METHOD: index index
+#
+# Returns the decimal string giving the integer index corresponding 
+# to index.  The index value may be a integer number, active,
+# anchor, end, @x,y, or a pattern.
+# ------------------------------------------------------------------
+itcl::body NickListBox::index {index} {
+    if {[regexp {(^[0-9]+$)|(active)|(anchor)|(end)|(^@-?[0-9]+,-?[0-9]+$)} $index]} {
+    return [$itk_component(listbox) index $index]
+    
+    } else {
+    set indexValue [lsearch -glob [get 0 end] $index]
+    
+    if {$indexValue == -1} {
+        error "bad Scrolledlistbox index \"$index\": must be active, anchor, end, @x,y, number, or a pattern"
+    }
+    
+    return $indexValue
+    }
+}
+
+# ------------------------------------------------------------------
+# METHOD: _fixIndex index
+#
+# Similar to the regular "index" method, but it only converts
+# the index to a numerical value if it is a string pattern.  If
+# the index is in the proper form to be used with the listbox,
+# it is left alone.  This fixes problems associated with converting
+# an index such as "end" to a numerical value.
+# ------------------------------------------------------------------
+itcl::body NickListBox::_fixIndex {index} {
+  if {[regexp {(^[0-9]+$)|(active)|(anchor)|(end)|(^@[0-9]+,[0-9]+$)} $index]} {
+    return $index
+  } else {
+    set indexValue [lsearch -glob [get 0 end] $index]
+    if {$indexValue == -1} {
+      error "bad Scrolledlistbox index \"$index\": must be active, anchor, end, @x,y, number, or a pattern"
+    }
+    return $indexValue
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: delete nickname
+#
+# ------------------------------------------------------------------
+itcl::body NickListBox::delete {nickname} {
+  foreach nick [$itk_component(listbox) get 0 end] { 
+    lappend nicks [string tolower [string trimleft $nick "@%+"]]
+  }
+  if [llength $nicks] {
+    if {[set pos [lsearch $nicks [string tolower $nickname]]] != -1} {
+      $itk_component(listbox) delete $pos
+      if {$oplen && $pos < $oplen} {
+        incr oplen -1
+      } elseif {$halfoplen && $pos < $oplen + $halfoplen} {
+        incr halfoplen -1
+      } elseif {$voicelen && $pos < $oplen + $halfoplen + $voicelen} {
+        incr voicelen -1
+      }
+      #puts "$oplen $halfoplen $voicelen"
+    }
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: get first ?last?
+#
+# Returns the elements of the listbox indicated by the indexes. 
+# Indexes may be a number, active, anchor, end, @x,y, ora pattern.
+# ------------------------------------------------------------------
+itcl::body NickListBox::get {first {last {}}} {
+  set first [_fixIndex $first]
+
+  if {$last != {}} {
+    set last [_fixIndex $last]
+  }
+
+  if {$last == {}} {
+    return [$itk_component(listbox) get $first]
+  } else {
+    return [$itk_component(listbox) get $first $last]
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: getcurselection 
+#
+# Returns the contents of the listbox element indicated by the current 
+# selection indexes.  Short cut version of get and curselection 
+# command combination.
+# ------------------------------------------------------------------
+itcl::body NickListBox::getcurselection {} {
+  set rlist {}
+
+  if {[selecteditemcount] > 0} {
+    set cursels [$itk_component(listbox) curselection]
+    switch $itk_option(-selectmode) {
+      single -
+      browse {
+        set rlist [$itk_component(listbox) get $cursels]
+      }
+
+      multiple -
+      extended {
+        foreach sel $cursels {
+          lappend rlist [$itk_component(listbox) get $sel]
+        }
+      }
+    }
+  }
+    
+  return $rlist
+}
+
+# ------------------------------------------------------------------
+# METHOD: insert nicklist
+#
+# ------------------------------------------------------------------
+itcl::body NickListBox::insert {nicklist} {
+  set nicklist [split [string trimright $nicklist " "]]
+  if [llength $nicklist] {
+    foreach nick $nicklist {
+      $itk_component(listbox) insert [_nickpos $nick] $nick
+    }
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: nearest y
+#
+# Given a y-coordinate within the listbox, this command returns the 
+# index of the visible listbox element nearest to that y-coordinate.
+# ------------------------------------------------------------------
+itcl::body NickListBox::nearest {y} {
+  $itk_component(listbox) nearest $y
+}
+
+# ------------------------------------------------------------------
+# METHOD: scan option args 
+#
+# Implements scanning on listboxes.
+# ------------------------------------------------------------------
+body NickListBox::scan {option args} {
+  eval $itk_component(listbox) scan $option $args
+}
+
+# ------------------------------------------------------------------
+# METHOD: selection option first ?last?
+#
+# Adjusts the selection within the listbox.  The index value may be 
+# a integer number, active, anchor, end, @x,y, or a pattern.
+# ------------------------------------------------------------------
+itcl::body NickListBox::selection {option first {last {}}} {
+  set first [_fixIndex $first]
+
+  if {$last != {}} {
+    set last [_fixIndex $last]
+    $itk_component(listbox) selection $option $first $last
+  } else {
+    $itk_component(listbox) selection $option $first 
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: size 
+#
+# Returns a decimal string indicating the total number of elements 
+# in the listbox.
+# ------------------------------------------------------------------
+itcl::body NickListBox::size {} {
+  return [$itk_component(listbox) size]
+}
+
+# ------------------------------------------------------------------
+# METHOD: selecteditemcount 
+#
+# Returns a decimal string indicating the total number of selected 
+# elements in the listbox.
+# ------------------------------------------------------------------
+itcl::body NickListBox::selecteditemcount {} {
+  return [llength [$itk_component(listbox) curselection]]
+}
+
+# ------------------------------------------------------------------
+# METHOD: justify direction
+#
+# Justifies the list scrolled region in one of four directions: top,
+# bottom, left, or right.
+# ------------------------------------------------------------------
+itcl::body NickListBox::justify {direction} {
+  switch $direction {
+    left { 
+      $itk_component(listbox) xview moveto 0
+    }
+    right {
+      $itk_component(listbox) xview moveto 1
+    }
+    top {
+      $itk_component(listbox) yview moveto 0
+    }
+    bottom {
+      $itk_component(listbox) yview moveto 1
+    }
+    default {
+      error "bad justify argument \"$direction\": should\
+          be left, right, top, or bottom"
+    }
+  }
+}
+
+# ------------------------------------------------------------------
+# METHOD: xview args
+#
+# Change or query the vertical position of the text in the list box.
+# ------------------------------------------------------------------
+itcl::body NickListBox::xview {args} {
+  return [eval $itk_component(listbox) xview $args]
+}
+
+# ------------------------------------------------------------------
+# METHOD: yview args
+#
+# Change or query the horizontal position of the text in the list box.
+# ------------------------------------------------------------------
+itcl::body NickListBox::yview {args} {
+  return [eval $itk_component(listbox) yview $args]
+}
+
+# ------------------------------------------------------------------
+# PROTECTED METHOD: _makeSelection 
+#
+# Evaluate the selection command.
+# ------------------------------------------------------------------
+itcl::body NickListBox::_makeSelection {} {
+  uplevel #0 $itk_option(-selectioncommand)
+}
+
+# ------------------------------------------------------------------
+# PROTECTED METHOD: _dblclick 
+#
+# Evaluate the double click command option if not empty.
+# ------------------------------------------------------------------
+itcl::body NickListBox::_dblclick {} {
+  uplevel #0 $itk_option(-dblclickcommand)
+}    
+
+# ------------------------------------------------------------------
+# PROTECTED METHOD: _nickpos 
+#
+# returns the proper index where an insert should be made
+# ------------------------------------------------------------------
+itcl::body NickListBox::_nickpos { newnick } {
+  set nicks [$itk_component(listbox) get 0 end]
+  set newnick [string tolower $newnick]
+  switch -- [string index $newnick 0] {
+    "@" {
+      if {![llength $nicks] || \
+          [string index [lindex $nicks 0] 0] != "@"} {
+        incr oplen
+        return 0
+      } else {
+        set newnick [string trimleft $newnick "@%+"]
+        set startpos 0
+        set endpos [expr $startpos + $oplen]
+        incr oplen
+        for {set pos $startpos} {$pos <= $endpos} {incr pos} {
+          if {[string compare $newnick [string tolower [string trimleft [lindex $nicks $pos] "@%+"]]] <= 0} {
+            return $pos
+          }
+        }
+        return [expr $pos - 1]
+      }
+    }
+    "%" {
+      set newnick [string trimleft $newnick "@%+"]
+      set startpos $oplen
+      set endpos [expr $startpos + $halfoplen]
+      incr halfoplen
+      if {$halfoplen == 1} { return $startpos }
+      for {set pos $startpos} {$pos <= $endpos} {incr pos} {
+        if {[string compare $newnick [string tolower [string trimleft [lindex $nicks $pos] "@%+"]]] <= 0} {
+          return $pos
+        }
+      }
+      return [expr $pos - 1]
+    }
+    "+" {
+      set newnick [string range $newnick 1 end]
+      set startpos [expr $oplen + $halfoplen]
+      set endpos [expr $startpos + $voicelen]
+      incr voicelen
+      if {$voicelen == 1} { return $startpos }
+      for {set pos $startpos} {$pos <= $endpos} {incr pos} {
+        if {[string compare $newnick [string tolower [string trimleft [lindex $nicks $pos] "@%+"]]] <= 0} {
+          return $pos
+        }
+      }
+      return [expr $pos - 1]
+    }
+    default {
+      set startpos [expr $oplen + $halfoplen + $voicelen]
+      set endpos [expr [llength $nicks] - 1]
+      if {$endpos == -1} {set endpos 0}
+      for {set pos $startpos} {$pos <= $endpos} {incr pos} {
+        if {[string compare $newnick [string tolower [lindex $nicks $pos]]] <= 0} {
+          return $pos
+        }
+      }
+      return "end"
+    }
+  }
+}
+# ------------------------------------------------------------------
+# PUBLIC METHOD: modnick <+/-> <o|h|v> <nick>
+#
+# used to change the mode on a nick in the nicklist
+# ------------------------------------------------------------------
+itcl::body NickListBox::modnick { dir modeChar nick } {
+  set inick [string tolower $nick]
+  foreach n [$itk_component(listbox) get 0 end] { 
+    lappend nicks [string tolower [string trimleft $n "@%+"]]
+  }
+  if {[llength $nicks] && \
+      [set pos [lsearch $nicks $inick]] != -1} {
+    set modenick [$itk_component(listbox) get $pos]
+    set pos -1 ; set modes [list]
+    while {[regexp \[@%\+\] [string index $modenick [incr pos]]]} {
+      lappend modes [string index $modenick $pos]
+    }
+    switch -- $dir {
+      "-" {
+        if {[set pos [lsearch $modes $modeChar]] != -1} {
+          set modes [lreplace $modes $pos $pos]
+        }
+      }
+      "+" {
+        if {[lsearch $modes $modeChar] != -1} {
+          # its already set, so ditch
+          return
+        } else {
+          switch -- $modeChar {
+            "@" {
+              # @ always goes first.
+              set modes [linsert $modes 0 @]
+            }
+            "%" {
+              if {[lindex $modes 0] == "@"} {
+                set modes [linsert $modes 1 %]
+              } else {
+                set modes [linsert $modes 0 %]
+              }
+            }
+            "+" {
+              set modes [linsert $modes end +]
+            }
+          }
+        }
+      }
+    }
+    #[.pw childsite "nicklist"].nicklist delete $nick
+    $this delete $nick
+    #[.pw childsite "nicklist"].nicklist insert "[join $modes {}]$nick"
+    $this insert "[join $modes {}]$nick"
+  }
+}
+# ------------------------------------------------------------------
+# METHOD: changenick oldnick newnick
+#
+# ------------------------------------------------------------------
+itcl::body NickListBox::changenick {oldnick newnick} {
+  set modes [list]
+  foreach nick [$itk_component(listbox) get 0 end] { 
+    lappend nicks [string tolower [string trimleft $nick "@%+"]]
+  }
+  if [llength $nicks] {
+    if {[set pos [lsearch $nicks [string tolower $oldnick]]] != -1} {
+      set modenick [$itk_component(listbox) get $pos]
+      $itk_component(listbox) delete $pos
+
+      set charpos -1
+      while {[regexp \[@%\+\] [string index $modenick [incr charpos]]]} {
+        lappend modes [string index $modenick $charpos]
+      }
+
+      $itk_component(listbox) insert \
+          [_nickpos "[join $modes {}]$newnick"] "[join $modes {}]$newnick"
+    }
+  }
+}

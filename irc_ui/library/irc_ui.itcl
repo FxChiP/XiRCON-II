@@ -1,0 +1,47 @@
+#------------------------------------------------------------------------
+#  irc_ui.itcl --
+#
+#  Master init for the IRC_UI extensions.
+#
+#  See the documentation for its use as
+#  the arguements aren't mentioned here.
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: irc_ui.itcl,v 1.2 2006/02/22 06:54:03 davygrvy Exp $
+#------------------------------------------------------------------------
+# vim: syntax=tcl
+
+load [file join [file dirname [info script]] GUI_irc[info shared]]
+
+package require IRC_Engine
+
+### For that comfy smooth OO feeling...
+### Ahh...  that's nice.
+
+itcl::class IRC::ui {
+    constructor {args} {
+	_initUI
+    }
+    destructor {
+	_destroyUI
+    }
+    public {
+	method destroy {} {itcl::delete object $this}
+	method echo {} @irc-ui-echo
+#	method window {} @irc-ui-window
+	method menu {} @irc-ui-menu
+	method hotkey {} @irc-ui-hotkey
+	method alias {} @irc-ui-alias
+	method channel {} @irc-ui-channel
+	method query {} @irc-ui-query
+	method chat {} @irc-ui-chat
+	method queries {} @irc-ui-queries
+	method chats {} @irc-ui-chats
+	method say {} @irc-ui-say
+	method input {} @irc-ui-input
+    }
+    private {
+	method _initUI {} @irc-ui-construct
+	method _destroyUI {} @irc-ui-destruct
+    }
+}

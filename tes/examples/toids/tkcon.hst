@@ -1,0 +1,10 @@
+::tkcon::EvalSlave history add {Gdiplus::Graphics g}
+::tkcon::EvalSlave history add {Gdiplus::Pen p Teal 3}
+::tkcon::EvalSlave history add {Gdiplus::Font f {Arial} 48}
+::tkcon::EvalSlave history add {Gdiplus::SolidBrush b Red}
+::tkcon::EvalSlave history add {g Clear}
+::tkcon::EvalSlave history add {g DrawPie p 300 100 200 200 -90 90}
+::tkcon::EvalSlave history add {g DrawBezier p 100 100 100 200 200 200 300 100}
+::tkcon::EvalSlave history add {g DrawText "Hello World!" f 140 300 b}
+::tkcon::EvalSlave history add {g Clear}
+::tkcon::EvalSlave history add {g DrawClosedCurve p 0 300 200 300 300 350 250}

@@ -1,0 +1,10 @@
+Simple BSD.
+
+Don't sue me if it doesn't work.  Copy and modify it as much as you like.
+There's no requirement to give me credit for it.  Fly away little bird,
+be free.  I understand full well that because I have released this
+software openly on the internet, I lose control over it.  Therefore, I'll
+relinquish control now in contrast to other type of licenses that try, but
+fail, to retain a minimum of control.
+
+Be nice and send me patches for bugs fixed or, at least, reports.

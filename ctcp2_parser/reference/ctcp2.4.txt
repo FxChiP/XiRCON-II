@@ -1,0 +1,373 @@
+4. CTCP Requests and Replies
+   
+A list of standard defined CTCP requests and replies follows.  Some CTCP
+keywords are only valid as a request, while one (ERRMSG) is only valid as
+a reply.  This is noted where applicable.  The requests are listed as
+either "required" or "optional".  It should be noted that implementation
+of CTCP requests as a whole is optional.  However, if you choose to
+implement CTCP, you must implement all "required" requests in order to
+be compliant with the CTCP specification.
+
+*** EDITOR'S NOTE ***
+4.9 (PLAY) and 4.11 (STREAM) are not finalized.  They may change drastically
+or completely disappear.  They are currently under discussion on the CTCP/2
+mailing list.
+
+
+4.1 VERSION (required)
+
+Request: 'VERSION'
+Reply: 'VERSION' SP user-text
+
+This request will provide to the initiator information about the 
+particular client is being used by the recipient.  A valid request will
+have no arguments accompanying it.
+
+The user-text is extracted by concatenating all remaining parameters
+together, separated by spaces.  Thus a VERSION with the user-text of
+"ircIII it's great!" can be sent as a CTCP VERSION with three parameters:
+"ircIII", "it's", and "great!".  This behavior is intended to provide
+compatibility with older IRC clients.  While it is possible (and valid)
+to send a CTCP VERSION request with only one parameter, having all spaces
+quoted (according to section 3), clients are encouraged instead to send
+the user-text as multiple parameters with no quoted spaces, so that older
+clients can decode them.
+
+It is not required that any useful information be encoded into a VERSION
+reply, or that a VERSION reply be machine-readable.  The VERSION reply
+is intended to be seen by humans.  Suggested information includes the
+IRC client's name and version, the operating system, and a contact address
+for the individual or organization responsible for the client.
+
+Older IRC clients revealed information about obtaining a copy of the
+client via CTCP SOURCE.  We have chosen to deprecate SOURCE in favor of
+returning this information inside a VERSION reply.  Use of the "URL"
+attribute (see section 2.8) in a VERSION reply for revealing a site with
+more information about the IRC client is encouraged.
+
+
+4.2  PING (required)
+
+Request: "PING" SP arg
+Reply: "PING" SP arg
+
+This request is intended to determine the round trip time of a message 
+from the initiator to the recipient and back to the initiator.  The
+recipient is required to return a duplicate of the received argument
+without modification.  Each client will define its own format for the
+argument.
+
+An argument longer than 32 octets may be truncated by the recipient (to
+a minimum of 32 octets in length) before it is echoed back.
+
+
+4.3 CLIENTINFO (required)
+
+Request: "CLIENTINFO"
+Reply: "CLIENTINFO" *( SP keyword )
+
+This request will be used to inquire of the capabilities of a client. 
+The response will be a space-separated list of the valid request keywords
+recognized by this client.
+
+The previous implementation of this command allowed for an argument which
+would provide additional information about the command, acting like a 
+help reference.  In the interests of cutting down on the flood potential 
+of clients, as well as the recent need to maintain local help files, 
+this optional behavior is deprecated.
+
+
+4.4 ACTION (required)
+
+Request: "ACTION" SP user-text
+There is no reply.
+
+This request is used to provide an alternative form of speaking either 
+to an individual or channel.  This text should be treated in a manner
+similar to a PRIVMSG from RFC 1459.  Alternate display methods are
+encouraged.
+
+Note that the comment on user-text from VERSION (section 4.1 above) applies
+here also.
+
+No reply is made to this request.
+
+
+4.5 FINGER (optional)
+
+Request: "FINGER"
+Reply: "FINGER" SP user-text
+
+The response to this request will be a user specified text string, and 
+may contain any valid ASCII character 32 or above.  No restrictions are
+placed on the content of this reply.
+
+The FINGER request is intended to include the deprecated USERINFO request
+in its domain.  A FINGER reply is generally expected to have some information
+about the user, although none is required.  There is no specified format
+for a FINGER response, so any client that attempts to automatically extract
+information such as idle time should prepare to be occasionally disappointed.
+
+Inclusion of a homepage or web site using the "URL" attribute (see section
+2.8) is encouraged.
+
+Note that the comment on user-text from VERSION (section 4.1 above) applies
+here also.
+
+
+4.6 TIME (optional)
+
+Request: "TIME"
+Reply: "TIME" SP date-time
+
+The response to this request will be the date and time of the system the
+client is running on.  The format of this reply must be that used be
+RFC 822, section 5, with the following modification: the year must be
+a four-digit (not two-digit) number.  The time should be given in the
+local time zone, with the time zone given as an offset.
+
+This modified format is listed in Appendix B for reference.  An example
+of a valid TIME reply is: "Wed, 11 Jun 1997 18:55 -0700".
+
+The old format, which looked like "Wed Aug 20 23:29:21 1997", is now
+deprecated, but clients may want to recognize it for compatibility
+reasons.
+
+Note that, as in VERSION (section 4.1 above), quoting the spaces in the
+date-time string is not recommended.
+
+
+4.7 AWAY (optional)
+
+Request: "AWAY"
+Reply: "AWAY" [ SP user-text ]
+
+Occasionally, a user will leave her client connected to an IRC network
+while she is physically elsewhere.  In these cases, it's convenient to
+have an automated way to determine if a user is away from the terminal.
+
+An AWAY reply may be generated in response to an AWAY request, or in
+response to any normal non-channel PRIVMSG.  The user text is optional,
+and is meant to contain some human-readable explanation.
+
+Note that the comment on user-text from VERSION (section 4.1 above) applies
+here also.
+
+
+4.8 ERRMSG (optional)
+
+This must not be sent as a request.
+Reply: "ERRMSG" SP keyword [ SP user-text ]
+
+ERRMSG is used as a reply indicating that there was something wrong with
+a previous CTCP request.  Usually it should contain information about why
+the request failed, in a human-readable format.
+
+Note that the comment on user-text from VERSION (section 4.1 above) applies
+here also.
+
+It is optional for an IRC client to send ERRMSG replies, though they are
+generally helpful to a user who receives them.
+
+
+*** 4.9 PLAY IS NOT FINALIZED ***
+4.9 PLAY (optional)
+
+Request: "PLAY" SP filename SP mime-type
+Reply: "PLAY" SP filename SP mime-type
+
+A PLAY request is a request to display or launch some file previously sent
+via a STREAM SEND.  The filename and mime-type must exactly match an existing
+downloaded file, and the file must have originally been sent with the "DO
+PLAYABLE" option (see section 5.X.X).  As with STREAM SEND, the filename may
+need to be adjusted by the receiving client to avoid characters which are
+"special" to that client's operating system (such as directory dividers).
+
+Clients should be careful when answering a PLAY request, and allow the user
+full control over whether a PLAY request is honored.  There is potential for
+abuse, so it is recommended that a client only honor PLAY requests for
+images, sounds, or videos.  Under no circumstances should a client PLAY any
+type of executable file.
+
+If the receiving client does not have the file referenced by the PLAY
+request, it may send a PLAY reply back to the originator.  This reply may
+be used by the originator to initiate a STREAM SEND of the file.  In this
+way, two clients may negotiate the launching of a file that has not been
+previously transferred.  This automatic transfer must never happen unless
+the user has indicated his/her consent to the client.  Unattended automatic
+file transfers are a possible security violation and should be handled with
+extreme care.
+*** 4.9 PLAY IS NOT FINALIZED ***
+
+
+*** 4.10 DCC IS NOT FINALIZED ***
+4.10 DCC (optional)
+
+Request: "DCC" SP dcc-type SP filename SP dcc-ip SP port [ SP dcc-arg ]
+There is no reply.
+
+This implements the "Direct Client to Client" protocol of the original
+CTCP, which facilitates the transfer of information from client to client,
+without directly accessing the IRC network.  An initial message, containing
+an IP and port, is sent from the initiator to the recipient.  The recipient
+extracts the IP and port from the message and establishes a direct TCP
+connection.  The intent of the connection is indicated by the dcc-type
+field in the original message.
+
+The dcc-ip field is a numerical IP expressed as an ASCII string containing
+a 32-bit unsigned integer in network order.  For example, the IP 127.0.0.1
+would be a dcc-ip of "2130706433".  (There is no apparent reason for this
+relatively arcane encoding -- it is historical.)  Note that an IPv6
+address may not be used in a DCC request.  Likewise, the port field is an
+ASCII string containing the port number.  Port 3045 would be expressed as
+"3045".
+
+Valid dcc-type values are "CHAT" and "SEND".  There is no filename for
+a DCC CHAT request; the usual placeholder filename is "chat".  (Note: some
+IRC clients may fail to recognize a DCC CHAT request unless the filename
+is "chat".)  The filename for a DCC SEND request is the name of the file
+being transmitted.  Because this CTCP message predates adequate quoting,
+the filename should not contain any spaces or unprintable characters.
+(Typically the client will replace each space with an underline before
+sending the CTCP request.)
+
+A DCC connection is initiated by sending a DCC request to another IRC
+user via CTCP.  The initiator must be "listening" at the TCP address/port
+pair given in the request.  To accept a DCC request, the recipient merely
+opens a TCP connection to the given address/port pair.  Either party may
+disconnect at any time.
+
+
+4.10.1 DCC CHAT
+
+A DCC CHAT request typically looks like this:
+    ^ADCC CHAT chat 2130706433 3045^A
+There are no optional parameters (dcc-arg) for a DCC CHAT request.
+
+Once a connection is established, either party may send text to the other
+side.  Each line of text must be followed by a linefeed (ASCII LF, or
+character 10).  The text is otherwise unprocessed by the IRC client
+program.
+
+CTCP/2 adds "STREAM CHAT", which is a more functional replacement for
+DCC CHAT.
+
+
+4.10.2 DCC SEND
+
+A DCC SEND request typically looks like this:
+    ^ADCC SEND me.jpg 2130706433 3048 22974^A
+The optional parameter (dcc-arg) for a DCC SEND request is the size of
+the file, in bytes.
+
+Once a connection is established, the initiator begins immediately sending
+data across the connection.  The data is sent in "chunks" of an arbitrary
+size, determined by the initiating client.  Typical clients use a chunk size
+of 1024 bytes (or more); some older clients use 512 bytes.  After sending
+each chunk of data, the initiator waits for the recipient to "acknowledge"
+the data.  Each acknowledgement is a 4-byte integer, in network order,
+indicating the number of bytes received so far (total).
+
+For example, if the initiator uses a chunk size of 1024 bytes, the transfer
+begins with the initiator sending the first 1024 bytes of the file.  When
+the recipient has received all 1024 bytes, it transmits the number 1024
+back to the initiator, as a 4-byte integer in network order.  The initiator,
+upon receiving the acknowlegement, proceeds to send the next 1024 bytes.
+This time, the recipient sends the number 2048.
+
+This back-and-forth exchange continues until the recipient sends an
+acknowledgement for the last chunk of the file.  This acknowledgement
+will necessarily be a 4-byte integer (in network order) containing the
+length of the file.
+
+Note that the recipient has no way of knowing what the chunk size will
+be before a file transfer begins.  The recipient should therefore send
+an acknowledgement for each data packet it receives.  The initiator must
+ignore any acknowledgments that don't match the number of bytes already
+sent.
+
+This "send and wait" style of transfer is inevitably slow.  One common
+speed improvement is for the initiator to ignore all acknowledgements
+except the final one (which will contain the file length).  The initiator
+may just transmit the entire file, limited only by TCP's flow control,
+and wait for the final acknowledgement.
+
+The file transfer is not successfully completed until the initiator has
+received an acknowledgement containing the length of the file.  At this
+time, both sides may termimate the TCP connection.
+
+CTCP/2 adds "STREAM SEND", which is a more functional replacement for
+DCC SEND.
+*** 4.10 DCC IS NOT FINALIZED ***
+
+
+*** 4.11 STREAM IS UNDER DISCUSSION ***
+4.11 STREAM (optional)
+
+Request: "STREAM" SP stream-type SP stream-ip SP port [ SP filename
+    [ SP mime-type [ SP stream-id ] ] ]
+A reply may be sent if the request was a reversed request or if
+    the request is denied.
+
+Unlike DCC, all parameters to STREAM can and must be quoted.  This
+means, for example, that a filename containing spaces or unprintable
+characters is permitted, and a client must be able to cope with such
+filenames.
+
+The filename "-" is special, and indicates that the transfer request
+is for a stream that has no filename.  A mime-type is required on
+all transfers that do not specify a filename.
+
+The stream-ip is an IP address in either IPv4 dotted notation (ie.
+127.0.0.1) or IPv6 notation (ie. FE00::ABCD:0123).  Domain names are
+not allowed; nor are the unsigned-integer representations used by DCC.
+The port field is an ASCII string containing the port number, just like
+in DCC.  A stream-ip of "*" is special, and indicates a reversed
+request.  Reversed requests are described in section 5.1.
+
+Valid stream-types are "CHAT" and "SEND".  A request may be rejected
+by sending a CTCP reply which includes exactly the same parameters
+as the original request, but replaces the stream-type with "REJECT".
+For example, the request:
+    ^ASTREAM SEND 127.0.0.1 3904 mycat.jpg^A
+may be rejected with the reply:
+    ^ASTREAM REJECT 127.0.0.1 3904 mycat.jpg^A
+
+If a STREAM request is accepted, the recipient opens a TCP connection
+to the IP/port given by the initiator (unless it is a reversed request,
+in which case the initiator opens a TCP connection to the IP/port given
+by the recipient -- see section 5.1).  All traffic over the TCP
+connection follows the CTCP STREAM protocol.  This protocol is described
+in section 5.
+*** 4.11 STREAM IS UNDER DISCUSSION ***
+
+
+4.12 Client Extensions
+
+This document can't (and doesn't try to) foresee all the uses to which CTCP
+messages will be put.  Therefore, a subset of CTCP keywords are reserved
+for experimental or client-specific CTCP messages.  Following the lead of
+the MIME standard, CTCP keywords that start with "X-" are reserved for
+these messages.  For example, a client that wishes to implement an online
+paging system could use "X-PAGE".
+
+If a client author is concerned about name collisions between differing
+implementations, he should prefix it further with some unique identifier,
+such as the client name, the script name, the author's nick, etc.  For
+example, "X-IRCII-PAGE".
+
+A client can silently ignore any of these "extended" keywords which it
+does not understand.  All extensions to CTCP that are not listed in this
+document should be preceded with "X-" until they are added to the standard.
+
+
+4.13 Deprecations
+
+Currently there are clients which implement requests which are of no
+significant value in the face of these specifications.  A client may
+respond to these deprecated requests, it may ignore them, or it may
+respond with an ERRMSG reply.  The list of deprecated requests is:
+
+ECHO, SED, USERINFO, UTC, ERRMSG (as a request), CLIENTINFO <arg>, and
+SOURCE.
+

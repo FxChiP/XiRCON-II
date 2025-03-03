@@ -1,0 +1,308 @@
+# An asteroids game!
+
+package require Itcl
+package require Gdiplus
+
+itcl::class Asteroid {
+    constructor {} {
+	set _xIncr [expr {((rand()*0.90)+0.2)*(round(rand()) ? -1 : 1)}]
+	set _yIncr [expr {((rand()*0.90)+0.2)*(round(rand()) ? -1 : 1)}]
+	if {round(rand())} {
+	    set _x 0
+	    set _y [expr {int(rand()*480)}]
+	} else {
+	    set _x [expr {int(rand()*640)}]
+	    set _y 0
+	}
+    }
+    destructor {}
+    public {
+	method draw {surface p1 p2 p3 p4}
+	method bump {}
+	method blowup {}
+    }
+    protected {
+	variable _points
+	variable _offsetPoints
+	variable _xIncr
+	variable _yIncr
+	variable _x
+	variable _y
+    }
+
+    # offsets from a center of a 40x40 box.
+    common _shapeData
+    set _shapeData(0) {{-10 -20} {0 -15} {10 -20} {20 -11} {10 -6} {20 2} {10 15} {-5 11} {-10 15} {-20 7} {-15 -2} {-20 -11}}
+    set _shapeData(1) {{-10 -20} {0 -12} {10 -20} {20 -12} {15 -3} {20 6} {5 14} {-10 14} {-20 6} {-20 -11}}
+    set _shapeData(2) {{-10 -20} {5 -20} {20 -11} {20 -7} {5 -2} {20 6} {10 15} {5 11} {-10 15} {-20 2} {-20 -11} {-5 -11}}
+    set _shapeData(3) {{-5 -20} {10 -20} {20 -7} {20 2} {10 15} {0 15} {0 2} {-10 15} {-20 2} {-10 -2} {-20 -7}}
+}
+
+itcl::body Asteroid::bump {} {
+    set _offsetPoints {}
+
+    set _x [expr {$_x+$_xIncr}]
+    set _y [expr {$_y+$_yIncr}]
+    if {$_x < 0} {set _x [expr {$_x+640}]}
+    if {$_y < 0} {set _y [expr {$_y+480}]}
+    if {$_x > 640} {set _x [expr {$_x-640}]}
+    if {$_y > 480} {set _y [expr {$_y-480}]}
+
+    foreach point $_points {
+	lappend _offsetPoints [list \
+	    [expr {[lindex $point 0] + $_x}] \
+	    [expr {[lindex $point 1] + $_y}]]
+    }
+}
+
+itcl::body Asteroid::draw {surface p1 p2 p3 p4} {
+    $surface DrawPolygonList $p1 $_offsetPoints
+
+    foreach point $_offsetPoints {
+	$surface DrawLine $p2 [lindex $point 0] [lindex $point 1] \
+		[expr {0.5+[lindex $point 0]}] [lindex $point 1]
+    }
+}
+
+itcl::body Asteroid::blowup {} {}
+
+
+itcl::class BigAsteroid {
+    inherit Asteroid
+    constructor {} {
+    	foreach point $_shapeData([expr {int((rand()*4))}]) {
+	    lappend _points [list [lindex $point 0] [lindex $point 1]]
+	}
+	lappend ::drawables $this
+    }
+    destructor {
+	if {[set pos [lsearch $::drawables $this]] != -1} {
+	    set ::drawables [lreplace $::drawables $pos $pos]
+	}
+    }
+}
+
+itcl::class MediumAsteroid {
+    inherit Asteroid
+    constructor {} {
+    	foreach point $_shapeData([expr {int((rand()*4))}]) {
+	    lappend _points [list [expr {[lindex $point 0]/2}] [expr {[lindex $point 1]/2}]]
+	}
+	lappend ::drawables $this
+    }
+    destructor {
+	if {[set pos [lsearch $::drawables $this]] != -1} {
+	    set ::drawables [lreplace $::drawables $pos $pos]
+	}
+    }
+}
+
+itcl::class SmallAsteroid {
+    inherit Asteroid
+    constructor {} {
+    	foreach point $_shapeData([expr {int((rand()*4))}]) {
+	    lappend _points [list [expr {[lindex $point 0]/4}] [expr {[lindex $point 1]/4}]]
+	}
+	lappend ::drawables $this
+    }
+    destructor {
+	if {[set pos [lsearch $::drawables $this]] != -1} {
+	    set ::drawables [lreplace $::drawables $pos $pos]
+	}
+    }
+}
+
+itcl::class Ship {
+    constructor {} {
+	genPointsFromAngle
+	lappend ::drawables $this
+    }
+    destructor {
+	if {[set pos [lsearch $::drawables $this]] != -1} {
+	    set ::drawables [lreplace $::drawables $pos $pos]
+	}
+    }
+    public {
+	method draw {surface p1 p2 p3 p4}
+	method bump {}
+	method fire {} {Missle #auto $x1 $y1 $angle}
+	method moveCw {} {set _move 1 ; set _dir 1}
+	method moveCcw {} {set _move 1 ; set _dir -1}
+	method stopMove {} {set _move 0}
+	method doThrust {} {set _accel 1}
+	method stopThrust {} {set _accel 0}
+	method hyperSpace {} {
+	    set _accel 0
+	    set _vY [set _vX 0]
+	    set x [expr {(rand()*630)+10}]
+	    set y [expr {(rand()*460)+10}]
+	    genPointsFromAngle
+	}
+    }
+    private {
+        method genPointsFromAngle {}
+	method DTOR {degrees}
+	method RTOD {radians}
+	variable x 320
+	variable y 245
+	variable angle 0
+	variable x1
+	variable y1
+	variable x2
+	variable y2
+	variable x3
+	variable y3
+	variable x4
+	variable y4
+	variable x5
+	variable y5
+	# thruster flame points
+	variable xt1
+	variable yt1
+	variable xt2
+	variable yt2
+	variable xt3
+	variable yt3
+	variable _move 0
+	variable _dir 1
+	variable _accel 0
+	variable _aI 0.066  ;# ship forward force
+	variable _aD 0.008  ;# ship friction
+	variable _vX 0
+	variable _vY 0
+	variable _thrustAngle 0
+    }
+}
+
+itcl::body Ship::DTOR {degrees} {
+    # return radians from degrees.
+    return [expr {((2*3.141592654)/360)*$degrees}]
+}
+itcl::body Ship::RTOD {radians} {
+    # return degrees from radians.
+    return [expr {(double($radians)/(2*3.141592654))*360}]
+}
+
+itcl::body Ship::genPointsFromAngle {} {
+    set x1 [expr {$x+(sin([DTOR $angle])*10)}]
+    set y1 [expr {$y-(cos([DTOR $angle])*10)}]
+    set x2 [expr {$x+(sin([DTOR [expr {$angle+145}]])*9)}]
+    set y2 [expr {$y-(cos([DTOR [expr {$angle+145}]])*9)}]
+    set x3 [expr {$x+(sin([DTOR [expr {$angle+215}]])*9)}]
+    set y3 [expr {$y-(cos([DTOR [expr {$angle+215}]])*9)}]
+    set x4 [expr {$x+(sin([DTOR [expr {$angle+130}]])*3)}]
+    set y4 [expr {$y-(cos([DTOR [expr {$angle+130}]])*3)}]
+    set x5 [expr {$x+(sin([DTOR [expr {$angle+230}]])*3)}]
+    set y5 [expr {$y-(cos([DTOR [expr {$angle+230}]])*3)}]
+    if {$_accel} {
+	set xt1 [expr {$x+(sin([DTOR [expr {$angle+160}]])*5)}]
+	set yt1 [expr {$y-(cos([DTOR [expr {$angle+160}]])*5)}]
+	set xt2 [expr {$x+(sin([DTOR [expr {$angle+180}]])*10)}]
+	set yt2 [expr {$y-(cos([DTOR [expr {$angle+180}]])*10)}]
+	set xt3 [expr {$x+(sin([DTOR [expr {$angle+200}]])*5)}]
+	set yt3 [expr {$y-(cos([DTOR [expr {$angle+200}]])*5)}]
+    }
+}
+
+itcl::body Ship::bump {} {
+    if {$_vX != 0 || $_vY != 0 || $_accel} {
+	if {$_accel} {
+	    # thrust is being applied to what vector components?
+	    # we don't care about the resultant vector, just the
+	    # perpindicular components.
+
+	    # x = v0t + 1/2at^2 <- displacement as a function of time.
+	    # v = v0 + at <- velocity as a function of time.
+	    # where time is constant.  each bump is equally spaced.
+
+	    set aX [expr {sin([DTOR $angle])*$_aI}]
+	    set aY [expr {cos([DTOR $angle])*-$_aI}]
+	    set dispX [expr {$_vX + pow(0.5*$aX,2)}]
+	    set _vX [expr {$_vX+$aX}]
+	    set dispY [expr {$_vY + pow(0.5*$aY,2)}]
+	    set _vY [expr {$_vY+$aY}]
+	    set _thrustAngle [RTOD [expr {atan2($_vX,$_vY)}]]
+	} else {
+	    set aX [expr {sin([DTOR $_thrustAngle])*$_aD}]
+	    set aY [expr {cos([DTOR $_thrustAngle])*$_aD}]
+	    set dispX [expr {$_vX - pow(0.5*$aX,2)}]
+	    set _vX [expr {$_vX-$aX}]
+	    set dispY [expr {$_vY - pow(0.5*$aY,2)}]
+	    set _vY [expr {$_vY-$aY}]    
+	}
+
+	# set the direction.
+	# need to do this or we go past zero and keep going.
+	if {$_vX < 0.0055 && $_vX > -0.0055} {set _vX 0}
+	if {$_vY < 0.0055 && $_vY > -0.0055} {set _vY 0}
+	set x [expr {$x+$dispX}]
+	set y [expr {$y+$dispY}]
+	if {$x < 0} {set x [expr {$x+640}]}
+	if {$y < 0} {set y [expr {$y+480}]}
+	if {$x > 640} {set x [expr {$x-640}]}
+	if {$y > 480} {set y [expr {$y-480}]}
+	if {$_move != 1} {genPointsFromAngle}
+    }
+    if {$_move == 1} {
+	set angle [expr {$angle+($_dir*7)}]
+	genPointsFromAngle
+    }
+}
+
+itcl::body Ship::draw {surface p1 p2 p3 p4} {
+    $surface DrawLine   $p2 $x1 $y1 $x2 $y2
+    $surface DrawLine   $p2 $x1 $y1 $x3 $y3
+    $surface DrawBezier $p2 $x2 $y2 $x4 $y4 $x5 $y5 $x3 $y3 
+    if {$_accel} {
+	$surface DrawLine [expr {round(rand())?"$p3":"$p4"}] $xt1 $yt1 $xt2 $yt2
+	$surface DrawLine [expr {round(rand())?"$p3":"$p4"}] $xt2 $yt2 $xt3 $yt3
+    }
+}
+
+
+itcl::class Missle {
+    constructor {x y angle} {
+	set _x $x
+	set _y $y
+	set _angle $angle
+	lappend ::drawables $this
+    }
+    destructor {
+	if {[set pos [lsearch $::drawables $this]] != -1} {
+	    set ::drawables [lreplace $::drawables $pos $pos]
+	}
+    }
+    public {
+	method draw {surface p1 p2 p3 p4}
+	method bump {}
+    }
+    private {
+	method DTOR {degrees}
+	variable _x
+	variable _y
+	variable _angle
+	variable _distance 340
+    }
+}
+
+itcl::body Missle::DTOR {degrees} {
+    return [expr {$degrees*((2*3.141592654)/360)}]
+}
+
+itcl::body Missle::bump {} {
+    incr _distance -6
+    if {$_distance < 0} {
+	itcl::delete object $this
+	return
+    }
+    set _x [expr {$_x+(sin([DTOR $_angle])*6)}]
+    set _y [expr {$_y-(cos([DTOR $_angle])*6)}]
+    if {$_x < 0} {set _x [expr {$_x+640}]}
+    if {$_y < 0} {set _y [expr {$_y+480}]}
+    if {$_x > 640} {set _x [expr {$_x-640}]}
+    if {$_y > 480} {set _y [expr {$_y-480}]}
+}
+
+itcl::body Missle::draw {surface p1 p2 p3 p4} {
+    $surface DrawLine $p2 $_x $_y [expr {$_x+0.5}] $_y
+}

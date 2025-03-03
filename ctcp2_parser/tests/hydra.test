@@ -1,0 +1,56 @@
+#  hydra.test
+#
+#  this test file checks the hydraAttrCvt class.  The job of the 
+#  hydraAttrCvt class is to convert special HydraIRC attributes to
+#  their ctcp/2 equivilents.
+#
+# RCS: @(#) $Id: hydra.test,v 1.4 2002/12/03 05:07:49 davygrvy Exp $
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands test::hydra]]} {
+  load ctcp2_parser_test Test
+}
+
+
+test hydra-0.1 {hi-color conversion, normal, fore and back} {
+    test::hydra "\004AABBCC,DDEEFFlala"
+} "\006C#AABBCC#DDEEFF\006lala"
+
+test hydra-0.2 {hi-color conversion, normal, fore only} {
+    test::hydra "\004AABBCClala"
+} "\006C#AABBCC-\006lala"
+
+test hydra-0.3 {hi-color conversion, normal, back only} {
+    test::hydra "\004,DDEEFFlala"
+} "\006C-#DDEEFF\006lala"
+
+
+test hydra-1.0 {hi-color conversion, failure, non-hex chars, fore} {
+    test::hydra "\004ghijklm"
+} "\004ghijklm"
+
+test hydra-1.1 {hi-color conversion, failure, non-hex chars, back} {
+    test::hydra "\004abcdef,ghijklm"
+} "\004abcdef,ghijklm"
+
+test hydra-1.2 {hi-color conversion, failure, not 6 chars, fore} {
+    test::hydra "\004abc"
+} "\004abc"
+
+test hydra-1.3 {hi-color conversion, failure, not 6 chars, back} {
+    test::hydra "\004,a"
+} "\004,a"
+
+
+test hydra-2.0 {italic} {
+    test::ircii "\035asd"
+} "\006I+\006asd"
+
+
+# cleanup
+::tcltest::cleanupTests
+return

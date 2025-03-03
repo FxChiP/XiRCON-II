@@ -1,0 +1,73 @@
+#------------------------------------------------------------------------
+#
+# IRC::ui class.
+#
+#   implimentation of the UI done using [Incr Widgets].
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: iwidgets_ui.itcl,v 1.1 2003/11/14 10:36:20 davygrvy Exp $
+#------------------------------------------------------------------------
+
+source [file join [file dirname [info script]] ViewBox.itcl]
+source [file join [file dirname [info script]] StatBox.itcl]
+
+itcl::class IRC::ui {
+    constructor {args} {
+	set status [StatBox .#auto -title "QuiRC is quirky. just give it time."]
+    }
+    destructor {
+    }
+    public {
+	method destroy {} {itcl::delete object $this}
+	method echo {what {where {}} {which {}}}
+	method window {args}
+#	method menu {} @irc-ui-menu
+#	method hotkey {} @irc-ui-hotkey
+#	method alias {} @irc-ui-alias
+#	method channel {} @irc-ui-channel
+#	method query {} @irc-ui-query
+#	method chat {} @irc-ui-chat
+#	method queries {} @irc-ui-queries
+#	method chats {} @irc-ui-chats
+#	method say {} @irc-ui-say
+#	method input {} @irc-ui-input
+    }
+    private {
+	variable status
+	variable channels [list]
+	variable queries [list]
+	variable chats [list]
+    }
+}
+
+itcl::body IRC::ui::echo {what {where {}} {which {}}} {
+    switch $where {
+	"" - "status" {
+	    $status echo $what
+	}
+	"channel" {
+	    if {[set idx [lsearch $channels $which]] != -1} {
+		[lindex $channels $idx] echo $what
+	    } else {
+		$status echo $what
+	    }
+	}
+	"query" {
+	    if {[set idx [lsearch $queries $which]] != -1} {
+		[lindex $queries $idx] echo $what
+	    } else {
+		$status echo $what
+	    }
+	}
+	"chat" {
+	    if {[set idx [lsearch $chats $which]] != -1} {
+		[lindex $chats $idx] echo $what
+	    } else {
+		$status echo $what
+	    }
+	}
+    }
+}
+
+itcl::body IRC::ui::window {args} {
+}

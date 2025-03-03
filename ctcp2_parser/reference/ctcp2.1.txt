@@ -1,0 +1,125 @@
+TODO:
+* flesh out the STREAM section more, now that a general consensus is growing
+* make an appendix with references to all the RFC's we mention in the draft
+    (1459-irc, 2068-http/1.1, 822-email, 854-telnet-options...)
+* document the way DCC currently works, as well as the new STREAM stuff
+
+* send thru a spell checker
+
+  RFC 1738 "Uniform Resource Locators (URL)"
+  RFC 1884 "IP Version 6 Addressing Architecture"
+
+
+
+TOC
+1.    Introduction
+1.1        Conventions
+1.2        Base Definitions
+2.    Text Attributes
+2.1        Bold
+2.2        Inverse (Reverse)
+2.3        Underline
+2.4        Overstrike
+2.5        Italics
+2.6        Colours
+2.7        Size
+2.8        Uniform Resource Locator
+2.9        Character Spacing
+2.10        Encoding
+2.11        Normal
+2.12        Extensions
+2.13        Deprecations
+2.14        Examples
+3.    Parsing CTCP Messages
+3.1        Quoting
+3.2        "Flooding" Policy
+4.    CTCP Requests and Replies
+4.1        VERSION
+4.2        PING
+4.3        CLIENTINFO
+4.4        ACTION
+4.5        USERINFO
+4.6        TIME
+4.7        AWAY
+4.8        ERRMSG
+4.9        PLAY
+4.10        DCC
+4.10.1        DCC CHAT
+4.10.2        DCC SEND
+4.11        STREAM
+4.12        Client Extensions
+4.13        Deprecations
+5.    CTCP STREAM Requests
+5.1        STREAM Over Firewalls
+5.2        DCC CHAT
+5.3        MIME DCC Protocol
+5.3.1        MIME DCC Negotiation
+5.3.2        MIME DCC Data Transfer
+
+
+1. Introduction
+
+This document describes CTCP version 2 (CTCP2).
+
+In order to facilitate the exchange of information with in the IRC
+networks, users have indicated desire to transmit files, determine
+transmission times and send specialized text messages.  As RFC 1459 
+offers no direct means to exchange such requests, a protocol built upon
+RFC 1459's is required.  This protocol is known as CTCP (or Client
+To Client Protocol).
+
+The original CTCP definition specified only request and reply messages,
+but allowed users to transfer files over IRC, measure lag (network delay),
+and retreive automated responses to queries about a user's IRC client or
+time zone.
+
+Over the course of time, CTCP has been expanded by various sources, and
+what was once a "standard" has become increasingly less so.  This document
+is an attempt to clarify earlier CTCP documentation and standardize some of
+the new features that have become commonplace since then.  In addition,
+some new functionality has been added in anticipation of future clients,
+and the extensibility of CTCP has been greatly improved.
+
+In a few cases, extensibility has been chosen over compatibility.  For
+that reason, CTCP2 is not completely compatible with the original CTCP.
+Clients that understand CTCP will not necessarily understand CTCP2.
+Clients that understand CTCP2 can be made compatible with the original
+CTCP, but this is not required.
+
+
+1.1 Conventions
+
+This document uses a mechanism known as "augmented Backus-Naur Form"
+(BNF) for most of its specifications.  A description of this augmented
+BNF can be found in RFC 2068 (HTTP/1.1) and RFC 822 (email) among many
+other places.  Please consult one of those RFCs for a full description.
+A few of the major elements this document uses are:
+
+"literal"
+   Anything in double quotes is a literal text string.  Unless stated
+   otherwise, it is case-insensitive.
+
+*rule
+   This indicates repitition, allowing 0 or more occurances of this
+   element.  A common derivitive is "1*rule" which specifies 1 or
+   more occurances.
+
+[rule]
+   Square brackets indicate an optional element or elements.
+
+Unless stated otherwise, there is no implied whitespace.  Areas where
+whitespace is allowed will be clearly marked.
+
+
+1.2 Base Definitions
+
+These are standard definitions that will show up throughout the document.
+
+OCTET    = <any 8-bit sequence of data>
+ALPHA    = <any US-ASCII uppercase or lowercase letter>
+DIGIT    = <any US-ASCII digit "0".."9">
+NUL      = <US-ASCII character 0 (octal 000)>
+LF       = <US-ASCII character 10 (octal 012)>
+CR       = <US-ASCII character 13 (octal 015)>
+SP       = <US-ASCII character 32 (octal 040)>
+

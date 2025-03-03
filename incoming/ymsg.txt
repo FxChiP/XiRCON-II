@@ -1,0 +1,72 @@
+From lars.eirik.mobak@tandberg.no Thu Nov 13 07:02:36 2003
+To: David Gravereaux <davygrvy@pobox.com>
+Subject: Re: YMSG (regarding IRC_Engine)
+From: Lars Eirik Mobæk <lars.eirik.mobak@tandberg.no>
+Date: Thu, 13 Nov 2003 16:02:36 +0100
+--------
+At 03:33 2003-11-13 -0800, David Gravereaux wrote:
+>Lars Eirik Mobæk <lars.eirik.mobak@tandberg.no> wrote:
+>
+> >Hi David,
+> >
+> >I have made a partial tcl/tcllib implementation of the Yahoo Messenger
+> >protocol (YMSG). It logs on to Yahoo using MD5 authentication
+> >implemented in pure tcl/tcllib .
+> >The only feature implemented is sending and receiving instant messages.
+> >
+> >If YMSG somehow fits into your view of the IRC_Engine then I
+> >will be happy to give the code away.
+> >
+> >Best Regards,
+> >Lars Eirik
+>
+>[cc'ing the xircon list, xircon listers don't forget to CC Lars]
+>
+>Hello Lars,
+>
+>This is interesting.  I hadn't though of supporting other protocols that
+>IRC.  Hmmm..  If I assume the same UI, and just think what if it provided
+>the same interface irc_engine does (or just the requirements the ui half
+>needs), it should be seamless give or take.  Or even a new pair to fit it's
+>needs.
+
+That was what triggered me as well, it could be rather seamless.
+
+>Is YMSG similar to IRC?  We have a guy here on the list that wrote an AIM
+>client.  I'm a bit swamped doing the gui.
+
+Similar, yes, but one different aspect is the authentication.
+Yahoo keeps changing the authentication procedure.
+I don't know how often this happends, but they have
+already changed the procedure since I wrote ymsg.tcl
+at September 1st.
+It was by the way instantly cracked: <http://gaim.sourceforge.net/>.
+If there is need I can update ymsg.tcl with the new authentication procedure
+(found here: <http://www.venkydude.com/articles/yahooencription.htm>).
+
+What I'm trying to say is that before you decide to support
+YMSG (or most other IM protocols) you should be aware that it
+might need alot of maintainance.
+
+>I can place into my incoming/ and have a look.  Yes, please send.
+
+Please find my ymsg.tcl attached.
+
+Best Regards,
+Lars Eirik
+
+--
+____________________________________________
+Lars Eirik Mobæk, +47 67 83 84 23
+TANDBERG, www.tandberg.net ,lem@tandberg.no
+
+--------
+Attachment
+2.7 kBytes
+--------
+--------
+Attachment
+Saved: D:\tomasoft_WS\tomahawk\incoming\ymsg.tcl
+15.6 kBytes
+--------
+

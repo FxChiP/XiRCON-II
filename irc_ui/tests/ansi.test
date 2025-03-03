@@ -1,0 +1,273 @@
+#  ansi.test
+#
+#  this test file checks the ansiAttrCvt class.  The job of the 
+#  ansiAttrCvt class is to convert ansi attributes to their
+#  ctcp/2 equivilents.
+#
+# RCS: @(#) $Id: ansi.test,v 1.1 2003/11/14 10:36:21 davygrvy Exp $
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands GUI_irc::testansi]]} {
+  load GUI_irc.dll Test
+}
+
+proc escSeq {} { return \033\133 }
+proc ctcpf {} { return \006 }
+
+
+#
+# Invalid ansi sequences
+#
+
+test ansi-0.1 {Ouch #1} {
+    GUI_irc::testansi "ouch! [escSeq]"
+} "ouch! "
+
+test ansi-0.2 {Ouch #2} {
+    GUI_irc::testansi "ouch! [escSeq]99"
+} "ouch! 99"
+
+test ansi-0.3 {Ouch #3} {
+    GUI_irc::testansi "ouch! [escSeq]99;"
+} "ouch! 99;"
+
+test ansi-0.4 {Ouch #4} {
+    GUI_irc::testansi "ouch! [escSeq];;;"
+} "ouch! ;;;"
+
+test ansi-0.5 {Ouch #5} {
+    GUI_irc::testansi "ouch! [escSeq][escSeq][escSeq]"
+} "ouch! "
+
+
+#
+# Ansi Reset <-[0m
+#
+
+test ansi-1.1 {Reset} {
+    GUI_irc::testansi "this is [escSeq]0mreset"
+} "this is [ctcpf]N[ctcpf]reset"
+
+
+#
+# Ansi Underscored <-[4m
+#
+
+test ansi-2.1 {Underscored} {
+    GUI_irc::testansi "this is [escSeq]4mUnderscored text"
+} "this is [ctcpf]U+[ctcpf]Underscored text"
+
+test ansi-2.2 {Underscored; strip dupes} {
+    GUI_irc::testansi "this is [escSeq]4mUnderscored[escSeq]4m text"
+} "this is [ctcpf]U+[ctcpf]Underscored text"
+
+
+#
+# Ansi Blink <-[5m
+#
+
+test ansi-3.1 {Blinking} {
+    GUI_irc::testansi "this is [escSeq]5mblinking text"
+} "this is [ctcpf]K+[ctcpf]blinking text"
+
+test ansi-3.2 {Blinking; strip dupes} {
+    GUI_irc::testansi "this is [escSeq]5mblinking [escSeq]5mtext"
+} "this is [ctcpf]K+[ctcpf]blinking text"
+
+
+#
+# Ansi Reverse <-[7m
+#
+
+test ansi-4.1 {Reverse} {
+    GUI_irc::testansi "this is [escSeq]7mreversed text"
+} "this is [ctcpf]V+[ctcpf]reversed text"
+
+test ansi-4.2 {Reverse; strip dupes} {
+    GUI_irc::testansi "this is [escSeq]7mreversed [escSeq]7mtext"
+} "this is [ctcpf]V+[ctcpf]reversed text"
+
+
+#
+# All Ansi Colors
+#
+
+test ansi-5.1 {Ansi: Black foreground} {
+    GUI_irc::testansi "this is [escSeq]30mBlack text"
+} "this is [ctcpf]C0-[ctcpf]Black text"
+
+test ansi-5.2 {Ansi: Red foreground} {
+    GUI_irc::testansi "this is [escSeq]31mRed text"
+} "this is [ctcpf]C4-[ctcpf]Red text"
+
+test ansi-5.3 {Ansi: Green foreground} {
+    GUI_irc::testansi "this is [escSeq]32mGreen text"
+} "this is [ctcpf]C2-[ctcpf]Green text"
+
+test ansi-5.4 {Ansi: Yellow foreground} {
+    GUI_irc::testansi "this is [escSeq]33mYellow text"
+} "this is [ctcpf]C6-[ctcpf]Yellow text"
+
+test ansi-5.5 {Ansi: Blue foreground} {
+    GUI_irc::testansi "this is [escSeq]34mBlue text"
+} "this is [ctcpf]C1-[ctcpf]Blue text"
+
+test ansi-5.6 {Ansi: Magenta foreground} {
+    GUI_irc::testansi "this is [escSeq]35mMagenta text"
+} "this is [ctcpf]C5-[ctcpf]Magenta text"
+
+test ansi-5.7 {Ansi: Cyan foreground} {
+    GUI_irc::testansi "this is [escSeq]36mCyan text"
+} "this is [ctcpf]C3-[ctcpf]Cyan text"
+
+test ansi-5.8 {Ansi: White foreground} {
+    GUI_irc::testansi "this is [escSeq]37mWhite text"
+} "this is [ctcpf]C7-[ctcpf]White text"
+
+test ansi-5.9 {Ansi: Intense Black foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;30mIntense Black text"
+} "this is [ctcpf]C8-[ctcpf]Intense Black text"
+
+test ansi-5.10 {Ansi: Intense Red foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;31mIntense Red text"
+} "this is [ctcpf]CC-[ctcpf]Intense Red text"
+
+test ansi-5.11 {Ansi: Intense Green foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;32mIntense Green text"
+} "this is [ctcpf]CA-[ctcpf]Intense Green text"
+
+test ansi-5.12 {Ansi: Intense Yellow foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;33mIntense Yellow text"
+} "this is [ctcpf]CE-[ctcpf]Intense Yellow text"
+
+test ansi-5.13 {Ansi: Intense Blue foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;34mIntense Blue text"
+} "this is [ctcpf]C9-[ctcpf]Intense Blue text"
+
+test ansi-5.14 {Ansi: Intense Magenta foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;35mIntense Magenta text"
+} "this is [ctcpf]CD-[ctcpf]Intense Magenta text"
+
+test ansi-5.15 {Ansi: Intense Cyan foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;36mIntense Cyan text"
+} "this is [ctcpf]CB-[ctcpf]Intense Cyan text"
+
+test ansi-5.16 {Ansi: Intense White foreground} {
+    GUI_irc::testansi "this is [escSeq]1\;37mIntense White text"
+} "this is [ctcpf]CF-[ctcpf]Intense White text"
+
+test ansi-5.17 {Ansi: Black background} {
+    GUI_irc::testansi "this is [escSeq]40mBlack background"
+} "this is [ctcpf]C-0[ctcpf]Black background"
+
+test ansi-5.18 {Ansi: Red background} {
+    GUI_irc::testansi "this is [escSeq]41mRed background"
+} "this is [ctcpf]C-4[ctcpf]Red background"
+
+test ansi-5.19 {Ansi: Green background} {
+    GUI_irc::testansi "this is [escSeq]42mGreen background"
+} "this is [ctcpf]C-2[ctcpf]Green background"
+
+test ansi-5.20 {Ansi: Yellow background} {
+    GUI_irc::testansi "this is [escSeq]43mYellow background"
+} "this is [ctcpf]C-6[ctcpf]Yellow background"
+
+test ansi-5.21 {Ansi: Blue background} {
+    GUI_irc::testansi "this is [escSeq]44mBlue background"
+} "this is [ctcpf]C-1[ctcpf]Blue background"
+
+test ansi-5.22 {Ansi: Magenta background} {
+    GUI_irc::testansi "this is [escSeq]45mMagenta background"
+} "this is [ctcpf]C-5[ctcpf]Magenta background"
+
+test ansi-5.23 {Ansi: Cyan background} {
+    GUI_irc::testansi "this is [escSeq]46mCyan background"
+} "this is [ctcpf]C-3[ctcpf]Cyan background"
+
+test ansi-5.24 {Ansi: White background} {
+    GUI_irc::testansi "this is [escSeq]47mWhite background"
+} "this is [ctcpf]C-7[ctcpf]White background"
+
+
+#
+# Can't set bold without knowing foreground color
+#
+
+test ansi-6.1 {Unknown foreground} {
+    GUI_irc::testansi "this is [escSeq]1mUnknown"
+} {this is Unknown}
+
+
+#
+# Ansi Cursor forward <-[<num>C
+#
+#   Fill with spaces
+#
+
+test ansi-6.1 {Cursor forward} {
+  GUI_irc::testansi "5 spaces->[escSeq]5C<-"
+} {5 spaces->     <-}
+
+test ansi-6.2 {Cursor forward; invalid index} {
+  GUI_irc::testansi "2 spaces backward(?)->[escSeq]-2C<-"
+} {2 spaces backward(?)->[ansi error: '-' sequence unsupported]2C<-}
+
+
+#
+# Ansi Unsupported escape sequences we must ignore and
+# *possibly* unquote them to show the user of the error.
+#
+
+test ansi-7.1 {Unsupported: Cursor Position} {
+  GUI_irc::testansi "trying cursor position1 [escSeq]5\;5fsequence"
+} {trying cursor position1 [ansi error: '5;5f' sequence unsupported]sequence}
+
+test ansi-7.2 {Unsupported: Cursor Position} {
+  GUI_irc::testansi "trying cursor position2 [escSeq]5\;5Hsequence"
+} {trying cursor position2 [ansi error: '5;5H' sequence unsupported]sequence}
+
+test ansi-7.3 {Unsupported: Cursor Up} {
+  GUI_irc::testansi "trying cursor up [escSeq]2Asequence"
+} {trying cursor up [ansi error: '2A' sequence unsupported]sequence}
+
+test ansi-7.4 {Unsupported: Cursor Down} {
+  GUI_irc::testansi "trying cursor down [escSeq]2Bsequence"
+} {trying cursor down [ansi error: '2B' sequence unsupported]sequence}
+
+test ansi-7.5 {Unsupported: Cursor Backward} {
+  GUI_irc::testansi "trying cursor backwards [escSeq]2Dsequence"
+} {trying cursor backwards [ansi error: '2D' sequence unsupported]sequence}
+
+test ansi-7.6 {Unsupported: Save Cursor position} {
+  GUI_irc::testansi "save cursor [escSeq]ssequence"
+} {save cursor [ansi error: 's' sequence unsupported]sequence}
+
+test ansi-7.7 {Unsupported: Restore Cursor position} {
+  GUI_irc::testansi "restore cursor [escSeq]usequence"
+} {restore cursor [ansi error: 'u' sequence unsupported]sequence}
+
+test ansi-7.8 {Unsupported: Erase display} {
+  GUI_irc::testansi "erase display [escSeq]2Jsequence"
+} {erase display [ansi error: '2J' sequence unsupported]sequence}
+
+test ansi-7.9 {Unsupported: Erase line} {
+  GUI_irc::testansi "erase line [escSeq]Ksequence"
+} {erase line [ansi error: 'K' sequence unsupported]sequence}
+
+test ansi-7.10 {Unsupported: Set display mode} {
+  GUI_irc::testansi "set mode [escSeq]=3hsequence"
+} {set mode [ansi error: '=3h' sequence unsupported]sequence}
+
+test ansi-7.11 {Unsupported: Reset display mode} {
+  GUI_irc::testansi "reset mode [escSeq]=3lsequence"
+} {reset mode [ansi error: '=3l' sequence unsupported]sequence}
+
+
+# cleanup
+::tcltest::cleanupTests
+return
+

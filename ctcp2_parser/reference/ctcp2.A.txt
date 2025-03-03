@@ -1,0 +1,180 @@
+Appendix A. Indexed Color Values
+
+Index   Name            RGB
+-----   ------------    ------
+0       Black           000000
+1       Blue            00007F
+2       Green           007F00
+3       Cyan            007F7F
+4       Red             7F0000
+5       Magenta         7F007F
+6       Yellow          7F7F00
+7       Light Gray      C0C0C0
+8       Gray            7F7F7F
+9       Light Blue      0000FF
+A       Light Green     00FF00
+B       Light Cyan      00FFFF
+C       Light Red       FF0000
+D       Light Magenta   FF00FF
+E       Light Yellow    FFFF00
+F       White           FFFFFF
+
+
+Appendix B. RFC 822.5 Date/Time Format (Modified)
+
+date-time   =  [ day "," ] date time        ; dd mm yy
+                                            ;  hh:mm:ss zzz
+
+day         =  "Mon"  / "Tue" /  "Wed"  / "Thu"
+            /  "Fri"  / "Sat" /  "Sun"
+
+date        =  1*2DIGIT month 4DIGIT        ; day month year
+                                            ;  e.g. 20 Jun 1982
+
+month       =  "Jan"  /  "Feb" /  "Mar"  /  "Apr"
+            /  "May"  /  "Jun" /  "Jul"  /  "Aug"
+            /  "Sep"  /  "Oct" /  "Nov"  /  "Dec"
+
+time        =  hour zone                    ; ANSI and Military
+
+hour        =  2DIGIT ":" 2DIGIT [":" 2DIGIT]
+                                            ; 00:00:00 - 23:59:59
+
+zone        =  ( ("+" / "-") 4DIGIT )       ; Local differential
+                                            ;  hours+min. (HHMM)
+
+Example: "Wed, 11 Jun 1997 18:55 -0700"
+
+
+Appendix C. MIME DCC Negotiation Parameters
+
+OPTION-QUERY    = QUERY OPTION PARAM-LEN PARAM-LEN(octet)
+
+QUERY        = DO | DON'T | WILL | WON'T
+DON'T        = <octet 254 (octal 0376)>
+DO        = <octet 253 (octal 0375)>
+WON'T        = <octet 252 (octal 0374)>
+WILL        = <octet 251 (octal 0373)>
+
+OPTION        = octet
+
+PARAM-LEN    = octet
+
+Option queries are given in hexidecimal.  Queries F0 through FE are reserved.
+Query FF is a special query indicating the end of the option query phase.
+
+Queries C0 through EF are reserved for private use by individual clients.
+
+QUERY   NAME/DESCRIPTION
+-----   ----------------
+00      RESUME
+    A "WILL RESUME" request indicates that this file is a static file
+    that can be resumed later if the transfer doesn't complete.  If a
+    client would like to resume a previously disconnected transfer,
+    it should send "DO RESUME" -- otherwise it should reply with
+    "DON'T RESUME".  There is one 4-byte parameter to a "WILL RESUME"
+    request: the timestamp of the file, in network byte order, measured
+    in standard epoch seconds (the number of seconds that have passed
+    since midnight on 1 January 1970, GMT).  This may be used by the
+    recipient client to assure that the file has not been modified
+    since the disconnected transfer.  There is also one 4-byte parameter
+    to a "DO RESUME" request: the offset, in network byte order, that
+    the transfer should be resumed from.  This offset is measured in
+    bytes from the beginning of the file -- hence, a value of "0"
+    indicates that the client wishes to receive the file from the
+    beginning.
+    Parameters: (request:) 4-byte timestamp (reply:) 4-byte offset
+    Example: (request:) FB 00 04 33 CD 53 16
+         (reply:) FD 00 04 00 00 04 00
+
+01      PLAYABLE
+        A "DO PLAYABLE" request indicates that this file is intended to be
+        triggered by a CTCP PLAY request later.  Clients should only activate
+        files sent with "DO PLAYABLE" when honoring a CTCP PLAY request.
+        The reply to the "DO PLAYABLE" request (WILL/WON'T) may be ignored.
+        A client should reply "WILL" if it supports CTCP PLAY and intends
+        to honor a future CTCP PLAY request for this file.  It should reply
+        "WON'T" if it doesn't support CTCP PLAY and/or doesn't intent to
+    honor future CTCP PLAY requests for this file.
+    Parameters: none.
+    Example: FD 01 00
+
+02      PLAY-NOW
+        A "DO PLAY-NOW" request indicates that this file should be "played"
+        after the file tranmission is complete.  The definition of "play"
+        will vary according to the file type, but should match the behavior
+        of a CTCP PLAY request.  A client may request "DO PLAY-NOW" without
+        "DO PLAYABLE" -- this means the client would like the file to be
+        activated upon receipt, and that no future CTCP PLAY request will be
+        made for this file.  The reply to the "DO PLAY-NOW" request may be
+        ignored.  A client should reply "WILL" if it intends to activate
+        the file after transmission is complete, and "WON'T" if it doesn't.
+    Parameters: none.
+    Example: FD 02 00
+
+10    ENCRYPT
+    "WILL ENCRYPT" is a request to negotiate encryption protocols.  Only
+    the initiating client may send a "WILL ENCRYPT" request.  The
+    recipient client may choose one encryption method and respond with
+    "DO ENCRYPT", or may refuse encryption and respond with "DON'T
+    ENCRYPT".  The parameters to a "WILL ENCRYPT" request should be a
+    series of one-byte codes representing encryption methods.  There
+    must be one parameter to a "DO ENCRYPT" request: the encryption
+    method chosen.  If the clients agree to encrypt the session, the
+    encryption begins after option negotiation is completed.
+    Parameters: encryption methods (one byte each).
+    Example: (request:) FB 10 02 00 01 (reply:) FD 10 01 01
+
+
+Appendix D. Encryption Methods
+
+[this is under discussion]
+00    some blowfish or DES symmetric key protocol?  volunteers? :)
+01    SSL? :)
+02    others?  are there any?
+
+F0-FF reserved for private testing use?
+register others with us?
+[very much undefined at this time]
+
+
+Appendix E. BNF for Embedding CTCP on IRC
+
+CTCP-MARKER      = <US-ASCII character 1 (octal 001)>
+CTCP-PERMITTED   = <any octet except NUL, CTCP-MARKER, LF, CR and SP>
+
+CTCP-TAG       = 1*CTCP-PERMITTED
+CTCP-MESSAGE   = CTCP-MARKER CTCP-TAG *( SP CTCP-TAG ) CTCP-MARKER
+
+IRC-TEXT       = *( CTCP-PERMITTED | SP )
+IRC-MESSAGE    = *( CTCP-MESSAGE | IRC-TEXT )
+
+
+Appendix F. BNF for CTCP Request Parameters
+
+keyword        = CTCP-TAG
+
+arg        = CTCP-TAG
+
+user-text    = *( CTCP-TAG [SP] )
+
+ip        = ( ip4dcc | ip4dotted | ip6 )
+
+ip4dcc        = <a 32-bit number representing an IPv4 address>
+                    ; the use of a 32-bit number as an
+                    ; IPv4 address is discouraged, and
+                    ; is included only for backward
+                    ; compatibility
+
+ip4dotted    = <a standard dotted IPv4 address: d.d.d.d>
+                    ; example: "192.168.0.5"
+
+ip6        = <any valid IPv6 hex notation, as listed in RFC 1884.2>
+                    ; example: "::FFFF:C0:A8:00:05"
+
+port        = 4*5DIGIT        ; in the range 1024 - 65535
+
+dcc-arg        = CTCP-TAG
+
+url        = <any valid URL as specified by the HTTP protocol>
+

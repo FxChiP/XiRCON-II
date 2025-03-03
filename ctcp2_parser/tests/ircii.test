@@ -1,0 +1,94 @@
+# RCS: @(#) $Id: ircii.test,v 1.2 2002/12/01 22:40:34 davygrvy Exp $
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands test::ircii]]} {
+  load ctcp2_parser_test Test
+}
+
+
+proc ctcpf {} { return \006 }
+
+
+# bold tests
+
+proc bold {} { return \002 }
+
+test ircii-1.1 {Bold attribute on test} {
+    test::ircii "this is [bold]Bold"
+} "this is [ctcpf]B+[ctcpf]Bold"
+
+test ircii-1.2 {Bold attribute on/off test} {
+    test::ircii "this is [bold]Bold[bold] text"
+} "this is [ctcpf]B+[ctcpf]Bold[ctcpf]B-[ctcpf] text"
+
+test ircii-1.3 {Bold attribute toggle test} {
+    test::ircii "this is not [bold][bold]Bold text anywhere"
+} "this is not [ctcpf]B+[ctcpf][ctcpf]B-[ctcpf]Bold text anywhere"
+
+test ircii-1.4 {Bold attribute on/off and toggle test} {
+    test::ircii "this is [bold][bold][bold]Bold[bold] text"
+} "this is [ctcpf]B+[ctcpf][ctcpf]B-[ctcpf][ctcpf]B+[ctcpf]Bold[ctcpf]B-[ctcpf] text"
+
+
+
+# underline tests
+
+proc under {} { return \037 }
+
+test ircii-2.1 {Underline attribute on test} {
+    test::ircii "this is [under]Underlined"
+} "this is [ctcpf]U+[ctcpf]Underlined"
+
+test ircii-2.2 {Underline attribute on/off test} {
+    test::ircii "this is [under]Underlined[under] text"
+} "this is [ctcpf]U+[ctcpf]Underlined[ctcpf]U-[ctcpf] text"
+
+test ircii-2.3 {Underline attribute toggle test} {
+    test::ircii "this is not [under][under]Underlined text anywhere"
+} "this is not [ctcpf]U+[ctcpf][ctcpf]U-[ctcpf]Underlined text anywhere"
+
+test ircii-2.4 {Underline attribute on/off and toggle test} {
+    test::ircii "this is [under][under][under]Underlined[under] text"
+} "this is [ctcpf]U+[ctcpf][ctcpf]U-[ctcpf][ctcpf]U+[ctcpf]Underlined[ctcpf]U-[ctcpf] text"
+
+
+
+# reverse tests
+
+proc rev {} { return \026 }
+
+test ircii-3.1 {Reverse attribute on test} {
+    test::ircii "this is [rev]Reversed"
+} "this is [ctcpf]V+[ctcpf]Reversed"
+
+test ircii-3.2 {Reverse attribute on/off test} {
+    test::ircii "this is [rev]Reversed[rev] text"
+} "this is [ctcpf]V+[ctcpf]Reversed[ctcpf]V-[ctcpf] text"
+
+test ircii-3.3 {Reverse attribute toggle test} {
+    test::ircii "this is not [rev][rev]Reversed text anywhere"
+} "this is not [ctcpf]V+[ctcpf][ctcpf]V-[ctcpf]Reversed text anywhere"
+
+test ircii-3.4 {Reverse attribute on/off and toggle test} {
+    test::ircii "this is [rev][rev][rev]Reversed[rev] text"
+} "this is [ctcpf]V+[ctcpf][ctcpf]V-[ctcpf][ctcpf]V+[ctcpf]Reversed[ctcpf]V-[ctcpf] text"
+
+
+#
+#  Mixed with reset
+#
+proc reset {} { return \017 }
+
+test ircii-3.1 {Mixed with reset #1} {
+    test::ircii "this is [bold]Bold [under]Underlined [rev]Reversed [reset]Reset"
+} "this is [ctcpf]B+[ctcpf]Bold [ctcpf]U+[ctcpf]Underlined [ctcpf]V+[ctcpf]Reversed [ctcpf]N[ctcpf]Reset"
+
+
+# cleanup
+::tcltest::cleanupTests
+return
+

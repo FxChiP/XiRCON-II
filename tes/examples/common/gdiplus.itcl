@@ -1,0 +1,419 @@
+package require Gdiplus
+
+itcl::class ::Gdiplus::Graphics {
+    constructor {} { _initGdipGraphics }
+    destructor { _destroyGdipGraphics }
+    public {
+	method AddMetaFileComment {string} \
+		@Gdip-Graphics-AddMetafileComment
+
+	method BeginContainer {} \
+		@Gdip-Graphics-BeginContainer
+
+	method Clear {{color Black}} \
+		@Gdip-Graphics-Clear
+
+	method DrawArc {pen x y width height startAngle sweepAngle} \
+		@Gdip-Graphics-DrawArc
+
+	method DrawBezier {pen x1 y1 x2 y2 x3 y3 x4 y4}	\
+		@Gdip-Graphics-DrawBezier
+
+	method DrawCachedBitmap \
+		@Gdip-Graphics-DrawCachedBitmap
+
+	method DrawClosedCurve {pen tension x1 y1 args} \
+		@Gdip-Graphics-DrawClosedCurve
+
+	method DrawCurve {pen offset numSegments tension x1 y1 args} \
+		@Gdip-Graphics-DrawCurve
+
+	method DrawDriverString \
+		@Gdip-Graphics-DrawDriverString
+
+	method DrawEllipse {pen x y width height} \
+		@Gdip-Graphics-DrawEllipse
+
+	method DrawImage \
+		@Gdip-Graphics-DrawImage
+
+	method DrawLine {pen x1 y1 x2 y2} \
+		@Gdip-Graphics-DrawLine
+
+	method DrawPath \
+		@Gdip-Graphics-DrawPath
+
+	method DrawPie {pen x y width height startAngle sweepAngle} \
+		@Gdip-Graphics-DrawPie
+
+	method DrawPolygon {pen x y args} \
+		@Gdip-Graphics-DrawPolygon
+
+	method DrawPolygonList {pen x y pointsList} \
+		@Gdip-Graphics-DrawPolygonList
+
+	method DrawRectangle {pen x y width height} \
+		@Gdip-Graphics-DrawRectangle
+
+	method DrawString {string font x y brush} \
+		@Gdip-Graphics-DrawString
+
+	method EndContainer \
+		@Gdip-Graphics-EndContainer
+
+	method EnumerateMetafile \
+		@Gdip-Graphics-EnumerateMetafile
+
+	method ExcludeClip \
+		@Gdip-Graphics-ExcludeClip
+
+	method FillClosedCurve \
+		@Gdip-Graphics-FillClosedCurve
+
+	method FillEllipse {brush x y width height} \
+		@Gdip-Graphics-FillEllipse
+
+	method FillPath \
+		@Gdip-Graphics-FillPath
+
+	method FillPie {brush x y width height startAngle sweepAngle} \
+		@Gdip-Graphics-FillPie
+
+	method FillPolygon \
+		@Gdip-Graphics-FillPolygon
+
+	method FillRectangle {brush x y width height} \
+		@Gdip-Graphics-FillRectangle
+
+	method FillRegion {brush x y width height} \
+		@Gdip-Graphics-FillRegion
+
+	method Flush {} \
+		@Gdip-Graphics-Flush
+
+	method ClipRegion args \
+		@Gdip-Graphics-ClipRegion
+
+	method CompositingMode \
+		@Gdip-Graphics-CompositingMode
+
+	method CompositingQuality \
+		@Gdip-Graphics-CompositingQuality
+
+	method InterpolationMode \
+		@Gdip-Graphics-InterpolationMode
+
+	method PageScale \
+		@Gdip-Graphics-PageScale
+
+	method PixelOffsetMode \
+		@Gdip-Graphics-PixelOffsetMode
+
+	method RenderingOrigin \
+		@Gdip-Graphics-RenderingOrigin
+
+	method SmoothingMode \
+		@Gdip-Graphics-SmoothingMode
+
+	method TextContrast \
+		@Gdip-Graphics-TextContrast
+
+	method TextRenderingHint \
+		@Gdip-Graphics-TextRenderingHint
+
+	method Transform \
+		@Gdip-Graphics-Transform
+
+	method GetDpiX \
+		@Gdip-Graphics-GetDpiX
+
+	method GetDpiY \
+		@Gdip-Graphics-GetDpiY
+
+	method GetVisibleClipBounds \
+		@Gdip-Graphics-GetVisibleClipBounds
+
+	method IntersectClip \
+		@Gdip-Graphics-IntersectClip
+
+	method IsClipEmpty \
+		@Gdip-Graphics-IsClipEmpty
+
+	method IsVisible \
+		@Gdip-Graphics-IsVisible
+
+	method IsVisibleClipEmpty \
+		@Gdip-Graphics-IsVisibleClipEmpty
+
+	method MeasureCharacterRanges \
+		@Gdip-Graphics-MeasureCharacterRanges
+
+	method MeasureDriverString \
+		@Gdip-Graphics-MeasureDriverString
+
+	method MeasureString \
+		@Gdip-Graphics-MeasureString
+
+	method MultiplyTransform \
+		@Gdip-Graphics-MultiplyTransform
+
+	method ResetClip \
+		@Gdip-Graphics-ResetClip
+
+	method ResetTransform \
+		@Gdip-Graphics-ResetTransform
+
+	method Restore \
+		@Gdip-Graphics-Restore
+
+	method RotateTransform \
+		@Gdip-Graphics-RotateTransform
+
+	method Save \
+		@Gdip-Graphics-Save
+
+	method ScaleTransform \
+		@Gdip-Graphics-ScaleTransform
+
+	method TransformPoints \
+		@Gdip-Graphics-TransformPoints
+
+	method TranslateClip \
+		@Gdip-Graphics-TranslateClip
+
+	method TranslateTransform \
+		@Gdip-Graphics-TranslateTransform
+    }
+    private {
+	method _initGdipGraphics    {}  @Gdip-Graphics-construct
+	method _destroyGdipGraphics {}  @Gdip-Graphics-destruct
+    }
+}
+
+itcl::class ::Gdiplus::Pen {
+    constructor {color {width 1.0}} { _initPen $color $width}
+    destructor { _destroyPen }
+    public {
+	method MultiplyTransform {matrix} \
+		@Gdip-Pen-MultiplyTransform
+
+	method ResetTransform {} \
+		@Gdip-Pen-ResetTransform
+
+	method RotateTransform {angle} \
+		@Gdip-Pen-RotateTransform
+
+	method ScaleTransform {sx sy} \
+		@Gdip-Pen-ScaleTransform
+
+	method Alignment args \
+		@Gdip-Pen-Alignment
+
+	method Brush \
+		@Gdip-Pen-Brush
+
+	method Color \
+		@Gdip-Pen-Color
+
+	method CompoundArray \
+		@Gdip-Pen-CompoundArray
+
+	method CustomEndCap \
+		@Gdip-Pen-CustomEndCap
+
+	method CustomStartCap \
+		@Gdip-Pen-CustomStartCap
+
+	method DashCap \
+		@Gdip-Pen-DashCap
+
+	method DashOffset \
+		@Gdip-Pen-DashOffset
+
+	method DashPattern \
+		@Gdip-Pen-DashPattern
+
+	method DashStyle \
+		@Gdip-Pen-DashStyle
+
+	method EndCap \
+		@Gdip-Pen-EndCap
+
+	method LineJoin \
+		@Gdip-Pen-LineJoin
+
+	method MiterLimit \
+		@Gdip-Pen-MiterLimit
+
+	method StartCap \
+		@Gdip-Pen-StartCap
+
+	method Transform \
+		@Gdip-Pen-Transform
+
+	method Width \
+		@Gdip-Pen-Width
+    }
+    private {
+	method _initPen {color width}	@Gdip-Pen-construct
+	method _destroyPen {}		@Gdip-Pen-destruct
+    }
+}
+
+itcl::class ::Gdiplus::SolidBrush {
+    constructor {color} {_initSolidBrush $color}
+    destructor {_destroySolidBrush}
+    private {
+	method _initSolidBrush {color}	@Gdip-SolidBrush-construct
+	method _destroySolidBrush {}	@Gdip-SolidBrush-destruct
+    }
+}
+
+itcl::class ::Gdiplus::TextureBrush {
+    constructor {} {_initTextureBrush}
+    destructor {_destroyTextureBrush}
+    private {
+	method _initTextureBrush    {}	@Gdip-TextureBrush-construct
+	method _destroyTextureBrush {}  @Gdip-TextureBrush-destruct
+    }
+}
+
+itcl::class ::Gdiplus::LinearGradientBrush {
+    constructor {args} {eval _initLGB $args}
+    destructor {_destroyLGB}
+    private {
+	method _initLGB {x y width height color1 color2 angle {scalable no}} \
+		@Gdip-LinearGradientBrush-construct
+	method _destroyLGB {}  @Gdip-LinearGradientBrush-destruct
+    }
+}
+
+itcl::class ::Gdiplus::HatchBrush {
+    constructor {args} {eval _initHatchBrush $args}
+    destructor {_destroyHatchBrush}
+    private {
+	method _initHatchBrush {hatchStyle foreColor {backColor Black}} \
+		@Gdip-HatchBrush-construct
+	method _destroyHatchBrush {}  @Gdip-HatchBrush-destruct
+    }
+}
+
+itcl::class ::Gdiplus::Font {
+    constructor {family point} {_initFont $family $point}
+    destructor {_destroyFont}
+    public {
+	method GetHeight {graphics} \
+		@Gdip-Font-GetHeight
+
+	method GetUnit {} \
+		@Gdip-Font-destruct
+    }
+    private {
+	method _initFont {family point} @Gdip-Font-construct
+	method _destroyFont {}  @Gdip-Font-destruct
+    }
+}
+
+itcl::class ::Gdiplus::Matrix {
+    constructor {m11 m12 m21 m22 m31 m32} {
+	_initMatrix $m11 $m12 $m21 $m22 $m31 $m32
+    }
+    destructor {_destroyMatrix}
+    public {
+	method Equals \
+		@Gdip-Matrix-Equals
+
+	method Invert \
+		@Gdip-Matrix-Invert
+
+	method IsIdentity \
+		@Gdip-Matrix-IsIdentity
+
+	method IsInvertible \
+		@Gdip-Matrix-IsInvertible
+
+	method Multiply \
+		@Gdip-Matrix-Multiply
+
+	method OffsetX \
+		@Gdip-Matrix-OffsetX
+
+	method OffsetY \
+		@Gdip-Matrix-OffsetY
+
+	method Rotate \
+		@Gdip-Matrix-Rotate
+
+	method RotateAt \
+		@Gdip-Matrix-RotateAt
+
+	method Scale \
+		@Gdip-Matrix-Scale
+
+	method Shear \
+		@Gdip-Matrix-Shear
+
+	method Translate \
+		@Gdip-Matrix-Translate
+    }
+    private {
+	method _initMatrix {m11 m12 m21 m22 m31 m32} @Gdip-Matrix-construct
+	method _destroyMatrix {}  @Gdip-Matrix-destruct
+    }
+}
+
+itcl::class ::Gdiplus::StringFormat {
+    constructor {} {_initStringFormat}
+    destructor {_destroyStringFormat}
+    public {
+	method Alignment \
+		@Gdip-StringFormat-Alignment
+
+	method DigitSubstitutionLanguage \
+		@Gdip-StringFormat-DigitSubstitutionLanguage
+
+	method FormatFlags \
+		@Gdip-StringFormat-FormatFlags
+
+	method HotkeyPrefix \
+		@Gdip-StringFormat-HotkeyPrefix
+
+	method LineAlignment \
+		@Gdip-StringFormat-LineAlignment
+
+	method MeasurableCharacterRangeCount \
+		@Gdip-StringFormat-MeasurableCharacterRangeCount
+
+	method TabStops \
+		@Gdip-StringFormat-TabStops
+
+	method Trimming \
+		@Gdip-StringFormat-Trimming
+    }
+    private {
+	method _initStringFormat {}	@Gdip-StringFormat-construct
+	method _destroyStringFormat {}  @Gdip-StringFormat-destruct
+    }
+}
+
+itcl::class ::Gdiplus::Region {
+    constructor args {eval _initRegion $args}
+    destructor {_destroyRegion}
+    public {
+	method Transform \
+		@Gdip-Region-Transform
+
+	method Translate \
+		@Gdip-Region-Translate
+
+	method Union \
+		@Gdip-Region-Union
+
+	method Xor \
+		@Gdip-Region-Xor
+    }
+    private {
+	method _initRegion args	@Gdip-Region-construct
+	method _destroyRegion {}  @Gdip-Region-destruct
+    }
+}

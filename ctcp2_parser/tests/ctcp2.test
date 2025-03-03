@@ -1,0 +1,457 @@
+# RCS: @(#) $Id: ctcp2.test,v 1.4 2002/12/03 04:08:39 davygrvy Exp $
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands test::ctcp2]]} {
+  load ctcp2_parser_test Test
+}
+
+
+# wrap it up, I'll take it -- Jimmy Vaughn :)
+#
+proc f {data} { return "\006$data\006" }
+
+
+#
+#  Validate all toggles exist.
+#
+test ctcp2-0.1 {Simple bold} {
+    test::ctcp2 "[f B]lala"
+} {{PushBold 1} lala}
+
+test ctcp2-0.2 {Simple underline} {
+    test::ctcp2 "[f U]lala"
+} {{PushUnderline 1} lala}
+
+test ctcp2-0.3 {Simple reverse} {
+    test::ctcp2 "[f V]lala"
+} {{PushReverse 1} lala}
+
+test ctcp2-0.4 {Simple overstrike} {
+    test::ctcp2 "[f S]lala"
+} {{PushOverstrike 1} lala}
+
+test ctcp2-0.5 {Simple Italic} {
+    test::ctcp2 "[f I]lala"
+} {{PushItalic 1} lala}
+
+test ctcp2-0.6 {Simple URL} {
+    test::ctcp2 "[f L]lala"
+} {{PushURL 1} lala}
+
+test ctcp2-0.7 {Simple blink} {
+    test::ctcp2 "[f K]lala"
+} {{PushBlink 1} lala}
+
+
+#
+#  Validate the counting of toggles through decodeToggle() and the XOR test in PushOut().
+#  We'll abuse bold just because I had to choose one.
+#
+test ctcp2-1.1 {Count toggle (single pair), no go} {
+    test::ctcp2 "[f B][f B-]lala"
+} {lala}
+
+test ctcp2-1.2 {Count toggle (double pair), no go} {
+    test::ctcp2 "[f B][f B][f B-][f B-]lala"
+} {lala}
+
+test ctcp2-1.3 {Count toggle (uneven pair), go} {
+    test::ctcp2 "[f B][f B][f B-]lala"
+} {{PushBold 1} lala}
+
+test ctcp2-1.4 {Count toggle (uneven pair), no go} {
+    # up 2, down 3
+    test::ctcp2 "[f B][f B][f B-][f B-][f B-]lala"
+} {lala}
+
+test ctcp2-1.5 {Count toggle (all negative), no go} {
+    test::ctcp2 "[f B-][f B-][f B-][f B-][f B-]lala"
+} {lala}
+
+test ctcp2-1.6 {Count toggle (slam negative, push, set)} {
+    test::ctcp2 "[f B-][f B-][f B-][f B-][f B-]la[f B]la"
+} {la {PushBold 1} la}
+
+test ctcp2-1.7 {Count toggle (slam positive, push, reset)} {
+    test::ctcp2 "[f B+][f B+][f B+][f B+][f B+]la[f N]la"
+} {{PushBold 1} la {PushBold 0} la}
+
+test ctcp2-1.8 {Count toggle (slam positive, push, unset just one)} {
+    test::ctcp2 "[f B+][f B+][f B+][f B+][f B+]la[f B-]la"
+} {{PushBold 1} la la}
+
+test ctcp2-1.9 {Count toggle (slam positive, push, unset one short of reset)} {
+    # up 5, down 4
+    test::ctcp2 "[f B+][f B+][f B+][f B+][f B+]la[f B-][f B-][f B-][f B-]la"
+} {{PushBold 1} la la}
+
+test ctcp2-1.10 {Count toggle (slam positive, push, unset same for reset)} {
+    # up 5, down 5
+    test::ctcp2 "[f B+][f B+][f B+][f B+][f B+]la[f B-][f B-][f B-][f B-][f B-]la"
+} {{PushBold 1} la {PushBold 0} la}
+
+
+if {0} {
+#
+#  Validate the encodings are all there.
+#
+test ctcp2-2.1 {iso8859-1 is the default} {
+    test::ctcp2 "[f E1]lala"
+} {lala}
+
+test ctcp2-2.2 {iso8859-2} {
+    test::ctcp2 "[f E2]lala"
+} {{PushEncoding iso8859-2} lala}
+
+test ctcp2-2.3 {iso8859-3} {
+    test::ctcp2 "[f E3]lala"
+} {{PushEncoding iso8859-3} lala}
+
+test ctcp2-2.4 {iso8859-4} {
+    test::ctcp2 "[f E4]lala"
+} {{PushEncoding iso8859-4} lala}
+
+test ctcp2-2.5 {iso8859-5} {
+    test::ctcp2 "[f E5]lala"
+} {{PushEncoding iso8859-5} lala}
+
+test ctcp2-2.6 {iso8859-6} {
+    test::ctcp2 "[f E6]lala"
+} {{PushEncoding iso8859-6} lala}
+
+test ctcp2-2.7 {iso8859-7} {
+    test::ctcp2 "[f E7]lala"
+} {{PushEncoding iso8859-7} lala}
+
+test ctcp2-2.8 {iso8859-8} {
+    test::ctcp2 "[f E8]lala"
+} {{PushEncoding iso8859-8} lala}
+
+test ctcp2-2.9 {iso8859-9} {
+    test::ctcp2 "[f E9]lala"
+} {{PushEncoding iso8859-9} lala}
+
+test ctcp2-2.10 {UTF-8} {
+    test::ctcp2 "[f EU]lala"
+} {{PushEncoding UTF8} lala}
+
+}
+
+#
+#  Colors, indexed.
+#
+
+# foregrounds
+
+test ctcp2-3.1 {forground index Black (foreground too similar to back, ignored)} {
+    test::ctcp2 "[f C0]lala"
+} {lala}
+
+test ctcp2-3.2 {forground index Blue} {
+    test::ctcp2 "[f C1]lala"
+} {{PushForegroundColor 0 0 127} lala}
+
+test ctcp2-3.3 {forground index Green} {
+    test::ctcp2 "[f C2]lala"
+} {{PushForegroundColor 0 127 0} lala}
+
+test ctcp2-3.4 {forground index Cyan} {
+    test::ctcp2 "[f C3]lala"
+} {{PushForegroundColor 0 127 127} lala}
+
+test ctcp2-3.5 {forground index Red} {
+    test::ctcp2 "[f C4]lala"
+} {{PushForegroundColor 127 0 0} lala}
+
+test ctcp2-3.6 {forground index Magenta} {
+    test::ctcp2 "[f C5]lala"
+} {{PushForegroundColor 127 0 127} lala}
+
+test ctcp2-3.7 {forground index Yellow} {
+    test::ctcp2 "[f C6]lala"
+} {{PushForegroundColor 127 127 0} lala}
+
+test ctcp2-3.8 {forground index Light Grey (ignored, same already} {
+    test::ctcp2 "[f C7]lala"
+} {lala}
+
+test ctcp2-3.9 {forground index Grey} {
+    test::ctcp2 "[f C8]lala"
+} {{PushForegroundColor 127 127 127} lala}
+
+test ctcp2-3.10 {forground index Light Blue} {
+    test::ctcp2 "[f C9]lala"
+} {{PushForegroundColor 0 0 255} lala}
+
+test ctcp2-3.11 {forground index Light Green} {
+    test::ctcp2 "[f CA]lala"
+} {{PushForegroundColor 0 255 0} lala}
+
+test ctcp2-3.12 {forground index Light Cyan} {
+    test::ctcp2 "[f CB]lala"
+} {{PushForegroundColor 0 255 255} lala}
+
+test ctcp2-3.13 {forground index Light Red} {
+    test::ctcp2 "[f CC]lala"
+} {{PushForegroundColor 255 0 0} lala}
+
+test ctcp2-3.14 {forground index Light Magenta} {
+    test::ctcp2 "[f CD]lala"
+} {{PushForegroundColor 255 0 255} lala}
+
+test ctcp2-3.15 {forground index Light Yellow} {
+    test::ctcp2 "[f CE]lala"
+} {{PushForegroundColor 255 255 0} lala}
+
+test ctcp2-3.16 {forground index White} {
+    test::ctcp2 "[f CF]lala"
+} {{PushForegroundColor 255 255 255} lala}
+
+# backgrounds
+
+test ctcp2-3.17 {background index Black (ignored, same already)} {
+    test::ctcp2 "[f C-0]lala"
+} {lala}
+
+test ctcp2-3.18 {background index Blue} {
+    test::ctcp2 "[f C-1]lala"
+} {{PushBackgroundColor 0 0 127} lala}
+
+test ctcp2-3.19 {background index Green} {
+    test::ctcp2 "[f C-2]lala"
+} {{PushBackgroundColor 0 127 0} lala}
+
+test ctcp2-3.20 {background index Cyan} {
+    test::ctcp2 "[f C-3]lala"
+} {{PushBackgroundColor 0 127 127} lala}
+
+test ctcp2-3.21 {background index Red} {
+    test::ctcp2 "[f C-4]lala"
+} {{PushBackgroundColor 127 0 0} lala}
+
+test ctcp2-3.22 {background index Magenta} {
+    test::ctcp2 "[f C-5]lala"
+} {{PushBackgroundColor 127 0 127} lala}
+
+test ctcp2-3.23 {background index Yellow} {
+    test::ctcp2 "[f C-6]lala"
+} {{PushBackgroundColor 127 127 0} lala}
+
+test ctcp2-3.24 {background index Light Grey (background too similar to fore, ignored)} {
+    test::ctcp2 "[f C-7]lala"
+} {lala}
+
+test ctcp2-3.25 {background index Grey} {
+    test::ctcp2 "[f C-8]lala"
+} {{PushBackgroundColor 127 127 127} lala}
+
+test ctcp2-3.26 {background index Light Blue} {
+    test::ctcp2 "[f C-9]lala"
+} {{PushBackgroundColor 0 0 255} lala}
+
+test ctcp2-3.27 {background index Light Green} {
+    test::ctcp2 "[f C-A]lala"
+} {{PushBackgroundColor 0 255 0} lala}
+
+test ctcp2-3.28 {background index Light Cyan} {
+    test::ctcp2 "[f C-B]lala"
+} {{PushBackgroundColor 0 255 255} lala}
+
+test ctcp2-3.29 {background index Light Red} {
+    test::ctcp2 "[f C-C]lala"
+} {{PushBackgroundColor 255 0 0} lala}
+
+test ctcp2-3.30 {background index Light Magenta} {
+    test::ctcp2 "[f C-D]lala"
+} {{PushBackgroundColor 255 0 255} lala}
+
+test ctcp2-3.31 {background index Light Yellow} {
+    test::ctcp2 "[f C-E]lala"
+} {{PushBackgroundColor 255 255 0} lala}
+
+test ctcp2-3.32 {background index White} {
+    test::ctcp2 "[f C-F]lala"
+} {{PushBackgroundColor 255 255 255} lala}
+
+
+#
+# hexidecimal color values
+#
+
+test ctcp2-4.1 {hex color #1} {
+    test::ctcp2 "[f C#090000]lala"
+} {{PushForegroundColor 9 0 0} lala}
+
+test ctcp2-4.2 {hex color #2} {
+    test::ctcp2 "[f C#000900]lala"
+} {{PushForegroundColor 0 9 0} lala}
+
+test ctcp2-4.3 {hex color #3} {
+    test::ctcp2 "[f C#000009]lala"
+} {{PushForegroundColor 0 0 9} lala}
+
+test ctcp2-4.4 {hex color #4} {
+    test::ctcp2 "[f C#090807]lala"
+} {{PushForegroundColor 9 8 7} lala}
+
+test ctcp2-4.5 {hex color #5} {
+    test::ctcp2 "[f C7#090807]lala"
+} {{PushBackgroundColor 9 8 7} lala}
+
+test ctcp2-4.6 {hex color #6} {
+    test::ctcp2 "[f C-#090807]lala"
+} {{PushBackgroundColor 9 8 7} lala}
+
+test ctcp2-4.7 {hex color #7} {
+    test::ctcp2 "[f C.#090807]lala"
+} {{PushBackgroundColor 9 8 7} lala}
+
+test ctcp2-4.8 {hex color #8} {
+    test::ctcp2 "[f C7#090000]lala"
+} {{PushBackgroundColor 9 0 0} lala}
+
+test ctcp2-4.9 {hex color #9} {
+    test::ctcp2 "[f C-#000900]lala"
+} {{PushBackgroundColor 0 9 0} lala}
+
+test ctcp2-4.10 {hex color #10} {
+    test::ctcp2 "[f C.#000009]lala"
+} {{PushBackgroundColor 0 0 9} lala}
+
+
+#
+# Mixed color tests
+#
+
+test ctcp2-5.1 {Mixed colors (set to blue, then reset)} {
+    test::ctcp2 "la[f C2]la[f C.]la"
+} {la {PushForegroundColor 0 127 0} la {PushForegroundColor 192 192 192} la}
+
+test ctcp2-5.1 {Mixed colors (set back to blue, then reset)} {
+    test::ctcp2 "la[f C-2]la[f C-.]la"
+} {la {PushBackgroundColor 0 127 0} la {PushBackgroundColor 0 0 0} la}
+
+
+#
+#  assorted full attribute mixing
+#
+
+test ctcp2-6.1 {assorted #1} {
+    test::ctcp2 "do[f C2]re[f B]me[f B-]fa[f U][f C-A]so"
+} {do {PushForegroundColor 0 127 0} re {PushBold 1} me {PushBold 0} fa {PushUnderline 1} {PushBackgroundColor 0 255 0} so}
+
+test ctcp2-6.2 {assorted #2} {
+    test::ctcp2 "do[f C2][f B][f B-][f B][f V][f L]re[f B]me[f B-]fa"
+} {do {PushBold 1} {PushReverse 1} {PushURL 1} {PushForegroundColor 0 127 0} re me fa}
+
+
+#
+#  Error indications
+#
+
+test ctcp2-7.1 {Error MSG about hex color not long enough, #1} {
+    test::ctcp2 "do[f C#12345]re"
+} {do {[C#12345]re}}
+
+test ctcp2-7.2 {Error MSG about hex color not long enough, #2} {
+    test::ctcp2 "do[f C#1234]re"
+} {do {[C#1234]re}}
+
+test ctcp2-7.3 {Error MSG about hex color not long enough, #3} {
+    test::ctcp2 "do[f C#123]re"
+} {do {[C#123]re}}
+
+test ctcp2-7.4 {Error MSG about hex color not long enough, #4} {
+    test::ctcp2 "do[f C#12]re"
+} {do {[C#12]re}}
+
+test ctcp2-7.5 {Error MSG about hex color not long enough, #5} {
+    test::ctcp2 "do[f C#1]re"
+} {do {[C#1]re}}
+
+test ctcp2-7.6 {Error MSG about hex color not long enough, #6} {
+    test::ctcp2 "do[f C#]re"
+} {do {[C#]re}}
+
+test ctcp2-7.7 {Error MSG about hex color not long enough, #7} {
+    test::ctcp2 "do[f C-#12345]re"
+} {do {[C-#12345]re}}
+
+test ctcp2-7.8 {Error MSG about hex color not long enough, #8} {
+    test::ctcp2 "do[f C-#1234]re"
+} {do {[C-#1234]re}}
+
+test ctcp2-7.9 {Error MSG about hex color not long enough, #9} {
+    test::ctcp2 "do[f C-#123]re"
+} {do {[C-#123]re}}
+
+test ctcp2-7.10 {Error MSG about hex color not long enough, #10} {
+    test::ctcp2 "do[f C-#12]re"
+} {do {[C-#12]re}}
+
+test ctcp2-7.11 {Error MSG about hex color not long enough, #11} {
+    test::ctcp2 "do[f C-#1]re"
+} {do {[C-#1]re}}
+
+test ctcp2-7.12 {Error MSG about hex color not long enough, #12} {
+    test::ctcp2 "do[f C-#]re"
+} {do {[C-#]re}}
+
+test ctcp2-7.13 {Error MSG about hex color not long enough, #13} {
+    test::ctcp2 "do[f C#123456#12345]re"
+} {do {[C#123456#12345]re}}
+
+test ctcp2-7.14 {Error MSG about hex color not long enough, #14} {
+    test::ctcp2 "do[f C#123456#1234]re"
+} {do {[C#123456#1234]re}}
+
+test ctcp2-7.15 {Error MSG about hex color not long enough, #15} {
+    test::ctcp2 "do[f C#123456#123]re"
+} {do {[C#123456#123]re}}
+
+test ctcp2-7.16 {Error MSG about hex color not long enough, #16} {
+    test::ctcp2 "do[f C#123456#12]re"
+} {do {[C#123456#12]re}}
+
+test ctcp2-7.17 {Error MSG about hex color not long enough, #17} {
+    test::ctcp2 "do[f C#123456#1]re"
+} {do {[C#123456#1]re}}
+
+test ctcp2-7.18 {Error MSG about hex color not long enough, #18} {
+    test::ctcp2 "do[f C#123456#]re"
+} {do {[C#123456#]re}}
+
+test ctcp2-7.19 {Error MSG about hex color not long enough, #19} {
+    test::ctcp2 "do[f C.#]re"
+} {do {[C.#]re}}
+
+test ctcp2-7.20 {Error MSG about hex color not long enough, #20} {
+    test::ctcp2 "do[f C2#]re"
+} {do {[C2#]re}}
+
+
+#
+#  All attributes are resetable with N
+#
+
+test ctcp2-8.1 {Bold can be reset} {
+    test::ctcp2 "do[f B]re[f N]me"
+} {do {PushBold 1} re {PushBold 0} me}
+
+
+#
+# Font spacing style
+#
+
+#
+# Font size
+#
+
+
+# cleanup
+::tcltest::cleanupTests
+return

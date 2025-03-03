@@ -1,0 +1,268 @@
+# RCS: @(#) $Id: mirc.test,v 1.2 2002/12/01 22:40:35 davygrvy Exp $
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands test::mirc]]} {
+  load ctcp2_parser_test Test
+}
+
+proc ctcpf {} { return \006 }
+proc mcolor {} { return \003 }
+
+
+#
+# Foreground tests
+#
+
+test mirc-1.1 {White, no background} {
+    test::mirc "this is [mcolor]0White"
+} "this is [ctcpf]CF-[ctcpf]White"
+
+test mirc-1.2 {Black, no background} {
+    test::mirc "this is [mcolor]1Black"
+} "this is [ctcpf]C0-[ctcpf]Black"
+
+test mirc-1.3 {DarkBlue, no background} {
+    test::mirc "this is [mcolor]2DarkBlue"
+} "this is [ctcpf]C1-[ctcpf]DarkBlue"
+
+test mirc-1.4 {DarkGreen, no background} {
+    test::mirc "this is [mcolor]3DarkGreen"
+} "this is [ctcpf]C2-[ctcpf]DarkGreen"
+
+test mirc-1.5 {BrightRed, no background} {
+    test::mirc "this is [mcolor]4BrightRed"
+} "this is [ctcpf]CC-[ctcpf]BrightRed"
+
+test mirc-1.6 {Brown, no background} {
+    test::mirc "this is [mcolor]5Brown"
+} "this is [ctcpf]C#7F3F3F-[ctcpf]Brown"
+
+test mirc-1.7 {Purple, no background} {
+    test::mirc "this is [mcolor]6Purple"
+} "this is [ctcpf]C5-[ctcpf]Purple"
+
+test mirc-1.8 {Orange, no background} {
+    test::mirc "this is [mcolor]7Orange"
+} "this is [ctcpf]C\#FF7F00-[ctcpf]Orange"
+
+test mirc-1.9 {BrightYellow, no background} {
+    test::mirc "this is [mcolor]8BrightYellow"
+} "this is [ctcpf]CE-[ctcpf]BrightYellow"
+
+test mirc-1.10 {BrightGreen, no background} {
+    test::mirc "this is [mcolor]9BrightGreen"
+} "this is [ctcpf]CA-[ctcpf]BrightGreen"
+
+test mirc-1.11 {DarkCyan, no background} {
+    test::mirc "this is [mcolor]10DarkCyan"
+} "this is [ctcpf]C3-[ctcpf]DarkCyan"
+
+test mirc-1.12 {BrightCyan, no background} {
+    test::mirc "this is [mcolor]11BrightCyan"
+} "this is [ctcpf]CB-[ctcpf]BrightCyan"
+
+test mirc-1.13 {BrightBlue, no background} {
+    test::mirc "this is [mcolor]12BrightBlue"
+} "this is [ctcpf]C9-[ctcpf]BrightBlue"
+
+test mirc-1.14 {Pink, no background} {
+    test::mirc "this is [mcolor]13Pink"
+} "this is [ctcpf]C#FF7FC0-[ctcpf]Pink"
+
+test mirc-1.15 {DarkGrey, no background} {
+    test::mirc "this is [mcolor]14DarkGrey"
+} "this is [ctcpf]C8-[ctcpf]DarkGrey"
+
+test mirc-1.16 {LightGrey, no background} {
+    test::mirc "this is [mcolor]15LightGrey"
+} "this is [ctcpf]C7-[ctcpf]LightGrey"
+
+
+#
+# Background tests
+#
+
+test mirc-2.1 {White, White} {
+    test::mirc "this is [mcolor]0,0White"
+} "this is [ctcpf]CFF[ctcpf]White"
+
+test mirc-2.2 {White, Black} {
+    test::mirc "this is [mcolor]0,1Black"
+} "this is [ctcpf]CF0[ctcpf]Black"
+
+test mirc-2.3 {White, DarkBlue} {
+    test::mirc "this is [mcolor]0,2DarkBlue"
+} "this is [ctcpf]CF1[ctcpf]DarkBlue"
+
+test mirc-2.4 {White, DarkGreen} {
+    test::mirc "this is [mcolor]0,3DarkGreen"
+} "this is [ctcpf]CF2[ctcpf]DarkGreen"
+
+test mirc-2.5 {White, BrightRed} {
+    test::mirc "this is [mcolor]0,4BrightRed"
+} "this is [ctcpf]CFC[ctcpf]BrightRed"
+
+test mirc-2.6 {no foreground, Brown} {
+    test::mirc "this is [mcolor]0,5Brown"
+} "this is [ctcpf]CF#7F3F3F[ctcpf]Brown"
+
+test mirc-2.7 {White, Purple} {
+    test::mirc "this is [mcolor]0,6Purple"
+} "this is [ctcpf]CF5[ctcpf]Purple"
+
+test mirc-2.8 {White, Orange} {
+    test::mirc "this is [mcolor]0,7Orange"
+} "this is [ctcpf]CF\#FF7F00[ctcpf]Orange"
+
+test mirc-2.9 {White, BrightYellow} {
+    test::mirc "this is [mcolor]0,8BrightYellow"
+} "this is [ctcpf]CFE[ctcpf]BrightYellow"
+
+test mirc-2.10 {White, BrightGreen} {
+    test::mirc "this is [mcolor]0,9BrightGreen"
+} "this is [ctcpf]CFA[ctcpf]BrightGreen"
+
+test mirc-2.11 {White, DarkCyan} {
+    test::mirc "this is [mcolor]0,10DarkCyan"
+} "this is [ctcpf]CF3[ctcpf]DarkCyan"
+
+test mirc-2.12 {White, BrightCyan} {
+    test::mirc "this is [mcolor]0,11BrightCyan"
+} "this is [ctcpf]CFB[ctcpf]BrightCyan"
+
+test mirc-2.13 {White, BrightBlue} {
+    test::mirc "this is [mcolor]0,12BrightBlue"
+} "this is [ctcpf]CF9[ctcpf]BrightBlue"
+
+test mirc-2.14 {White, Pink} {
+    test::mirc "this is [mcolor]0,13Pink"
+} "this is [ctcpf]CF#FF7FC0[ctcpf]Pink"
+
+test mirc-2.15 {White, Grey} {
+    test::mirc "this is [mcolor]0,14Grey"
+} "this is [ctcpf]CF8[ctcpf]Grey"
+
+test mirc-2.16 {White, LightGrey} {
+    test::mirc "this is [mcolor]0,15LightGrey"
+} "this is [ctcpf]CF7[ctcpf]LightGrey"
+
+
+#
+# Background ONLY tests.  mIRC fails to properly parse these.
+# Therefore this test MUST correctly show this.
+#
+
+test mirc-3.1 {no foreground, White} {
+    # we MUST have mIRC's parser bug
+    test::mirc "this is NOT [mcolor],0White"
+} "this is NOT [ctcpf]C[ctcpf],0White"
+
+
+#
+# Resets
+#
+
+test mirc-4.1 {reset #1} {
+    test::mirc "this is [mcolor]reset"
+} "this is [ctcpf]C[ctcpf]reset"
+
+
+#
+# mixed tests
+#
+
+test mirc-5.1 {mixed #1} {
+    test::mirc "this is [mcolor]4,2red/darkblue"
+} "this is [ctcpf]CC1[ctcpf]red/darkblue"
+
+test mirc-5.2 {mixed #2} {
+    test::mirc "this is [mcolor]4,2red/darkblue [mcolor]reset"
+} "this is [ctcpf]CC1[ctcpf]red/darkblue [ctcpf]C[ctcpf]reset"
+
+test mirc-5.3 {mixed #3} {
+    test::mirc "this is [mcolor]4,2red/darkblue [mcolor]"
+} "this is [ctcpf]CC1[ctcpf]red/darkblue [ctcpf]C[ctcpf]"
+
+
+#
+# mIRC hex bugs
+#
+#  mIRC has an odd behavior when the number is greater than 16.
+#   16 is understood as 0
+#   17 is understood as 1
+#   18     "            2
+#   etc...
+#
+
+test mirc-6.1 {hex bug #1} {
+    test::mirc "this is [mcolor]16invalid"
+} "this is [ctcpf]CF-[ctcpf]invalid"
+
+test mirc-6.2 {hex bug #2} {
+    test::mirc "this is [mcolor]17invalid"
+} "this is [ctcpf]C0-[ctcpf]invalid"
+
+test mirc-6.3 {hex bug #3} {
+    test::mirc "this is [mcolor]89invalid"
+} "this is [ctcpf]CA-[ctcpf]invalid"
+
+
+#
+# Greater than 2 digit limit
+#
+
+test mirc-7.3 {2 digit limit #1} {
+    test::mirc "this is [mcolor]100invalid"
+} "this is [ctcpf]C3-[ctcpf]0invalid"
+
+test mirc-7.4 {2 digit limit #2} {
+    test::mirc "this is [mcolor]100,9invalid"
+} "this is [ctcpf]C3-[ctcpf]0,9invalid"
+
+
+#
+#  mIRC transparent color
+#
+#   mIRC's transparent == ctcp/2's default
+#
+
+test mirc-8.1 {transparency #1} {
+    test::mirc "this is [mcolor]99transparent"
+} "this is [ctcpf]C.-[ctcpf]transparent"
+
+test mirc-8.2 {transparency #2} {
+    test::mirc "this is [mcolor]99,99transparent"
+} "this is [ctcpf]C..[ctcpf]transparent"
+
+test mirc-8.3 {transparency #3} {
+    # we MUST have mIRC's parser bug
+    test::mirc "this is NOT [mcolor],99transparent"
+} "this is NOT [ctcpf]C[ctcpf],99transparent"
+
+#
+#  Many in a row
+#
+
+test mirc-8.3 {transparency #3} {
+    test::mirc "changes[mcolor]1,1[mcolor]7[mcolor]6,12lala"
+} "changes[ctcpf]C00[ctcpf][ctcpf]C\#FF7F00-[ctcpf][ctcpf]C59[ctcpf]lala"
+
+
+#
+#  Assorted errors found
+#
+
+test mirc-8.3 {assorted asserts #1} {
+    test::mirc "lala[mcolor]2jaja[mcolor][mcolor]2asd"
+} "lala[ctcpf]C1-[ctcpf]jaja[ctcpf]C[ctcpf][ctcpf]C1-[ctcpf]asd"
+
+###......C..PU Info....: .14..:(..141-Intel Pentium III, 450MHz, 512KB (9% Load)...14):..
+
+# cleanup
+::tcltest::cleanupTests
+return
+

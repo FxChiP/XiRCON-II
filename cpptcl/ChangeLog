@@ -1,0 +1,332 @@
+2002-08-23  davygrvy
+	* TclChannelStreambuf.cpp:
+	* TclChannelStreambuf.hpp:
+		Made inoperable until it gets 1) repaired, 2) needed.
+
+2002-08-15  davygrvy
+	* ItclAdaptor.hpp:
+	* TclAdaptor.hpp:
+		Changed the NewTclCmd and NewItclCmd macros to not take the interp
+		pointer.  We already know the name of the variable..  it's ours anyway.
+
+	* TclSock.cpp:
+		normal disconnections now return their errno message of "No
+		error"
+
+2002-08-14  davygrvy
+	* TclSock.cpp:
+		disconnecting bug fixed!
+
+2002-08-13  davygrvy
+	* TclSock.hpp:
+		more better
+
+	* FastInvoke.cpp:
+		an 8.4 CONST issue resolved
+
+2002-08-07  davygrvy
+	* TclSock.cpp:
+	* TclSock.hpp:
+		today's rounds of edits
+
+2002-08-04  davygrvy
+	* TclSock.cpp:
+		oOps..  bad ref counting fixed.
+
+2002-08-02  davygrvy
+	* cpptcl.hpp:
+		Had to remove ItclAdaptor.hpp or we get a link reference.
+
+2002-08-01  davygrvy
+	* TclSock.cpp:
+	* TclSock.hpp:
+		Added the static init procedure and a static GetPort function for resolving
+		ports from service names.
+
+	* TclSock.cpp:
+	* TclSock.hpp:
+		More stuff that approaches "working".
+
+	* TclAdaptor.hpp:
+		The destructor does not need to be virtual.
+
+2002-07-31  davygrvy
+	* TclAdaptor.hpp:
+		Instead of commenting that use of the interp should be done in derived
+		destructors, I have now removed it before calling it.  What a concept :)
+
+2002-07-30  davygrvy
+	* ItclAdapter.hpp:
+	* ItclAdaptor.hpp:
+	* TclAdapter.hpp:
+	* TclAdaptor.hpp:
+	* cpptcl.hpp:
+		renamed the adatpor classes.
+
+	* ItclAdaptor.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		more good stuff...
+
+2002-07-21  davygrvy
+	* TclAdapter.hpp:
+		added another constructor sig for when I don't have the interp yet, nor need
+		the "bring it down" stuff.
+
+2002-07-18  davygrvy
+	* TclSock.hpp:
+		typed va_list in proto not allowed using Dev-C++ as the
+		compiler.
+
+	* TclSock.cpp:
+		more work getting this working.
+
+2002-07-15  davygrvy
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		retired from service due to the bad Tcl_Obj usage it has.  It retains
+		references and causes over use of copying when not desired due
+		to the C++ model.  So go away.
+
+2002-07-05  davygrvy
+	* TclSock.cpp:
+	* TclSock.hpp:
+		The mass of warnings are fixed.
+
+2002-07-02  davygrvy
+	* TclSock.cpp:
+	* TclSock.hpp:
+		trying to fix this mess I'm in with this thing.  I don't have my mojo today
+		to take on the big issues.
+
+	* TclHash.hpp:
+		CONST'ification change for 8.4
+
+2002-06-17  davygrvy
+	* TclChannelStreambuf.h:
+	* TclChannelStreambuf.hpp:
+		renamed.
+
+2002-05-21  davygrvy
+	* TclAdapter.hpp:
+		made the interp meber have public scope.
+
+2002-04-04  davygrvy
+	* ItclAdapter.hpp:
+		fixed shared interp variable's name to match the base.
+
+2002-04-03  davygrvy
+	* TclHash.hpp:
+		Top() and Next() can now return the key, if requested.
+
+2002-04-02  davygrvy
+	* TclChannelStreambuf.cpp:
+	* TclSock.cpp:
+	* TclSock.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		not sure what these changes are, but they must be good.
+
+2002-03-30  davygrvy
+	* TclAdapter.hpp:
+	* TclHash.hpp:
+		hash template got a Top() and Next() for doing searches. 
+		Adapter is naming the interp variable correctly, now.
+
+2001-12-13  davygrvy
+	* FastInvoke.cpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		Fixing up the ctcp2 parser stuff.  removed the old vc makefile and getting
+		ready to add an encoding pre-parser as I'll need this in IRCSplitAndQ later.
+
+2001-12-12  davygrvy
+	* TclHash.hpp:
+		revamped and updated with no new features.  Just some
+		organizational stuff.
+
+2001-12-11  davygrvy
+	* FastInvoke.cpp:
+	* cpptcl.dsp:
+		some more minor trims.
+
+2001-12-10  davygrvy
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+	* license.txt:
+		Fixed-up the project files and shoe-horned TES into it.
+
+	* cpptcl.dsp:
+		Fixed-up more stuff that I missed before.
+
+	* cpptcl.dsp:
+		Yet, more stuff that I missed before.
+
+2001-09-02  daveg
+	* FastInvoke.cpp:
+	* FastInvoke.hpp:
+	* ItclAdapter.hpp:
+	* TclAdapter.hpp:
+	* TclHash.hpp:
+		yummy c++ goodies all finally brought together to a single nest
+		:)
+
+	* TclExtBase.hpp:
+		gone!
+
+2001-03-15  daveg
+	* cpptcl.dsp:
+		removed broken TclSock.cpp from build
+
+	* TclChannelStreambuf.cpp:
+	* TclChannelStreambuf.h:
+		new stuff!
+
+2000-12-14  daveg
+	* TclSock.cpp:
+	* TclSock.hpp:
+		still advancing this wrapper class to be almost usable
+
+	* TclHash.hpp:
+		fixed a grammar mistake in the comments.. not the code
+
+	* config.hpp:
+		more acurate comments
+
+	* .cvsignore:
+		lost rcs file in repository move..  re-added
+
+2000-10-24  davidg
+	* FastInvoke.hpp:
+	* TclHash.hpp:
+	* TclSock.cpp:
+		adapted irc_engine to the cpptcl changes...  mostly working now
+
+2000-10-21  davidg
+	* cpptcl.dsp:
+		increased the warning level to make sure I don't do something
+		stupid with knowing first.
+
+2000-10-20  davidg
+	* FastInvoke.hpp:
+	* TclHash.hpp:
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* TclSock.cpp:
+	* TclSock.hpp:
+		improvements coming along...
+
+2000-10-13  davidg
+	* TclHash.hpp:
+	* TclSock.cpp:
+	* TclSock.hpp:
+		made the code more readable
+
+2000-10-10  davidg
+	* TclSock.cpp:
+	* TclSock.hpp:
+		Even more cleanup of same, but I know realize that I've reinvented Tcl's
+		stacked channels..  hmm..   This will not do.  Too bad Tcl doesn't maintain
+		a registry of available stackable interfaces to possible clients of them.
+
+2000-10-09  davidg
+	* TclSock.cpp:
+	* TclSock.hpp:
+		Internal socket code just inching along as I prepare the class relationships
+
+	* TclSock.cpp:
+	* TclSock.hpp:
+		Class relationships done.  Time to fill in the implementation.
+
+	* TclSock.cpp:
+		more cleaned-up of same
+
+	* TclSock.cpp:
+		cleaned-up some rather messy mis-understandings of the
+		inheritence I was implementing
+
+2000-10-08  davidg
+	* TclSock.cpp:
+	* TclSock.hpp:
+	* cpptcl.dsp:
+		public interface for the Socket class is set.  Lots of work to be done on the
+		internals.
+
+2000-09-30  davidg
+	* FastInvoke.hpp:
+	* TclExtBase.hpp:
+	* TclSock.cpp:
+	* TclSock.hpp:
+		added new extension base class template.  Will see lots of edits making it
+		perfect.
+
+	* TclHash.hpp:
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* TclSock.cpp:
+	* TclSock.hpp:
+	* config.hpp:
+	* cpptcl.hpp:
+		new socket class and platform config file
+
+	* FastInvoke.cpp:
+	* FastInvoke.hpp:
+	* cpptcl.hpp:
+		templatized Tcl_FastInvoke
+
+	* config.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		added more compiler tests
+
+	* TclSock.cpp:
+	* TclSock.hpp:
+		added interp member for error reporting
+
+2000-09-25  davidg
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		general clean-up and trying to get all the build components to know about
+		each other and have a consistent layout
+
+2000-08-06  davidg
+	* FastInvoke.cpp:
+	* TclHash.hpp:
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+		gotcha...  irc_engine now compiles.. next it gets
+		converted to using Tcl Tcp channels for sockets.
+
+2000-08-05  davidg
+	* TclHash.hpp:
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* cpptcl.dsp:
+	* cpptcl.hpp:
+	* readme.txt:
+		ack!!  why did I get all these messeded-up <EOL> things??
+
+2000-07-01  davygrvy
+	* cpptcl.dsp:
+		small changes
+
+	* cpptcl.dsp:
+		reorganizing the project files (again!), but this time for VC++
+		.  I'm droping 5.0 support as of now.
+
+2000-04-30  davygrvy
+	* cpptcl.dsp:
+		re-organization of profect files to prevent crappy M$ software from
+		reformatting them.
+
+2000-02-14  davygrvy
+	* TclHash.hpp:
+	* TclObj.cpp:
+	* TclObj.hpp:
+	* readme.txt:
+		initial import
+

@@ -1,0 +1,45 @@
+So you wanna mess with this monster and add stuff?
+Did you read How2BuildThisThing.txt?  If not, read that first.
+
+
+Here's the basic design...
+
+There's 3 parts (modules) to this IRC client.
+
+  1)  MDI parent  (OS specific) [depends: some tcl8X.dll]
+		-- the exe.  responsible for loading Tcl, starting the event
+		loop, creating the global interp, loading all the snapins, and
+		providing an API to them using the Stubs method.
+
+  2)  GUI_irc.dll  (OS specific) [depends: irc_engine.dll]
+		-- a pure Tcl extension that contains the MDI child IRC-type
+		windows, toolbars, menus, connect/user/preferences dialogs,
+		string tables, attribute decoding.. et al.
+
+  This 2 part approach to the GUI allows the addition of new window types
+  and even new application types.  a text editor, news, email, and telnet
+  come to mind first off.  I hope this grows to be much more than IRC.
+
+  3)  irc_engine.dll  (OS neutral) [depends: none]
+		-- a pure Tcl extension whose job is to parse the incoming text,
+		invoke the event hooks or default routines, manage channel/user
+		data, and everything else IRC that's unseen.  Will use the Tcl
+		API for sockets.
+
+
+GUI_irc.dll and irc_engine.dll are brought together in the Tcl interpreter.  As
+both are [Incr Tcl] class extensions, inheritence is used to form one single
+top-level class.
+
+itcl::class IRC::connection {
+    ### Bring the 2 halves together :)
+    inherit engine ui
+    constructor {args} {
+        eval engine::constructor $args
+    } {}
+}
+
+This is a form of "soft-linking" as both sides assume each others commands are
+available in the instance and not until they are brought together can
+irc_engine.dll actually work without tossing "unknown command" errors about
+[echo].

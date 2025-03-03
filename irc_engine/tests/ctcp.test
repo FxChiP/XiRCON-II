@@ -1,0 +1,72 @@
+#------------------------------------------------------------------------
+#  ctcp.test
+#
+#   This tcltest script checks the CTCP features of the IRCSplitAndQ
+#   class.  tclTestAdapter.cpp contain the commands this test script
+#   calls.
+#
+#------------------------------------------------------------------------
+# RCS: @(#) $Id: ctcp.test,v 1.2 2002/07/19 03:56:44 davygrvy Exp $
+#------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+if {![llength [info commands IRC::testparse]]} {
+    load irc_engine Test
+}
+
+test ctcp-0.1 {extracting a ctcp from a privmsg} {
+    set capture [IRC::testsplit ":nick privmsg someone :\001version\001"]
+    set ctcpevent [lindex [lindex $capture 0] 4]
+    set ctcparg1 [lindex [lindex [lindex $capture 0] 5] 0]
+    set origTrailing [lindex [lindex [lindex $capture 1] 5] 1]
+    list [llength $capture] $origTrailing $ctcpevent $ctcparg1
+} {2 {} ctcp version}
+
+test ctcp-0.2 {extracting a ctcp reply from a notice} {
+    set capture [IRC::testsplit ":nick notice someone :\001version tomahawk r0X0rz.\001"]
+    set ctcpevent [lindex [lindex $capture 0] 4]
+    set ctcparg1 [lindex [lindex [lindex $capture 0] 5] 0]
+    set origTrailing [lindex [lindex [lindex $capture 1] 5] 1]
+    list [llength $capture] $origTrailing $ctcpevent $ctcparg1
+} {2 {} ctcp_reply version}
+
+test ctcp-0.3 {verifying unquoting of ctcp args (NULL)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\060hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\000hawk"
+
+test ctcp-0.4 {verifying unquoting of ctcp args (STX)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\061hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\001hawk"
+
+test ctcp-0.5 {verifying unquoting of ctcp args (LF)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\156hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\012hawk"
+
+test ctcp-0.6 {verifying unquoting of ctcp args (CR)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\162hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\015hawk"
+
+test ctcp-0.7 {verifying unquoting of ctcp args (SPC)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\100hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\040hawk"
+
+test ctcp-0.8 {verifying unquoting of ctcp args (DLE)} {
+    set capture [IRC::testsplit ":nick notice someone :\001version toma\020\020hawk r0X0rz.\001"]
+    set unQuoted [lindex [lindex [lindex $capture 0] 5] 1]
+    list [string length $unQuoted] $unQuoted
+} "9 toma\020hawk"
+

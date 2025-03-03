@@ -1,0 +1,70 @@
+#------------------------------------------------------------------------
+#  irc_engine.itcl --
+#
+#  Master init for the IRC_Engine extension.
+#
+#  See the documentation for the use of this one (very powerful) class as
+#  the arguements aren't mentioned here.
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: irc_engine.itcl,v 1.16 2004/12/12 21:51:16 davygrvy Exp $
+#------------------------------------------------------------------------
+
+load [file join [file dirname [info script]] irc_engine[info shared]]
+
+
+itcl::class IRC::engine {
+    constructor {args} {
+	eval _initEngine $args
+    }
+    destructor {
+	_destroyEngine
+    }
+
+    common irc_engine_library [file dirname [info script]]
+
+    public {
+	method destroy {} {itcl::delete object $this}
+	method connect {} @irc-engine-connect
+	method disconnect {} @irc-engine-disconnect
+	method connected {} @irc-engine-connected
+	method raw {} @irc-engine-raw
+	method server {} @irc-engine-server
+	method my_nick {} @irc-engine-my_nick
+	method my_ip {} @irc-engine-my_ip
+	method my_host {} @irc-engine-my_host
+	method my_user {} @irc-engine-my_user
+	method my_port {} @irc-engine-my_port
+	method channels {} @irc-engine-channels
+	method nicks {} @irc-engine-nicks
+	method scripts {} @irc-engine-scripts
+	method mode {} @irc-engine-mode
+	method whois {} @irc-engine-whois
+	method lookup {} @irc-engine-lookup
+	method color {} @irc-engine-color
+	method topic {} @irc-engine-topic
+
+	method rehash {} @irc-engine-rehash
+    }
+    private {
+	method _initEngine {} @irc-engine-construct
+	method _destroyEngine {} @irc-engine-destruct
+    }
+}
+
+itcl::class CTCP2::parse {
+    constructor {args} {
+	eval _initAction $args
+    }
+    destructor {
+	_destroyAction
+    }
+    public {
+	method parse {} @CTCP2-parse-parse
+	method destroy {} {itcl::delete object $this}
+    }
+    private {
+	method _initAction {} @CTCP2-parse-construct
+	method _destroyAction {} @CTCP2-parse-destruct
+    }
+}

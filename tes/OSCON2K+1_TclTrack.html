@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+    <META NAME="Generator" CONTENT="Microsoft Word 97">
+    <meta name="Keywords" content="Threading Windows Win32 Tcl_DoOneEvent Tcl_AsyncMark embedding Tcl Tk MFC">
+    <TITLE>A new way to embed Tcl/Tk in Windows&#174;&#169;&trade; applications</TITLE>
+</HEAD>
+<BODY>
+
+<!--
+    The Word 97 HTML output is garbage!
+    I just *had* to redo this by hand ;^}	
+-->
+
+<!--
+    -- RCS: @(#) info lines --
+    $Source: /mnt/c/Users/davyg/old_CVSROOT/tes/OSCON2K+1_TclTrack.html,v $
+    $Revision: 1.5 $
+    $Author: davygrvy $
+    $Date: 2001/12/10 01:27:20 $
+    $State: Exp $
+-->
+
+
+<!-- Title -->
+<center>
+    <h1>A new way to embed Tcl/Tk in Windows<sup>&#174;&#169;&trade;</sup> applications</h1>
+</center>
+
+
+<!-- Author -->
+<center>
+    <font size="+1">
+        David Gravereaux<br/>
+        Tomasoft Engineering<br/>
+    </font>
+    2557 West Winton Ave., Unit 7C<br/>
+    Hayward, CA 94545<br/>
+    (510) 785-0613<br/>
+    <A HREF="mailto:davygrvy@pobox.com?subject=you rule!" title="Send the author an email">davygrvy@pobox.com</A><br/>
+    <br/>
+    Last edited: 2001-08-31 for TES 1.4<br/>
+    From the <a href="http://conferences.oreillynet.com/cs/os2001/view/e_sess/1358"
+    target="photo">OSCON</a> presentation.<br/>
+    Yes, I'm a <a href="http://www.lucidway.org/Marty/Tcl/2001OSCON/DCP01081.JPG"
+    target="photo">long haired</a> <a href="http://www.lucidway.org/Marty/Tcl/2001OSCON/DCP01080.JPG"
+    target="photo">hippy freak</a>.
+</center>
+
+
+<!-- Quotes of good fortune -->
+<p/>
+<center><i>
+    &quot;You can't handle the truth!&quot; -- Jack Nicholson, A few Good Men.<br/>
+    &quot;There is no try&hellip; Only do.&quot; -- Yoda, The Empire Strikes Back.<br/>
+</i></center>
+
+<h3><a name="toc"></a><a href="#toc">Table Of Contents</a></h3>
+<a href="#abstract">Abstract</a><br/>
+<a href="#keywords">Keywords</a><br/>
+<a href="#introduction">Introduction</a><br/>
+<a href="#blend">Why not blend the two?</a><br/>
+<a href="#threading">Let's try threading.</a><br/>
+<a href="#library">The Static Library.</a><br/>
+<a href="#conclutions">Conclutions</a><br/>
+
+<!-- The goods! -->
+
+<h3><a name="abstract"></a><a href="#toc">Abstract</a></h3>
+
+The windows' message pump or Tcl's event loop -- which owns the center point of
+execution when embedding Tcl/Tk into a windows GUI application?  In this
+presentation, I'll explain the problem with embedding Tcl/Tk into windows
+applications and present a solution.
+
+<h3><a name="keywords"></a><a href="#toc">Keywords</a></h3>
+
+Threading, Windows, Tcl_DoOneEvent, Tcl_AsyncMark, Embedding.
+
+<h3><a name="introduction"></a><a href="#toc">Introduction</a></h3>
+
+The center-point for execution of Tcl/Tk in wish is the following (from tkEvent.c):
+<pre>
+  void
+  Tk_MainLoop()
+  {
+      while (Tk_GetNumMainWindows() &gt; 0) {
+          Tcl_DoOneEvent(0);
+      }
+  }
+</pre>
+
+This is the entrance to the event loop and is called from <code>Tk_Main()</code>.
+In comparison, a standard windows GUI program looks like this:
+
+<pre>
+  WINAPI BOOL
+  WinMain (...)
+  {
+      MSG msg;
+
+      RegisterClass(...);
+      CreateWindow(...);
+
+      while (GetMessage(&amp;msg, NULL, 0, 0)) {
+          TranslateMessage(&amp;msg);
+          DispatchMessage(&amp;msg);
+      }
+      return msg.wParam;
+  }
+</pre>
+
+Notice the similarities?  They both block in an alertable state and process events
+when received.  Both fall-out of the loop to end the application.  But how can
+these two co-exist when one wants to embed Tcl into an existing windows program?
+<p/>
+To use Tk widgets and fileevents we will need to have an active Tcl event loop.
+Just doing <code>Tcl_Eval()</code> at the opertune moments isn't enough to have
+Tk controls, fileevents or background callbacks service themselves.  I needed a
+solution to this problem.
+
+<h3><a name="blend"></a><a href="#toc">Why not blend the two?</a></h3>
+
+I tried the following blend:
+<pre>
+  WINAPI BOOL WinMain (...)
+  {
+      MSG msg;
+
+      RegisterClass(...);
+      CreateWindow(...);
+
+      while (GetMessage(&amp;msg, NULL, 0, 0)) {
+          TranslateMessage(&amp;msg);
+          DispatchMessage(&amp;msg);
+-&gt;        Tcl_DoOneEvent(TCL_DONT_WAIT);
+      }
+      return msg.wParam;
+  }
+</pre>
+
+That's polling (or flushing).  Not alertable and CPU inefficient.  Tcl isn't
+alertable in this way.  If a non-blocking socket becomes readable (an event
+posted to the Tcl event loop) while the windows message pump is idle, Tcl has
+to wait until the next windows' message happens before its event is serviced.
+<p/>
+Trying to use this method with MFC probably wouldn't be a good idea.  Direct
+access to the message pump isn't provided or, at least, abstracted away from
+the user.
+
+<h3><a name="threading"></a><a href="#toc">Let's try threading.</a></h3>
+
+If we run Tcl's execution in a separate thread from the main thread, this
+solves the isuue, but introduces a new set of complexities.
+
+<pre>
+  WINAPI BOOL WinMain (...)
+  {
+      MSG msg;
+
+      RegisterClass(...);
+      CreateWindow(...);
+
+-&gt;    CreateThread(TclThreadFunc,...);
+      while (GetMessage(&amp;msg, NULL, 0, 0)) {
+          TranslateMessage(&amp;msg);
+          DispatchMessage(&amp;msg);
+      }
+      return msg.wParam;
+  }
+
+  WINAPI int TclThreadFunc(void *)
+  {
+      while (!done)
+          Tcl_DoOneEvent(TCL_ALL_EVENTS);
+  }
+</pre>
+
+This launches Tcl's event loop in a thread separate from the main, and is now
+in an alertable state.  At first glance, this looks like we'll need to compile
+Tcl for thread support.  In truth, we won't need to.  <U>When we take on the
+responsibility of thread safety, and only access Tcl from the thread it's
+running in, we'll be fine</U>.  Our new concerns are:
+<p/>
+<OL>
+    <LI>
+	The original thread that creates an interpreter must always be the
+	same thread that accesses it.  Which leads into&hellip;
+    </LI>
+    <LI>
+	Work asked of Tcl from the application's thread must be posted to Tcl
+	instead of being run directly.  A form of message passing, if you will.
+    </LI>
+    <LI>
+	Tcl commands specific to the application are now always executed in
+	Tcl's thread context.  This is easily handled using standard-issue,
+	shared resource locking as per normal multithreaded programming
+	techniques.
+    </LI>
+</OL>
+
+In a sense, Tcl's event loop is like a waitable Queue (or FIFO).  All we need
+now is a way to send Tcl work.  For an alerting method, I'll choose
+<code>Tcl_AsyncMark()</code>.
+<p/>
+<code>Tcl_AsyncMark()</code> was designed to be called from signal handlers
+and is the perfect method for alerting Tcl from a "far away" thread.  And then
+from within the <code>AsyncProc</code> callback, we can use <code>
+Tcl_QueueEvent()</code> for posting it into the event loop.
+<p/>
+Why not use <code>Tcl_ThreadQueueEvent()</code> and <code>Tcl_ThreadAlert()</code>
+instead and post the event directly?  <code>Tcl_ThreadQueueEvent()</code> isn't,
+actually, thread-safe. The mutex lock on the events' linkedlist is only turned on
+when compiled for multithreading support.  Therefore, we risk corrupting the
+linkedlist.
+<p/>
+Making Tcl's event loop into a thread-safe work queue using <code>Tcl_AsyncMark()
+</code> and <code>Tcl_QueueEvent()</code> looks like this:
+
+<OL>
+    <LI>
+	Create an async token from within the target Tcl thread (the one where
+	the event loop is running) with <code>Tcl_AsyncCreate()</code>.  <U>The
+	use of this token with <code>Tcl_AsyncMark()</code> is unlimited, has no
+	restrictions and is our secret sause</U>.
+    </LI>
+    <LI>
+	Queue an event into Tcl's event loop from the <code>AsyncProc</code> with
+	<code>Tcl_QueueEvent()</code>. The handler function associated to the
+	token is always entered within Tcl's thread context.  From here, it's
+	unsafe to use the interp pointer in the params, even if it is valid.
+	<U>Only allocation Tcl API calls are allowed</U> such as
+	<code>Tcl_NewStringObj()</code>, <code>Tcl_GetHashValue()</code> and
+	pretty much anything that doesn't use an interp pointer.
+    </LI>
+    <LI>
+	In the <code>EventProc</code>, we <U>switch to our interp pointer and
+	run anything</U>, <code>Tcl_Eval()</code>, etc&hellip;
+    </LI>
+</OL>
+
+For this to work effectively, in between time <code>Tcl_AsyncMark()</code> is
+called with our token, and our <code>AsyncProc</code> is entered, we'll need
+to store the "job" in our own work queue.
+<pre>
+  Tcl_AsyncHandler OurToken;
+  Tcl_Interp *OurInterp;
+  SomeFIFOClass OurQ;
+
+  WINAPI BOOL WinMain (...)
+  {
+      MSG msg;
+
+      RegisterClass(...);
+      CreateWindow(...);
+
+      CreateThread(TclThreadFunc,...);
+      while (GetMessage(&amp;msg, NULL, 0, 0)) {
+          TranslateMessage(&amp;msg);
+          DispatchMessage(&amp;msg);
+      }
+      return msg.wParam;
+  }
+
+  WINAPI int TclThreadFunc(void *)
+  {
+      Tcl_FindExecutable(...);
+      OurInterp = Tcl_CreateInterp();
+      Tcl_Init(OurInterp);
+
+-&gt;    OurToken =
+          Tcl_AsyncCreate(OurAsyncProc, NULL);
+
+      OurAppInit(OurInterp);
+
+      while (!done)
+          Tcl_DoOneEvent(TCL_ALL_EVENTS);
+
+      Tcl_DeleteInterp(OurInterp);
+      Tcl_AsyncDelete(OurToken);
+      Tcl_Finalize();
+      return 0;
+  }
+
+  typedef struct {
+      char *script;
+  } ASYNCPAYLOAD, *LPASYNCPAYLOAD;
+
+  typedef struct {
+      Tcl_Event header;
+      LPASYNCPAYLOAD apl;
+  } ASYNCEVENT, *LPASYNCEVENT;
+
+  LRESULT CALLBACK
+  OurWndProc(HWND h,UINT m,WPARAM w,LPARAM l)
+  {
+      switch (m) {
+      case SOME_MSG_CONSTANT:
+         LPASYNCPAYLOAD apl = new ASYNCPAYLOAD;
+         apl-&gt;script = (char *)w;
+         OurQ.Put(apl);
+-&gt;       Tcl_AsyncMark(OurToken);
+         break;
+      default:
+         DefWindowProc(h, m, w, l);
+      }
+  }
+
+  int OurAsyncProc(void*,Tcl_Interp*,int code)
+  {
+      // This is Tcl's thread context.
+
+      LPASYNCPAYLOAD apl;
+      LPASYNCEVENT ae;
+
+      // Assume the Get() method returns false when
+      // the Queue is empty.  Multiple calls to
+      // Tcl_AsyncMark() won't guarentee multiple
+      // entries to the callback, so we grab
+      // everything while we're here.
+
+      while (OurQ.Get(&amp;apl)) {
+          ae = (LPASYNCEVENT) Tcl_Alloc(
+              sizeof(ASYNCEVENT));
+          ae-&gt;header.proc = OurEventProc;
+          ae-&gt;apl = apl;
+
+-&gt;        Tcl_QueueEvent((Tcl_Event *)ae,
+              TCL_QUEUE_TAIL);
+      }
+      return code;
+  }
+
+  int OurEventProc(Tcl_Event *evPtr, int flags)
+  {
+      // Again, this is Tcl's thread context.
+
+      LPASYNCEVENT ae = (LPASYNCEVENT) evPtr;
+
+      // We only handle file-type events here.
+      if (!(flags &amp; TCL_FILE_EVENTS)) return 0;
+
+-&gt;    Tcl_Eval(OurInterp, ae-&gt;apl-&gt;script);
+      delete ae-&gt;apl-&gt;script;
+      delete ae-&gt;apl;
+
+      return 1;
+  }
+</pre>
+
+<h3><a name="library"></a><a href="#toc">The Static Library.</a></h3>
+
+Let's not stop.  I've described a method for alerting and transfering jobs to
+Tcl. Let's make it into a static library for inclution into an application.
+<p/>
+There are some issues that need to be addressed regarding Stubs and the search
+algorithym for finding tclXX.dll, but I'm quite happy with what I do have finished.
+<p/>
+Introducing 'TES' -- a development library for running Tcl on windows, using
+the method just descibed.  Its use would look something like the following:
+
+<pre>
+  TclEventSystem *Tcl;
+
+  WINAPI BOOL WinMain (...)
+  {
+      MSG msg;
+
+      RegisterClass(...);
+      CreateWindow(...);
+
+      Tcl = TES::Instance("8.1", 0 /*exact*/);
+
+      while (GetMessage(&amp;msg, NULL, 0, 0)) {
+          TranslateMessage(&amp;msg);
+          DispatchMessage(&amp;msg);
+      }
+      Tcl-&gt;Shutdown();
+      return msg.wParam;
+  }
+</pre>
+
+To post work to Tcl, we now have to create an instance of a class derived from
+TclAsyncJob.  The base class looks like this:
+
+<pre>
+  // Base class for all work to be handed over to Tcl.
+  class TclAsyncJob
+  {
+  public:
+      // Returning true means an event does not
+      // need to be queue'd and the only use was
+      // to yield Tcl for just the AsyncProc.
+      // NOTE: Only Tcl_* allocation functions are
+      // allowed to be called from this function
+      // (Ie. pretty much any that doesn't use an
+      // interp pointer).
+      virtual bool AsyncProc (void) = 0;
+
+      // Call any Tcl function in here.
+      virtual void EventProc (void) = 0;
+  };
+</pre>
+
+Using the previous WinProc, we'll post a job using the library.
+
+<pre>
+  class OurTclRun : public TES::TclAsyncJob
+  {
+     char *script;
+
+  public:
+     OurTclRun(char *script_)
+       : script(script_)
+     {
+         TES::Instance()-&gt;QueueJob(this);
+     }
+     ~OurTclRun() { delete script; }
+     bool AsyncProc() { return false; }
+     void EventProc()
+     {
+         Tcl_Eval(interp, script);
+     }
+  };
+
+  LRESULT CALLBACK
+  OurWndProc(HWND h, UINT m, WPARAM w, LPARAM l)
+  {
+      switch (m) {
+      case SOME_MSG_CONSTANT:
+          new OurTclRun((char *)w);
+          break;
+      default:
+         return DefWindowProc(h, m, w, l);
+      }
+      return TRUE;
+  }
+</pre>
+
+See the example source code for the &quot;real deal&quot;.
+
+<h3><a name="conclutions"></a><a href="#toc">Conclutions</a></h3>
+
+This new method is experimental.  I've been playing around with it, but haven't
+used it in a &quot;real&quot; application except for the examples themselves.
+I do recommend using 8.4a3 as of 2001-08-30 as the last bug was just fixed with
+how the whole Tcl_Async* API works (or had never worked, whichever your veiw-point).
+8.3.4 already has this patch as of 2001-09-01.
+<p/>
+If you do need to use an older Tcl version of range [8.1.0, 8.4a3), just copy the
+latest generic/tclAsync.c (-r1.6) over and apply this, too:
+<pre>
+*** generic/tclEvent.c	2001/03/31 07:57:31	1.11
+--- generic/tclEvent.c	2001/04/12 00:43:13
+***************
+*** 907,912 ****
+--- 907,913 ----
+  	}
+  	TclFinalizeIOSubsystem();
+  	TclFinalizeNotifier();
++ 	TclFinalizeAsync();
+  
+  	/*
+  	 * Blow away all thread local storage blocks.
+
+*** generic/tclInt.h	2000/08/25 02:04:29	1.50
+--- generic/tclInt.h	2001/04/12 00:43:20
+***************
+*** 1688,1693 ****
+--- 1688,1694 ----
+  EXTERN void		TclFinalizeLoad _ANSI_ARGS_((void));
+  EXTERN void		TclFinalizeMemorySubsystem _ANSI_ARGS_((void));
+  EXTERN void		TclFinalizeNotifier _ANSI_ARGS_((void));
++ EXTERN void		TclFinalizeAsync _ANSI_ARGS_((void));
+  EXTERN void		TclFinalizeSynchronization _ANSI_ARGS_((void));
+  EXTERN void		TclFinalizeThreadData _ANSI_ARGS_((void));
+  EXTERN void		TclFindEncodings _ANSI_ARGS_((CONST char *argv0));
+</pre>
+The diff for <code>tclInt.h</code> might need a rather high fuzz factor for patch <code>;^)</code>
+<hr/>
+The library itself (called 'TES') can be found at:
+<p/>
+<a href="http://sf.net/projects/tomasoft/" target="photo" title="Freebie goodies!">
+http:&#47;&#47;sf.net&#47;projects&#47;tomasoft</a>
+<p/>
+Please give this a try and let me know what you think.<br/>
+<hr/>
+--<br/>
+David Gravereaux [planet: earth,milkyway,alpha sector; species: human].<br/>
+<a href="http://validator.w3.org/check/referer"><img border="0"
+        src="http://www.w3.org/Icons/valid-html401"
+        alt="Valid HTML 4.01!" height="31" width="88"></a>
+</BODY>
+</HTML>

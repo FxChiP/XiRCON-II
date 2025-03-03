@@ -1,0 +1,311 @@
+#------------------------------------------------------------------------
+#  irc_ui_html.itcl --
+#
+#  UI half for irc_engine.dll for DHTML output.  Proof-of-concept.
+#
+#  http://www.webreview.com/style/css1/charts/mastergrid.shtml
+#  Look down the chart and see that IE5.5 doesn't do 'white-space: pre'
+#  nor 'text-decoration: blink'.
+#
+#------------------------------------------------------------------------
+#  RCS: @(#) $Id: irc_ui_html.itcl,v 1.1 2003/11/14 10:36:21 davygrvy Exp $
+#------------------------------------------------------------------------
+
+package require IRC_Engine
+
+itcl::class IRC::ui {
+    constructor {args} {
+	### create a CTCP2 parser in tag mode.
+	set displayAction [CTCP2::parse #auto [itcl::code $this dodisplay] literal \
+		-fg 0x$tagColors(default,f) -bg 0x$tagColors(default,b) \
+		-sp $CharSpacing]
+
+	set f [open "irc_output.html" w]
+	fconfigure $f -encoding utf-8
+	puts $f [subst {
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=[fconfigure $f -encoding]">
+    <META NAME="Generator" CONTENT="IRC_Engine">
+    <TITLE>Live on Internet Relay Chat</TITLE>
+    <style type="text/css">
+	/* standard line class */
+	.ircline   { text-indent: -2em; padding-left: 2em; text-align: left; white-space: normal; background-image: none; font-family: [expr {"$CharSpacing" == "fixed" ? "monospace" : "san-serif"}] }
+	/* standard attributes classes (overlayed) */
+	.blink      { text-decoration: blink }
+	.underline  { text-decoration: underline }
+	.overstrike { text-decoration: line-through }
+	.bold       { font-weight: bold }
+	.italic     { font-style: italic }
+        .reverse    { color: expression(this.parentNode.currentStyle.backgroundColor) !important; background-color: expression(this.parentNode.currentStyle.color) !important}
+	/* tag color classes (absolute) */
+	.default    { color: #$tagColors(default,f);	background-color: #$tagColors(default,b) }
+	.public     { color: #$tagColors(public,f);	background-color: #$tagColors(public,b) }
+	.private    { color: #$tagColors(private,f);	background-color: #$tagColors(private,b) }
+	.action     { color: #$tagColors(action,f);	background-color: #$tagColors(action,b) }
+	.notice     { color: #$tagColors(notice,f);	background-color: #$tagColors(notice,b) }
+	.ctcp       { color: #$tagColors(ctcp,f);	background-color: #$tagColors(ctcp,b) }
+	.change     { color: #$tagColors(change,f);	background-color: #$tagColors(change,b) }
+	.join       { color: #$tagColors(join,f);	background-color: #$tagColors(join,b) }
+	.part       { color: #$tagColors(part,f);	background-color: #$tagColors(part,b) }
+	.kick       { color: #$tagColors(kick,f);	background-color: #$tagColors(kick,b) }
+	.quit       { color: #$tagColors(quit,f);	background-color: #$tagColors(quit,b) }
+	.highlight  { color: #$tagColors(highlight,f);	background-color: #$tagColors(highlight,b) }
+	.error      { color: #$tagColors(error,f);	background-color: #$tagColors(error,b) }
+	.nick       { color: #$tagColors(nick,f);	background-color: #$tagColors(nick,b) }
+	.channel    { color: #$tagColors(channel,f);	background-color: #$tagColors(channel,b) }
+	.mode       { color: #$tagColors(mode,f);	background-color: #$tagColors(mode,b) }
+	.socket     { color: #$tagColors(socket,f);	background-color: #$tagColors(socket,b) }
+    </style>
+</head>
+<body text="#$tagColors(default,f)" bgcolor="#$tagColors(default,b)">
+<a href="http://validator.w3.org/check/referer"><img border="0"
+          src="http://www.w3.org/Icons/valid-html401"
+          alt="Valid HTML 4.01!" height="31" width="88"></a>}]
+    }
+    destructor {
+	if {[info exist displayAction]} {$displayAction destroy}
+	if {[info exist f]} {
+	    puts $f {</body>}
+	    puts $f {</html>}
+	    close $f
+	}
+    }
+    public {
+	method destroy {} {itcl::delete object $this}
+	method echo {what {where {}} {which {}}}
+#	method window {args}
+	method menu {args}
+	method hotkey {args}
+	method alias {args}
+	method channel {args}
+	method query {args}
+	method chat {args}
+	method queries {args}
+	method chats {args}
+	method say {args}
+	method input {args}
+    }
+    private {
+	method getTimeStamp {}
+	method haveReadyAttributes {var}
+	method clearReadyAttributes {}
+	method dodisplay {args}
+	method replace_sp {spaces}
+
+	variable displayAction
+	variable f
+
+	variable overlayclasses [list]
+	variable segIsUrl 0
+	variable scale {}
+	variable spacing {}
+	variable tagName {}
+	variable fg {}
+	variable bg {}
+	variable tabFill "[string repeat \\&nbsp\; 7] "
+
+	### Master list of colors.
+	common tagColors
+	array set tagColors [list \
+	    default,f	C0C0C0		default,b	000000 \
+	    public,f	C0C0C0		public,b	000000 \
+	    private,f	C0C0C0		private,b	000000 \
+	    action,f	FF7F00		action,b	000000 \
+	    notice,f	7F3F00		notice,b	000000 \
+	    ctcp,f	FF0000		ctcp,b		000000 \
+	    change,f	A000A0		change,b	000000 \
+	    join,f	007F7F		join,b		000000 \
+	    part,f	007F7F		part,b		000000 \
+	    kick,f	007F00		kick,b		000000 \
+	    quit,f	007F00		quit,b		000000 \
+	    highlight,f	FF00FF		highlight,b	000000 \
+	    error,f	FFFF00		error,b		FF0000 \
+	    nick,f	00FFFF		nick,b		000000 \
+	    channel,f	00FF00		channel,b	000000 \
+	    mode,f	FFFF00		mode,b		000000 \
+	    socket,f	FFFFFF		socket,b	7F7F7F]
+
+	common CharSpacing fixed ;# or proportional
+    }
+}
+
+itcl::body ::IRC::ui::getTimeStamp {} {
+    set secs [clock seconds]
+    set ms [clock clicks -milliseconds]
+    set base [expr { $secs * 1000 }]
+    set fract [expr { $ms - $base }]
+    if { $fract > 1000 } {
+	set diff [expr { $fract / 1000 }]
+	incr secs $diff
+	incr fract [expr { -1000 * $diff }]
+    }
+    return [clock format $secs -format "%a, %e %b %Y %H:%M:%S.[format %03d $fract]"]
+}
+
+itcl::body ::IRC::ui::haveReadyAttributes {var} {
+    upvar $var local
+    set local [list]
+    set classes [list]
+    set styles [list]
+
+    if {[llength $overlayclasses]} {
+	lappend classes $overlayclasses
+    }
+    if {[string length $tagName]} {
+	lappend classes $tagName
+    }
+    if {[string length $scale]} {
+	lappend styles "font-size: $scale"
+    }
+    if {[string length $spacing]} {
+	lappend styles "font-family: $spacing"
+    }
+    if {[string length $fg]} {
+	lappend styles "color: $fg"
+    }
+    if {[string length $bg]} {
+	lappend styles "background-color: $bg"
+    }
+
+    set a [llength $classes]
+    set b [llength $styles]
+
+    if {$a || $b} {
+	### space seperated
+	if {$a} {lappend local "class=\"[join $classes { }]\""}
+	### semicolon seperated
+	if {$b} {lappend local "style=\"[join $styles {; }]\""}
+	set local [join $local]
+	return 1
+    } else {
+	return 0
+    }
+}
+
+itcl::body ::IRC::ui::clearReadyAttributes {} {
+    set overlayclasses [list]
+    set segIsUrl 0
+    set scale {}
+    set spacing {}
+    set tagName {}
+    set fg {}
+    set bg {}
+}
+
+
+itcl::body ::IRC::ui::dodisplay {args} {
+    puts $args
+    set cmd [lindex $args 0]
+    switch -- $cmd {
+        "tag" {
+	    set tagName [lindex $args 1]
+	    set fg {}
+	    set bg {}
+
+	    ### We must return the color values to the parser.  Doing so allows it
+	    ### to handle context errors that might follow.  ie. can't set
+	    ### fore to black if back is black.
+	    ###
+	    return [list 0x$tagColors($tagName,f) 0x$tagColors($tagName,b)]
+	}
+	"bold" -
+	"reverse" -
+	"underline" -
+	"overstrike" -
+	"italic" -
+	"blink"	{
+	    ### toggle it.
+	    if {[lindex $args 1]} {
+		### add it.
+		lappend overlayclasses $cmd
+	    } else {
+		### subtract it.
+		if {[set i [lsearch -exact $overlayclasses $cmd]] != -1} {
+		    set overlayclasses [lreplace $overlayclasses $i $i]
+		}
+	    }
+	}
+	"url" {
+	    ### the segment to follow will be a URL.
+	    set segIsUrl [lindex $args 1]
+	}
+	"spacing" {
+	    set spacing [expr {"[lindex $args 1]" == "fixed" ? "monospace" : "san-serif"}]
+	}
+	"fontsize" {
+	    ### has the range -5 to 5
+	    switch -- [lindex $args 1] {
+		-5  { set scale 50%  }
+		-4  { set scale 60%  }
+		-3  { set scale 70%  }
+		-2  { set scale 80%  }
+		-1  { set scale 90%  }
+		0   { set scale {}   }
+		1   { set scale 115% }
+		2   { set scale 130% }
+		3   { set scale 145% }
+		4   { set scale 170% }
+		5   { set scale 200% }
+	    }
+	}
+	"forecolor" {
+	    set tagName {}
+	    set fg "rgb([lindex $args 1],[lindex $args 2],[lindex $args 3])"
+	}
+	"backcolor" {
+	    set tagName {}
+	    set bg "rgb([lindex $args 1],[lindex $args 2],[lindex $args 3])"
+	}
+	"segment" {
+	    if {[set inSpan [haveReadyAttributes attributes]]} {
+		puts -nonewline $f "<span $attributes>"
+	    }
+
+	    if {$segIsUrl} {
+		puts -nonewline $f "<a href=\"[lindex $args 1]\" target=\"_workspot\">[lindex $args 1]</a>"
+	    } else {
+		### Quote some specials.
+		set line [string map {& &amp; < &lt; > &gt; \" &quot;} [lindex $args 1]]
+
+		### Don't let multiple spaces be collapsed by the browser.
+		regsub -all { (?= )} $line {\&nbsp;} line
+
+		### Fill tabs
+		regsub -all {\t} $line $tabFill line
+
+		### Push the text out.
+		puts -nonewline $f $line
+	    }
+
+	    if {$inSpan} {
+		### close the span tag.
+		puts -nonewline $f {</span>}
+	    }
+	}
+    }
+}
+
+itcl::body ::IRC::ui::replace_sp {spaces} {
+    return [string repeat &nbsp\; [string length $spaces]]
+}
+
+# this is the magic
+itcl::body ::IRC::ui::echo {what {where {}} {which {}}} {
+
+    ### Start the line in our paragraph rule.
+    puts -nonewline $f "<div class=\"ircline\" title=\"[getTimeStamp]\">"
+
+    ### Grind it through our CTCP/2 parser to get out to the display.
+    $displayAction parse $what
+
+    ### wipe-out any left-over attributes.
+    clearReadyAttributes
+
+    ### Close our paragraph rule
+    puts $f {</div>}
+
+    ### Force it out.
+    flush $f
+}

@@ -1,0 +1,1149 @@
+2006-09-24  davygrvy
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		added missing unload event (duh!)
+
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* generic/tclTestAdapter.cpp:
+		IRC_UtfToLayedExternalDString  renamed to
+		IRC_UtfToLayeredExternalDString as was intended prior to me
+		typing it wrong the first time.
+
+	* win32/irc_engine.rc:
+		updated to version 0.2
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdapter.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		URI regular expressions added for detector, but not yet being
+		used.
+
+	* library/default.tcl:
+		updated some color points
+
+2004-12-12  davygrvy
+	* generic/CTCP2ParserAction.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdapter.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		Big brain dump.
+
+	* generic/Engine.class:
+	* generic/Engine.h:
+		added JNI support files
+
+	* library/irc_engine.itcl:
+		CTCP2::parse needed a destroy member
+
+2003-11-14  davygrvy
+	* generic/tclTestAdapter.cpp:
+	* library/default.tcl:
+		removed compiled libraries from version control.  It's getting
+		in my way
+
+2003-11-11  davygrvy
+	* win32/irc_engine.rc:
+		updated version numbers
+
+	* generic/IRCEngineItclAdapter.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+		Changed filename
+
+2003-11-10  davygrvy
+	* generic/CTCP2ParserAction.hpp:
+		had to cache fg and bg during PushOut, so not to trigger a
+		change.
+
+2003-11-09  davygrvy
+	* generic/IRCEngineItclAdapter.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/default.tcl:
+		Added a WhoisCmd() and change the Tcl_PkgProvide for user
+		scripts to not be IRCL_Engine_User to be XiRCON 2.0 instead.
+
+	* tests/tolkien.tcl:
+		tengwar script test.  Uses the decremented ConScript area, but
+		so what ;)
+
+2003-11-08  davygrvy
+	* generic/CTCP2ParserAction.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdapter.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/tclTestAdapter.cpp:
+	* generic/tclTestAdaptor.cpp:
+	* library/default.tcl:
+	* win32/irc_engine.dsp:
+		changes to match cpptcl recent changes.
+
+2003-01-18  davygrvy
+	* library/default.tcl:
+		fixed the CTCP time reply so it is in the proper rfc822 format.
+
+2003-01-17  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUtils.cpp:
+		japanese decoding problems fixed.  layered decoding now working.
+
+	* library/default.tcl:
+		a little clean-up.  small stuff.  Will attack it soon as we have a test GUI done in Tk
+		for building up the windowing command protocol.
+
+	* tests/klingon.tcl:
+		for testing the sending/reception of klingon characters over
+		IRC.
+
+	* generic/CTCP2ParserAction.hpp:
+		a ctcp/2 display attribute parser is now being included.
+
+2003-01-13  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.hpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* generic/tclTestAdaptor.cpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+	* library/msgs/de.msg:
+	* library/msgs/en.msg:
+	* library/msgs/es.msg:
+	* library/msgs/es_BR.msg:
+	* library/msgs/fr.msg:
+	* library/msgs/ru.msg:
+	* library/servers.ini:
+	* tests/unitest.tcl:
+	* win32/irc_engine.dsp:
+		Lots 'a' changes.  encoding stuff still needs work.
+
+2003-01-08  davygrvy
+	* library/msgs/es.msg:
+		donated by Fernando Cassia <fcassia@compuserve.com>
+
+	* library/msgs/en.msg:
+		New message catalog
+
+	* library/msgs/en.msg:
+	* library/msgs/es.msg:
+		fixed error
+
+	* library/msgs/en.msg:
+	* library/msgs/es_BR.msg:
+		renamed "latin american spanish" translation to es_BR.  I think that's the right
+		code.  Not sure though.
+
+	* library/msgs/de.msg:
+	* library/msgs/en.msg:
+	* library/msgs/es.msg:
+	* library/msgs/fr.msg:
+	* library/msgs/ru.msg:
+		beginning of translations.  awaiting donations...
+
+2003-01-07  davygrvy
+	* library/servers.ini:
+		beginning to get a better feel for how to manage info.  A work
+		in progress...
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.hpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/PerlCore.cpp:
+	* generic/PerlCore.hpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+	* win32/irc_engine.dsp:
+		reorganized the color command.  It now inserts a tag in place of the literal.
+		this tag is used later by the display to fill in what values it would like to use.
+		Many other changes in this round of edits as well.  I fogot exactly what
+		they were.
+
+2003-01-03  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.cpp:
+		color command now returns "tags" instead of literal color codes.  This
+		will allow the display to choose how it will render them and fits better
+		with how Tk's text widget works.
+		
+		Added an -encoding option to the connect command.  For use when certain
+		IRC servers break the iso-8859-1 standard, such as chinese chat servers.
+
+2003-01-01  davygrvy
+	* library/servers.ini:
+		not done yet, but close.
+
+	* library/servers.ini:
+		could be useful
+
+2002-12-26  davygrvy
+	* tests/unitest.tcl:
+		slight formatting changes
+
+2002-12-02  davygrvy
+	* generic/IRCEngineItclAdaptor.cpp:
+		A minor mingw (gcc) typedef issue fixed.
+
+	* library/default.tcl:
+		wrap the [puts] in a catch, should an ident requester dump the
+		socket.
+
+2002-09-19  davygrvy
+	* win32/irc_engine.dsp:
+		This commit is mainly to test the loginfo echo to the dev mailing list.  Let's see
+		if it works :)
+
+	* readme.txt:
+		Still needs lots more work, but this is a good start, at least.
+
+	* generic/IRCEngine.cpp:
+		more testing of the loginfo posting script (and system)
+
+	* tests/unitest.tcl:
+		sending unicode over IRC test.
+
+2002-09-14  davygrvy
+	* generic/IRCEngine.cpp:
+		private message color now middle grey instead of white.
+
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+	* library/numerics.tcl:
+		small subtle stuff.
+
+	* generic/IRCEngine.cpp:
+		large reference counting bug fixed.  I hate these types of bugs.  Sometime
+		you just don't know it, then *bang* in odd intermittency!
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+		initial guess for handling all the commands.
+
+2002-09-01  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* win32/IRCUserScriptProviderForActiveX.cpp:
+	* win32/IRCUserScriptProviderForDLL.cpp:
+	* win32/irc_engine.dsp:
+		Started to add the DLL stuff.
+
+2002-08-31  davygrvy
+	* generic/IRCUserScriptProviderForJava.cpp:
+		typedef'd some ugly to make it look smaller and easier to read.
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+		Java_Engine_args() appear like it might work.
+
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		More good stuff (TM)
+
+2002-08-30  davygrvy
+	* generic/IRCUserScriptProviderForJava.cpp:
+		bug fix
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+		an unfinished idea.
+
+	* generic/IRCEngine.cpp:
+		Changes from Ian Pojman for better gcc support.
+
+2002-08-28  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* generic/tclTestAdaptor.cpp:
+		Changes from Ian Pojman for better gcc support.
+
+2002-08-26  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+		gcc compatibility mods.
+
+2002-08-25  davygrvy
+	* generic/Engine.java:
+	* generic/JavaCore.cpp:
+	* generic/JavaCore.hpp:
+		fixed the exception problem creating a JVM, but now FindClass()
+		is going boom..
+
+	* generic/Engine.java:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/JavaCore.cpp:
+	* generic/JavaCore.hpp:
+		java extensions are getting added.  what a head-trip this is. 
+		can't they java like Tcl, then everything would be easy :)
+
+	* win32/irc_engine.dsp:
+		java turned on
+
+2002-08-24  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/tclTestAdaptor.cpp:
+		numerous syntax errors with -DIRCE_USEJAVA=1 fixed.
+
+	* generic/IRCUserScriptProviderForPerl.cpp:
+		some obvious syntax errors fixed
+
+2002-08-23  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+		got [my_host] working.
+
+	* generic/IRCEngine.cpp:
+		Some better error handling around script loading added.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		Added the ability to load scripts.
+
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+		Moved IRCEngineItclAdaptor::SplitFromObj() to the common utils and
+		now called IRCSplitFromObj() and can now take more than one split char.
+
+	* library/irc_engine.itcl:
+		added [scripts]
+
+	* generic/IRCEngineItclAdaptor.cpp:
+		IRCSplitFromObj() in replace of the local.  Spelling fix with
+		NotImplementedCmd() and added [my_host].
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+		syntax error fixed with constructor
+
+2002-08-18  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUtils.cpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+	* library/numerics.tcl:
+		not sure of the details, but more "good stuff" added.
+
+2002-08-16  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* generic/tclTestAdaptor.cpp:
+		Unicode over IRC now works!  IRCEngine::SendToIRC() now converts all
+		characters in the uncode range to embedded utf-8 and marks them with
+		CTCP/2 encoding attributes.  Both ends are completed.
+
+2002-08-15  davygrvy
+	* generic/IRCChanInfo.cpp:
+	* generic/IRCChanInfo.hpp:
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+		renamed
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/tclTestAdaptor.cpp:
+	* library/default.tcl:
+		CTCP/2 encoding decoder in IRCSplitAndQ now open for business!  Sending
+		encoding wrapped characters is still an issue, though.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* win32/irc_engine.dsp:
+		using renamed IRCChanObj->IRCChanInfo
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+		[disconnect] now doesn't blow-up and connection state info is properly
+		cleared.
+
+2002-08-14  davygrvy
+	* generic/IRCUserScriptProviderNub.cpp:
+		A pass-through for use when default.tcl can't load.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+		more bugs fixed.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/numeric.h:
+		new ClearObj #define for better housecleaning.
+
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+		Added a new [rehash] member to IRC::engine for reloading default.tcl .  Got
+		[topic] working and return who and timeset, as well, as a 3 element list.
+
+	* library/default.tcl:
+		`on notice` logic fixed.
+
+2002-08-13  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+		[channels] now open for business
+
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+	* win32/irc_engine.dsp:
+		[my_nick] and [server] performing well.
+
+2002-08-11  davygrvy
+	* generic/numeric.h:
+		re-adding numeric.h
+
+2002-08-10  davygrvy
+	* generic/IRCEngineItclAdaptor.cpp:
+		bottom line at requiring Tcl 8.3
+
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+		re-adding
+
+	* library/default.tcl:
+		more stuff
+
+2002-08-09  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCSplitAndQ.cpp:
+		now 8.3 compatible with Tcl_UniCharNcasecmp() (8.4 only) replaced with
+		Tcl_UniCharNcasecmp()
+
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/irc_engine.itcl:
+		[channels] and [nicks] were double declared, now fixed.
+
+2002-08-08  davygrvy
+	* library/default.tcl:
+		I'm becoming very please with how this is taking shape.
+
+	* generic/IRCEngine.cpp:
+		fall-out printing logic changed so the three '***' are red to indicate an
+		unhandled event.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+	* library/default.tcl:
+	* library/irc_engine.itcl:
+		added a [color] command
+
+	* generic/IRCEngine.cpp:
+		added a color string for "kick"
+
+	* library/default.tcl:
+		more work with color handling
+
+2002-08-07  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/default.tcl:
+		today's rounds of edits
+
+2002-08-06  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		Even more good stuff (TM)
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* library/default.tcl:
+		removed all extra default handler that just echoed to the status window and
+		set IRCEngine::EvalOneIRCEvent() to do do that instead for unhandled ones.
+
+	* generic/IRCEvents.hpp:
+		template changed to take a deletion proc.
+
+	* library/irc_engine.itcl:
+		Using inheritence as our "soft link" at run-time is now proven to work.  _init,
+		_destroy renamed to avoid name clashing for inheritence.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		more good stuff (TM)
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		errors from user interps loading are now passing up.
+
+2002-08-04  davygrvy
+	* generic/IRCEngineItclAdaptor.cpp:
+		IRC::engine::topic is a GUI command and now yanked from us.  We will expect
+		this in a derived object of IRC::engine.
+
+	* library/default.tcl:
+		some small stuff
+
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		GUI command assumptions now aliased, too.  We will assume through
+		inheritence that the derived IRC::engine object will have these methods.
+
+2002-08-03  davygrvy
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/tclTestAdaptor.cpp:
+		adaptor base now brought in as private inheritence.
+
+2002-08-02  davygrvy
+	* library/default.tcl:
+		aliased up IRC::echo and IRC::window.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/default.tcl:
+		more working pathways.  @socket event now fires in the default script.  Still
+		can't receive yet.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/tclTestAdaptor.cpp:
+		const`ifying work.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/irc_engine.itcl:
+		more member commands added to IRCEngineItclAdaptor.
+
+2002-08-01  davygrvy
+	* generic/IRCEngineItclAdaptor.cpp:
+		yet, more good stuff to ConnectCmd()
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+		yet, even more stuff hooked in.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* library/default.tcl:
+	* win32/irc_engine.dsp:
+		now connects to IRC!
+
+2002-07-31  davygrvy
+	* library/irc_engine.itcl:
+		added some comments to the file comment block.
+
+	* generic/IRCEngineItclAdaptor.cpp:
+		Use the interp pointer when getting encodings.
+
+	* generic/IRCEvents.hpp:
+		Added missing file header comments.
+
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/tclTestAdaptor.cpp:
+		Cathedral building is a fine craft..
+
+	* win32/irc_engine.dsp:
+		let's not forget the other library files I'm about to use :)
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* library/irc_engine.itcl:
+	* win32/irc_engine.rc:
+	* win32/resource.h:
+		more good stuff (tm)
+
+2002-07-30  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		more good stuff changed..  Too tired to keep going..
+
+	* generic/tclTestAdaptor.cpp:
+		renamed the adaptor classes.
+
+	* library/irc_engine.itcl:
+		top-level init script to be called by the pkgIndex for this
+		extension.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+		I've made a mess of this, but motion is happening.
+
+	* generic/IRCEngineItclAdaptor.cpp:
+		more stuff, closer...
+
+	* generic/IRCEngineItclAdaptor.cpp:
+		new top-level interface.  IRCEngine will get smaller.  This
+		will get bigger...
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+		more good stuff...
+
+	* generic/IRCUserScriptProvider.hpp:
+		changed a Tcl::Adapter reference to be the new Tcl::Adaptor
+		name change.
+
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEngineItclAdaptor.cpp:
+	* library/default.tcl:
+	* library/engine.tcl:
+	* library/irc_engine.itcl:
+	* library/numerics.tcl:
+	* win32/irc_engine.dsp:
+		if you start digging the tunnel on that side of the mountain, and I start on this
+		side, we'll meet in the middle somewhere...
+
+	* generic/IRCEngineItclAdaptor.cpp:
+		closer...  more work to go.
+
+2002-07-29  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.hpp:
+		integrating script providers into the top-level IRCEngine class
+		:)
+
+2002-07-28  davygrvy
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		The IRCEvents class has been turned into a template to support all the script
+		engine's own bytecode representation.  Just the Tcl one is working so far.
+
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/JavaCore.cpp:
+	* generic/JavaCore.hpp:
+	* generic/PerlCore.hpp:
+		some more progress.
+
+2002-07-27  davygrvy
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/JavaCore.hpp:
+	* generic/PerlCore.cpp:
+	* generic/PerlCore.hpp:
+		perl and java moved over to the new bridge pattern as well.
+
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+		python stuff moved over to a bridge pattern to avoid all the
+		header file namespace pollution garbage.
+
+2002-07-26  davygrvy
+	* generic/IRCUserScriptProvider.hpp:
+		trying to place all class definitions in one header.
+
+2002-07-24  davygrvy
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+		not needed.
+
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		base class changed.
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/PerlCore.cpp:
+	* generic/PerlCore.hpp:
+	* win32/irc_engine.dsp:
+		more stuff.  Doesn't work yet, but coming along nicely.
+
+	* generic/PythonCore.cpp:
+	* generic/PythonCore.hpp:
+		new compile-time switches added to remove/keep this.
+
+	* generic/numeric.h:
+		not ever used.
+
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/JavaCore.cpp:
+	* generic/JavaCore.hpp:
+	* win32/irc_engine.dsp:
+		Some very empty java stuff added.
+
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/PerlCore.cpp:
+	* generic/PerlCore.hpp:
+	* win32/irc_engine.dsp:
+		initial perl stuff getting added.
+
+2002-07-22  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/PythonCore.cpp:
+	* generic/PythonCore.hpp:
+		IRCEngine is getting smaller and more to how I want it, and the script provider
+		stuff is getting bigger to more how I envision it.
+
+	* tests/rfc1459.test:
+		more tests added
+
+	* generic/IRCUserScriptProviderForPython.cpp:
+		TranslateObj() is taking shape.
+
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* generic/PythonCore.hpp:
+	* win32/irc_engine.dsp:
+		Wow!  The python stuff compiles cleanly.
+
+2002-07-21  davygrvy
+	* generic/IRCSplitAndQ.cpp:
+		lint and stuff.
+
+	* generic/IRCParse.hpp:
+		Get* members set for readable with const.
+
+	* win32/IRCUserScriptProviderForDLL.cpp:
+		some user might want a script done in a compiled language to a
+		dll.
+
+	* generic/IRCUserScriptProviderForTcl.cpp:
+		more complete.
+
+	* generic/tclTestAdaptor.cpp:
+		changed Tcl macro 'CONST' for the real one 'const' because this is C++ where
+		'const' shall always exist.
+
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/PythonCore.cpp:
+	* generic/PythonCore.hpp:
+	* win32/irc_engine.dsp:
+		Some python stuff added.
+
+	* generic/IRCUserScriptProvider.hpp:
+	* generic/IRCUserScriptProviderForJava.cpp:
+	* generic/IRCUserScriptProviderForPerl.cpp:
+	* generic/IRCUserScriptProviderForPython.cpp:
+	* generic/IRCUserScriptProviderForTcl.cpp:
+	* win32/IRCUserScriptProviderForActiveX.cpp:
+	* win32/irc_engine.dsp:
+		ideas for generizing how to support multiple scripting engines from this
+		little tcl extension.
+
+2002-07-19  davygrvy
+	* generic/IRCEngine.cpp:
+	* library/engine.tcl:
+	* win32/irc_engine.dsp:
+		some minor cleanup
+
+	* tests/ctcp.test:
+		more tests added.
+
+	* win32/irc_engine.dsp:
+		renamed the parser tests and added the ctcp tests.  encoding test will
+		be next to add.
+
+2002-07-18  davygrvy
+	* generic/IRCParse.cpp:
+		more standards complient.
+
+	* win32/irc_engine.test.dsm:
+		ick!  dsm macros stink.
+
+	* tests/ctcp.test:
+	* tests/rfc1459.test:
+	* tests/rfc1459_parser.test:
+		renamed the parser tests and added the ctcp tests.  encoding test will
+		be next to add.
+
+2002-07-17  davygrvy
+	* tests/rfc1459_parser.test:
+		this needs updating.  major updating.
+
+	* generic/tclTestAdaptor.cpp:
+		using Status() of IRCParse class.
+
+	* generic/IRCParse.cpp:
+		Changed some logic around to be more RFC complient.
+
+2002-07-16  davygrvy
+	* generic/IRCSplitAndQ.cpp:
+		optimized the switch logic.
+
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		SplitModes() now working.  More modes need to be added.
+
+	* win32/irc_engine.dsp:
+		optimized the build size to be smaller without all the empty
+		holes.
+
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		dalnet and dancer channel modes added.  user mode don't go
+		through here.
+
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		No user modes yet -- just channel modes.  Changed the splitter
+		to maintain unicode through-out.
+
+	* generic/IRCSplitAndQ.cpp:
+		bug fix in SplitMode() where the ObjectBuffer class wasn't
+		being cleared on each loop iteration.
+
+2002-07-15  davygrvy
+	* generic/IRCParse.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+		Changed the ObjectBuffer class a bit.
+
+	* win32/irc_engine.dsp:
+		matched the add of 2 files.
+
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.hpp:
+		Added a Status() member to see if the line was parsed without
+		errors.
+
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* win32/irc_engine.dsp:
+		removed IRCChanObj classes for the moment.
+
+	* generic/IRCEngine.cpp:
+		removed calls to PreEvent(), DefEvent(), and PostEvent().  We'll handle this
+		differently eventually.
+
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.hpp:
+		retired the use of Tcl::Obj class
+
+	* generic/IRCParse.cpp:
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+	* generic/IRCUtils.cpp:
+	* generic/IRCUtils.hpp:
+		Made the ObjectBuffer class common.
+
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		Added beginnings of splitting modes and some better Tcl_Obj* 
+		array handling.
+
+	* generic/DefEvent.cpp:
+	* generic/PostEvent.cpp:
+	* generic/PreEvent.cpp:
+		Not needed anymore.
+
+	* win32/irc_engine.dsp:
+		matched removal of the three files.
+
+2002-07-11  davygrvy
+	* generic/IRCParse.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		Added a file header comment block (about time!)
+
+2002-07-10  davygrvy
+	* generic/IRCEvents.cpp:
+	* generic/IRCParse.cpp:
+		Removed static limit of 35 middle params within the parser.
+
+2002-07-02  davygrvy
+	* generic/tclTestAdaptor.cpp:
+		updated for a change in the Tcl::Adapter templated class.
+
+	* win32/winDllMain.c:
+		minor stuff
+
+2002-04-02  davygrvy
+	* generic/IRCSplitAndQ.cpp:
+	* library/engine.tcl:
+	* win32/irc_engine.dsp:
+		not sure what these changes are, but they must be good.
+
+2002-01-14  davygrvy
+	* generic/IRCSplitAndQ.cpp:
+		All hand test cases all working.  Needs test suite entries to test the encoding
+		decoder.
+
+2002-01-13  davygrvy
+	* generic/tclTestAdaptor.cpp:
+		changed comment block to be accurate.
+
+	* generic/IRCSplitAndQ.cpp:
+	* generic/IRCSplitAndQ.hpp:
+		encoding fix-ups now working!  Needs test suite entries!
+
+	* generic/tclTestAdaptor.cpp:
+		Oops!  bug fix.  bad scope was hiding the interp pointer.
+
+2002-01-09  davygrvy
+	* library/engine.tcl:
+	* library/numerics.tcl:
+		old stuff added
+
+2001-12-13  davygrvy
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/tclTestAdaptor.cpp:
+	* tests/rfc1459_parser.test:
+	* win32/.cvsignore:
+	* win32/irc_engine.test.dsm:
+		Fixing up the ctcp2 parser stuff.  removed the old vc makefile and getting
+		ready to add an encoding pre-parser as I'll need this in IRCSplitAndQ later.
+
+2001-12-11  davygrvy
+	* generic/IRCEngine.cpp:
+	* win32/winDllMain.c:
+		some more minor trims.
+
+2001-12-10  davygrvy
+	* win32/irc_engine.dsp:
+		Yet, more stuff that I missed before.
+
+	* win32/irc_engine.dsp:
+		Fixed-up more stuff that I missed before.
+
+	* win32/irc_engine.dsp:
+		Fixed-up the project files and shoe-horned TES into it.
+
+2000-12-14  daveg
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+		beginning to add the new Tcl::Socket class...  not working yet
+
+	* win32/.cvsignore:
+		lost rcs file in repository move..  re-added
+
+	* generic/IRCChanObj.cpp:
+	* generic/IRCParse.cpp:
+		reformatted to indent = 4
+
+	* tests/rfc1459_parser.test:
+		beginning of the new tests for the engine...  There's no
+		tclTestAdaptor.cpp yet, like in UI_irc
+
+2000-10-25  davidg
+	* generic/IRCChanObj.cpp:
+		intriguing C++ bug resolved.  It seems that base classes who are
+		namespaced and templatized need special "hacking" to resolve base
+		members:
+		
+		Tcl::Hash<IRCChanObj *>::Find()
+		
+		  had to become:
+		
+		(static_cast<Tcl::Hash<IRCChanObj *> *>(this))->Find()
+
+2000-10-24  davidg
+	* generic/DefEvent.cpp:
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.hpp:
+	* generic/PreEvent.cpp:
+		adapted irc_engine to the cpptcl changes...  mostly working now
+
+2000-09-28  davidg
+	* win32/irc_engine.dsp:
+		corrected data that was causing MsDev to have parsing errors
+
+2000-09-25  davidg
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.hpp:
+	* generic/IRCParse.hpp:
+	* win32/irc_engine.dsp:
+		general clean-up and trying to get all the build components to know about
+		each other and have a consistent layout
+
+2000-08-06  davidg
+	* generic/DefEvent.cpp:
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.h:
+	* generic/IRCChanObj.hpp:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.h:
+	* generic/IRCEvents.hpp:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.h:
+	* generic/IRCParse.hpp:
+	* generic/PostEvent.cpp:
+	* generic/PreEvent.cpp:
+	* win32/irc_engine.dsp:
+		gotcha...  irc_engine now compiles.. next it gets
+		converted to using Tcl Tcp channels for sockets.
+
+2000-08-05  davidg
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.h:
+	* generic/IRCEngine.h:
+		still rearranging the files
+
+	* generic/rfc1459.g:
+		old cruft removed
+
+	* generic/irc_e.decls:
+	* generic/irc_e.h:
+	* generic/irc_eDecls.h:
+	* generic/irc_eInt.decls:
+	* generic/irc_eInt.h:
+	* generic/irc_ePort.h:
+	* generic/irc_eStubInit.c:
+		removed old garbage
+
+	* generic/DefEvent.cpp:
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.h:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.h:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.h:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.h:
+	* generic/PostEvent.cpp:
+	* generic/PreEvent.cpp:
+	* generic/irc_e.decls:
+	* generic/irc_e.h:
+	* generic/irc_eDecls.h:
+	* generic/irc_eInt.decls:
+	* generic/irc_eInt.h:
+	* generic/irc_ePort.h:
+	* generic/irc_eStubInit.c:
+	* generic/numeric.h:
+	* readme.txt:
+		ack!!  why did I get all these fucked-up <EOL> things??
+
+	* generic/IRCChanObj.h:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.hpp:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.h:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.h:
+	* win32/irc_engine.dsp:
+	* win32/winDllMain.c:
+		fixing old broken code.
+
+2000-02-14  davygrvy
+	* readme.txt:
+		initial import
+
+	* generic/DefEvent.cpp:
+	* generic/IRCChanObj.cpp:
+	* generic/IRCChanObj.h:
+	* generic/IRCEngine.cpp:
+	* generic/IRCEngine.h:
+	* generic/IRCEvents.cpp:
+	* generic/IRCEvents.h:
+	* generic/IRCParse.cpp:
+	* generic/IRCParse.h:
+	* generic/PostEvent.cpp:
+	* generic/PreEvent.cpp:
+	* generic/irc_e.decls:
+	* generic/irc_e.h:
+	* generic/irc_eDecls.h:
+	* generic/irc_eInt.decls:
+	* generic/irc_eInt.h:
+	* generic/irc_ePort.h:
+	* generic/irc_eStubInit.c:
+	* generic/numeric.h:
+		icky old code that needs a whole lota work
+
+	* generic/irc_e.decls:
+	* generic/irc_eDecls.h:
+	* generic/irc_eStubInit.c:
+		getting genStubs.tcl to be a bit automatic
+

@@ -1,0 +1,49 @@
+Before doing any work on this, I recommend doing a fresh CVS update each day (or
+editing session) to make sure your working copy matches the repository.  Unless
+you just did a checkout and are reading this for the first time.
+
+This code is only intended for MSVC++ v6 at this time.  We'll venture into
+cross-platform some time in the future.
+
+You'll need to have tcl8.4 installed.  we use that for the tests.
+
+
+You'll also need M$'s Platform SDK, as I reference some new techniques to ensure
+forward (Win64) and of course backward compatibility.  Get it @
+http://msdn.microsoft.com/downloads/sdks/platform/platform.asp
+
+Just select the custom install with the following components:
+
+  MS Platform SDK
+   + - Configuration options
+   |   + - Integrate with VC (selected)
+   |
+   + - Build Environment
+   |   + - Minimum Build Tools (selected)
+   |   + - Win32 API (selected)
+   + - Tools
+       + - Platform SDK Tools (selected)
+
+
+In MSVC++, you'll need to make sure of a few tidbits.  On the options dialog
+(tools | options...), set the following:
+
+  Tabs:          File Type:     C/C++
+                 Tab size:      8
+                 Indent Size:   4
+                 Keep Tabs:     checked
+                 Auto indent:   smart
+                 Smart Options: none with 100 lines of history
+
+  Directories:   Add include and lib paths to the platform SDK ones and higher in
+		 precedence than the vc paths.  This ensures we reference to the
+		 newer (better?) Win32 internals should this project venture into
+		 some of the advanced direct API stuff.
+
+
+I picked-up a little goodie I like @ http://www.geocities.com/kaczoroj/CvsIn/ .
+It's a little Add-In for MSVC++ that jumps to the current VC++ file in WinCVS.
+It's nice..  ya can't beat the price :)
+
+--
+David Gravereaux <davygrvy@pobox.com>

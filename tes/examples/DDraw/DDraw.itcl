@@ -1,0 +1,315 @@
+package require Itcl
+package require Gdiplus
+
+# Make sure we don't do calculations too deeply.
+set tcl_precision 4
+
+set hatchStyles [list Horizontal Vertical ForwardDiagonal BackwardDiagonal \
+	    Cross DiagonalCross 5% 10% 20% 25% 30% 40% 50% 60% 70% 75% 80% 90% \
+	    LightDownwardDiagonal LightUpwardDiagonal DarkDownwardDiagonal \
+	    DarkUpwardDiagonal WideDownwardDiagonal WideUpwardDiagonal \
+	    LightVertical LightHorizontal NarrowVertical NarrowHorizontal \
+	    DarkVertical DarkHorizontal DashedDownwardDiagonal \
+	    DashedUpwardDiagonal DashedHorizontal DashedVertical SmallConfetti \
+	    LargeConfetti ZigZag Wave DiagonalBrick HorizontalBrick Weave Plaid \
+	    Divot DottedGrid DottedDiamond Shingle Trellis Sphere SmallGrid \
+	    SmallCheckerBoard LargeCheckerBoard OutlinedDiamond SolidDiamond \
+	    LargeGrid]
+
+
+proc Do1 {} {
+    itcl::local Gdiplus::Graphics drawablesurface
+    itcl::local Gdiplus::Pen pen Teal 017
+
+    drawablesurface DrawLine pen 50 50 500 400
+}
+
+proc Do2 {} {
+    itcl::local Gdiplus::Graphics drawablesurface
+    itcl::local Gdiplus::Pen pen 0xFFFF7F00 1 ;# orange
+
+    drawablesurface DrawPie pen 100 100 400 300 20 270
+}
+
+proc Do3 {} {
+    itcl::local Gdiplus::Graphics drawablesurface
+    itcl::local Gdiplus::Pen pen 0xFFFF7F00 1 ;# orange
+    itcl::local Gdiplus::Font font {Comic Sans MS} 48
+    itcl::local Gdiplus::SolidBrush brush Olive
+
+    drawablesurface DrawPolygon pen 60 70 590 20 400 400 90 270
+    drawablesurface DrawString {This is a polygon} font 80 100 brush
+}
+
+
+proc Do4 {} {
+    global hatchStyles
+    set style [lindex $hatchStyles \
+	    [expr {int(rand()*([llength $hatchStyles] - 1))}]]
+
+    itcl::local Gdiplus::Graphics drawablesurface
+    itcl::local Gdiplus::HatchBrush brush $style Blue
+    itcl::local Gdiplus::SolidBrush brush2 Silver
+    itcl::local Gdiplus::Font font {Arial} 36
+
+    drawablesurface FillRectangle brush 60 80 500 300
+    drawablesurface DrawString $style font 50 410 brush2
+}
+
+proc Do5 {} {
+    global dontStop
+    set i -1
+    set colors [list Silver Gray White Maroon Red Purple Fuchsia Green Lime \
+	    Olive Yellow Navy Blue Teal Aqua]
+
+    foreach cname $colors {
+	set brush([incr i]) [itcl::local Gdiplus::HatchBrush #auto \
+		DarkUpwardDiagonal $cname]
+    }
+
+    set dontStop true
+    while {$dontStop} {
+	for {set i 0} {$i < [llength $colors] && $dontStop} {incr i} {
+	    Gdiplus::Graphics drawablesurface
+	    Gdiplus::Font font {Courier New} 64
+	    drawablesurface DrawString {Tcl is Cool!} font 50 200 $brush($i)
+	    itcl::delete object drawablesurface font
+	    after 100; update
+	}
+    }
+
+}
+
+proc Do6 {} {
+    global dontStop clockTimer
+    global drawMouse
+    set drawMouse 0
+    set dontStop false
+    catch {after cancel $clockTimer}
+}
+
+proc DoEllipse {r g b degrees} {
+    set forecolor 0xFF[format %02X $r][format %02X $g][format %02X $b]
+    set x 370
+    set y 140
+
+    Gdiplus::Graphics drawablesurface
+    Gdiplus::Font font {Courier New} 24
+    Gdiplus::HatchBrush brush LargeConfetti $forecolor
+    Gdiplus::SolidBrush pieBrush $forecolor
+    Gdiplus::SolidBrush textBrush Silver
+
+    drawablesurface FillEllipse brush 30 60 230 330
+    drawablesurface FillPie pieBrush $x $y 180 180 [expr {$degrees-94}] 8
+    drawablesurface DrawString R font [expr {$x+80}] [expr {$y-25}] textBrush
+    drawablesurface DrawString G font [expr {$x+168}] [expr {$y+130}] textBrush
+    drawablesurface DrawString B font [expr {$x-8}] [expr {$y+130}] textBrush
+    drawablesurface DrawString $forecolor font [expr {$x+16}] [expr {$y+182}] textBrush
+
+    itcl::delete object drawablesurface font brush pieBrush textBrush
+    update
+}
+
+proc Do7 {} {
+    global dontStop
+    set dontStop true
+
+    while {$dontStop} {
+	for {set r 255; set g 0; set b 0} {$g < 256 && $dontStop} {incr g} {
+	    DoEllipse $r $g $b [expr {0.0 + ((double($g)/255) * 60)}]
+	}
+	incr g -1
+	for {} {$r > -1 && $dontStop} {incr r -1} {
+	    DoEllipse $r $g $b [expr {60.0 + ((double($g-$r)/255) * 60)}]
+	}
+	incr r
+	for {} {$b < 256 && $dontStop} {incr b} {
+	    DoEllipse $r $g $b [expr {120.0 + ((double($b)/255) * 60)}]
+	}
+	incr b -1
+	for {} {$g > -1 && $dontStop} {incr g -1} {
+	    DoEllipse $r $g $b [expr {180.0 + ((double($b-$g)/255) * 60)}]
+	}
+	incr g
+	for {} {$r < 256 && $dontStop} {incr r} {
+	    DoEllipse $r $g $b [expr {240.0 + ((double($r)/255) * 60)}]
+	}
+	incr r -1
+	for {} {$b > -1 && $dontStop} {incr b -1} {
+	    DoEllipse $r $g $b [expr {300.0 + ((double($r-$b)/255) * 60)}]
+	}
+	incr b
+    }
+}
+
+proc DrawClock {h m s ap} {
+    set x 100
+    set y 30
+    set z 380
+
+    # Scale Factors
+    set hsf 0.65
+    set msf 0.90
+    set ssf 0.85
+    set scwsf 0.25
+    set pivotsf 0.018
+
+    itcl::local Gdiplus::Graphics drawablesurface
+    itcl::local Gdiplus::Pen rimPen Blue 0.18
+    itcl::local Gdiplus::Pen fivePen Maroon 10
+    itcl::local Gdiplus::Pen onePen Maroon 0.18
+    itcl::local Gdiplus::SolidBrush digitBrush Silver
+    itcl::local Gdiplus::SolidBrush hBrush Silver ;#0xffc000c0
+    itcl::local Gdiplus::SolidBrush mBrush Gray ;#Purple
+    itcl::local Gdiplus::SolidBrush sBrush 0xffa00000
+    itcl::local Gdiplus::Font font {Courier New} 36
+
+    drawablesurface DrawString "$h:$m:$s $ap" font \
+	    [expr {$x+250}] [expr {$y+400}] digitBrush
+
+    # remove the leading zeros :)
+    set h [scan $h %d]
+    set m [scan $m %d]
+    set s [scan $s %d]
+
+    drawablesurface DrawEllipse rimPen $x $y $z $z
+
+    # Draw the notches along the rim.
+    for {set i 0} {$i < 60} {incr i} {
+	if {$i % 5 == 0} {
+	    drawablesurface DrawArc fivePen $x $y $z $z [expr {($i*6)-90.75}] 1.5
+	} else {
+	    drawablesurface DrawArc onePen $x $y $z $z [expr {($i*6)-90.5}] 1
+	}
+    }
+
+    # Hour hand
+    drawablesurface FillPie hBrush \
+	    [expr {$x+($z-($z*$hsf))/2}] \
+	    [expr {$y+($z-($z*$hsf))/2}] \
+	    [expr {$z-($z-($z*$hsf))}] \
+	    [expr {$z-($z-($z*$hsf))}] \
+	    [expr {(((double($h)/12)*360.0)+((double($m)/60.0)*30.0)+((double($s)/60.0)*0.5))-94}] 8
+
+    # Minute hand
+    drawablesurface FillPie mBrush \
+	    [expr {$x+($z-($z*$msf))/2}] \
+	    [expr {$y+($z-($z*$msf))/2}] \
+	    [expr {$z-($z-($z*$msf))}] \
+	    [expr {$z-($z-($z*$msf))}] \
+	    [expr {(((double($m)/60)*360.0)+((double($s)/60.0)*6.0))-92.5}] 5
+
+    # Second hand
+    drawablesurface FillPie sBrush \
+	    [expr {$x+($z-($z*$ssf))/2}] \
+	    [expr {$y+($z-($z*$ssf))/2}] \
+	    [expr {$z-($z-($z*$ssf))}] \
+	    [expr {$z-($z-($z*$ssf))}] \
+	    [expr {(((double($s)/60.0)*360.0))-90.875}] 1.75
+
+    # Second hand counter weight
+    drawablesurface FillPie sBrush \
+	    [expr {$x+($z-($z*$scwsf))/2}] \
+	    [expr {$y+($z-($z*$scwsf))/2}] \
+	    [expr {$z-($z-($z*$scwsf))}] \
+	    [expr {$z-($z-($z*$scwsf))}] \
+	    [expr {(((double($s)/60.0)*360.0))+85}] 10
+
+    # The center looked a little imperfect, so draw a pivot.
+    drawablesurface FillEllipse sBrush \
+	    [expr {$x+($z-($z*$pivotsf))/2}] \
+	    [expr {$y+($z-($z*$pivotsf))/2}] \
+	    [expr {$z-($z-($z*$pivotsf))}] \
+	    [expr {$z-($z-($z*$pivotsf))}]
+}
+
+proc updateClock {} {
+    global clockTimer
+    set now [clock seconds]
+    DrawClock [clock format $now -format %I] \
+	    [clock format $now -format %M] \
+	    [clock format $now -format %S] \
+	    [clock format $now -format %p]
+
+    set clockTimer [after 1000 updateClock]
+}
+
+# Start clock
+proc Do8 {} {
+    global dontStop
+    set dontStop true
+    updateClock
+}
+
+set drawMouse 0
+proc MouseMove {click x y} {
+    global drawMouse
+
+    if {$drawMouse} {
+	itcl::local Gdiplus::Graphics surface
+	itcl::local Gdiplus::Font font {Courier New} 48
+	itcl::local Gdiplus::SolidBrush digitBrush Silver
+	itcl::local Gdiplus::SolidBrush brush [expr {$click?"Blue":"Red"}]
+
+	surface FillEllipse brush [expr {$x-10}] [expr {$y-10}] 20 20
+	surface DrawString "[format "%3d" $x] [format "%3d" $y]" font 200 240 digitBrush
+    }
+}
+
+proc Do9 {} {
+    global drawMouse
+    set drawMouse 1
+}
+
+
+
+Gdiplus::Pen p1 Gray 0.5
+Gdiplus::Pen p2 White 1
+Gdiplus::Pen p3 Yellow 1
+Gdiplus::Pen p4 Red 1
+
+proc doit {} {
+    global clockTimer drawables
+    set clockTimer [after 16 doit]
+    itcl::local	Gdiplus::Graphics surface
+
+    foreach drawable $drawables {
+	$drawable bump
+    }
+    foreach drawable $drawables {
+	$drawable draw surface p1 p2 p3 p4
+    }
+}
+
+proc Fire {} {
+    ship fire
+}
+proc MoveCw {} {
+    ship moveCw
+}
+proc MoveCcw {} {
+    ship moveCcw
+}
+proc StopMove {} {
+    ship stopMove
+}
+proc DoThrust {} {
+    ship doThrust
+}
+proc StopThrust {} {
+    ship stopThrust
+}
+proc HyperSpace {} {
+    ship hyperSpace
+}
+
+proc Do0 {} {
+    global drawables
+    if {![info exist drawables]} {
+	for {set i 0} {$i < 10} {incr i} {
+	    BigAsteroid #auto
+	}
+	Ship ship
+    }
+    doit
+}

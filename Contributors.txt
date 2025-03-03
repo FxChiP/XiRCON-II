@@ -1,0 +1,29 @@
+send me diffs and get your name here!
+
+
+Project Lead:  David Gravereaux <davygrvy@pobox.com>
+
+
+Keith Lea <keith@cs.oswego.edu>
+ o   mirc, ansi, and ircii attribute converters.
+
+Terry Peng <tpeng@osiris.978.org>
+ o   original inspirations for how to do a viewbox.
+
+Juha Jäykkä <juhaj@iki.fi>
+ o   Finnish translations.
+
+Max Maischein <max.maischein@econsult.de>
+ o   German translations.
+
+SprudL <bjorn.olievier@advalvas.be>
+ o   Dutch translations.
+
+Dave Burgess <compuservice@uswest.net>
+ o   Spanish translations???  did I get any from you?  I forgot.
+
+Zach Carlson <fxchip@gmail.com>
+ o   testing and all around energetic interest in detail.
+
+Ian Pojman <ipojman@jmlafferty.com>
+ o   java scripting engine.
