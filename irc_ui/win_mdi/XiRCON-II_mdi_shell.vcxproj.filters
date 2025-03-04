@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="generic">
+      <UniqueIdentifier>{580c87fe-0801-4f64-8431-77fd614583ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BlankBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChanBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DCCChatBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameWndProc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRCWindowsSystemFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NickListBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StatBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewBoxImps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32TextLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generic\CmdBoxCommonImp.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generic\IRCWindows.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generic\IRCWindowsItclAdapter.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\xirclone.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\xircon.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BlankBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChanBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DCCChatBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameWndProc.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRCWindowsSystemFactory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NickListBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StatBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewBoxImps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32TextLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\BlankBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\ChanBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\CmdBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\DCCChatBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\IRCTextLine.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\IRCWindows.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\NickListBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\QueryBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\StatBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic\ViewBoxCommonImp.hpp">
+      <Filter>generic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

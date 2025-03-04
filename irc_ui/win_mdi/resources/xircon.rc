@@ -1,0 +1,875 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "CompanyName", "Tomasoft Engineering\0"
+            VALUE "FileDescription", "an IRC Client in development\0"
+            VALUE "FileVersion", "Alpha4\0"
+            VALUE "InternalName", "xircon\0"
+            VALUE "LegalCopyright", "Copyright © 2003\0"
+            VALUE "OriginalFilename", "xircon.exe\0"
+            VALUE "ProductName", "XiRCON ][\0"
+            VALUE "ProductVersion", "Alpha4\0"
+        END
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Tomasoft Engineering\0"
+            VALUE "FileDescription", "an IRC Client in development\0"
+            VALUE "FileVersion", "Alpha4\0"
+            VALUE "InternalName", "xircon\0"
+            VALUE "LegalCopyright", "Copyright © 2003\0"
+            VALUE "OriginalFilename", "xircon.exe\0"
+            VALUE "ProductName", "XiRCON ][\0"
+            VALUE "ProductVersion", "Alpha4\0"
+        END
+        BLOCK "040b04b0"
+        BEGIN
+            VALUE "CompanyName", "Tomasoft Engineering\0"
+            VALUE "FileDescription", "an IRC Client in development\0"
+            VALUE "FileVersion", "Alpha4\0"
+            VALUE "InternalName", "xircon\0"
+            VALUE "LegalCopyright", "Copyright © 2003\0"
+            VALUE "OriginalFilename", "xircon.exe\0"
+            VALUE "ProductName", "XiRCON ][\0"
+            VALUE "ProductVersion", "Alpha4\0"
+        END
+        BLOCK "081304b0"
+        BEGIN
+            VALUE "CompanyName", "Tomasoft Engineering\0"
+            VALUE "FileDescription", "an IRC Client in development\0"
+            VALUE "FileVersion", "Alpha4\0"
+            VALUE "InternalName", "xircon\0"
+            VALUE "LegalCopyright", "Copyright © 2003\0"
+            VALUE "OriginalFilename", "xircon.exe\0"
+            VALUE "ProductName", "XiRCON ][\0"
+            VALUE "ProductVersion", "Alpha4\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200, 0x409, 1200, 0x40b, 1200, 0x813, 
+        1200
+    END
+END
+
+#endif    // !_MAC
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// German (Germany) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Server"
+    BEGIN
+        MENUITEM "&Verbinden...",               ID_SERV_CONNECT
+        MENUITEM "&Disconnect",                 ID_SERV_DISCONN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Extras"
+    BEGIN
+        MENUITEM "&Channel betreten...",        ID_TOOLS_JCHAN
+        MENUITEM "&Privatchat...",              ID_TOOLS_QUERY
+        MENUITEM "&DCC Chat...",                ID_TOOLS_DCCCHAT
+        MENUITEM SEPARATOR
+        MENUITEM "Dateien &senden...",          ID_TOOLS_DCCSEND
+        MENUITEM "&Finger...",                  ID_TOOLS_FINGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Optionen",                   ID_TOOLS_PREFS
+        MENUITEM "&Benutzer",                   ID_TOOLS_USERS
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "&ToolBar",                    ID_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&StatusBar",                  ID_VIEW_STATUS_BAR, CHECKED
+    END
+    POPUP "&Fenster"
+    BEGIN
+        MENUITEM "Ü&bereinander",               ID_WINDOW_CASCADE
+        MENUITEM "&Waagerecht nebeneinander",   ID_WINDOW_TILE_HORZ
+        MENUITEM "&Senkrecht nebeneinander",    ID_WINDOW_TILE_VERT
+        MENUITEM "&Icons anordnen",             ID_WINDOW_ARRANGE
+        MENUITEM SEPARATOR
+        MENUITEM "&Nächstes Fenster",           ID_WINDOW_NEXT
+        MENUITEM "A&lle schließen",             ID_WINDOW_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "Show C&onsole",               ID_WINDOW_SHOWCONSOLE
+        , CHECKED
+    END
+    POPUP "&Hilfe", HELP
+    BEGIN
+        MENUITEM "Contents",                    ID_HELP_FINDER
+        MENUITEM "Search",                      ID_HELP_SEARCH
+        MENUITEM "Index",                       ID_HELP_INDEX
+        MENUITEM SEPARATOR
+        MENUITEM "Ü&ber...",                    ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDR_USERS DIALOGEX 0, 0, 244, 213
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Users"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Benutzerliste:",101,4,4,60,8
+    LISTBOX         102,4,14,180,60,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",103,"Static",SS_ETCHEDHORZ,4,78,180,1
+    CONTROL         "Be&nachrichtigen wenn im IRC",104,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,84,106,12
+    RTEXT           "&Ignorieren:",105,121,86,36,8,NOT WS_GROUP
+    COMBOBOX        106,161,84,60,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "&Op in diesen Channels geben:",107,4,102,90,8,NOT 
+                    WS_GROUP
+    EDITTEXT        108,4,112,180,12,ES_AUTOHSCROLL
+    LTEXT           "Aus diesen Channels &bannen:",109,4,130,90,8,NOT 
+                    WS_GROUP
+    EDITTEXT        110,4,140,180,12,ES_AUTOHSCROLL
+    LTEXT           "No&tizen:",111,4,158,90,8,NOT WS_GROUP
+    EDITTEXT        112,4,168,180,12,ES_AUTOHSCROLL
+    CONTROL         "",113,"Static",SS_ETCHEDHORZ,4,184,236,1
+    PUSHBUTTON      "&Hinzufügen...",114,190,14,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "B&earbeiten...",115,190,36,50,15,BS_CENTER
+    PUSHBUTTON      "&Löschen",116,190,58,50,15,BS_CENTER
+    PUSHBUTTON      "OK",IDOK,4,192,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "Abbrechen",IDCANCEL,60,192,50,15,BS_CENTER
+END
+
+IDR_PREFERENCES DIALOG DISCARDABLE  0, 0, 234, 234
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,215,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,179,215,50,14
+END
+
+IDR_CONNECT DIALOGEX 0, 0, 228, 221
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Verbinden mit:",110,4,84,80,8,NOT WS_GROUP
+    COMBOBOX        102,4,94,220,106,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Nickname:",111,4,112,80,8,NOT WS_GROUP
+    EDITTEXT        103,4,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Alternativer Nickname:",112,118,112,80,8,NOT WS_GROUP
+    EDITTEXT        104,118,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Benutzername:",113,4,138,80,8,NOT WS_GROUP
+    EDITTEXT        105,4,148,106,12,ES_AUTOHSCROLL
+    LTEXT           "B&eschreibung:",114,118,138,80,8,NOT WS_GROUP
+    EDITTEXT        106,118,148,106,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Neues &Fenster",107,"Button",BS_AUTOCHECKBOX | BS_LEFT | 
+                    WS_GROUP | WS_TABSTOP,4,164,106,12
+    CONTROL         "&Unsichtbar machen (+i)",116,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,118,164,106,12
+    CONTROL         "SOCKS &Proxy verwenden",117,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,4,178,96,12
+    PUSHBUTTON      "...",118,117,178,20,12,BS_CENTER
+    CONTROL         "",108,"Static",SS_ETCHEDHORZ | WS_GROUP,4,194,220,1
+    DEFPUSHBUTTON   "OK",IDOK,4,200,50,15,WS_GROUP
+    PUSHBUTTON      "Abbrechen",IDCANCEL,60,200,50,15
+    LTEXT           "&Servers:",109,4,4,80,8
+    CONTROL         "",101,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | 
+                    TVS_LINESATROOT | TVS_EDITLABELS | TVS_DISABLEDRAGDROP | 
+                    TVS_SHOWSELALWAYS | TVS_TRACKSELECT | WS_BORDER | 
+                    WS_TABSTOP,4,14,220,64,WS_EX_CLIENTEDGE
+    RTEXT           "(Bearbeiten mit Rechtsklick)",115,124,80,100,8,NOT 
+                    WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CONNECT             "Verbinden"
+    IDS_DISCONN             "Trennen"
+    IDS_PREFERENCES         "Optionen"
+    IDS_USERS               "Benutzer"
+END
+
+#endif    // German (Germany) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Server"
+    BEGIN
+        MENUITEM "&Connect...",                 ID_SERV_CONNECT
+        MENUITEM "&Disconnect",                 ID_SERV_DISCONN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit",                       ID_APP_EXIT
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Join Channel...",            ID_TOOLS_JCHAN
+        MENUITEM "&Query...",                   ID_TOOLS_QUERY
+        MENUITEM "&DCC Chat...",                ID_TOOLS_DCCCHAT
+        MENUITEM SEPARATOR
+        MENUITEM "&Send Files...",              ID_TOOLS_DCCSEND
+        MENUITEM "&Finger...",                  ID_TOOLS_FINGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Preferences",                ID_TOOLS_PREFS
+        MENUITEM "&Users",                      ID_TOOLS_USERS
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&ToolBar",                    ID_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&StatusBar",                  ID_VIEW_STATUS_BAR, CHECKED
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "Tile &Horizontal",            ID_WINDOW_TILE_HORZ
+        MENUITEM "Tile &Vertical",              ID_WINDOW_TILE_VERT
+        MENUITEM "&Arrange Icons",              ID_WINDOW_ARRANGE
+        MENUITEM SEPARATOR
+        MENUITEM "&Next Window\tCtrl+F6",       ID_WINDOW_NEXT
+        MENUITEM "C&lose All",                  ID_WINDOW_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "Show C&onsole",               ID_WINDOW_SHOWCONSOLE
+        , CHECKED
+    END
+    POPUP "&Help", HELP
+    BEGIN
+        MENUITEM "Contents",                    ID_HELP_FINDER
+        MENUITEM "Search",                      ID_HELP_SEARCH
+        MENUITEM "Index",                       ID_HELP_INDEX
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDR_CONNECT DIALOGEX 0, 0, 228, 221
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Connect To:",110,4,84,40,8,NOT WS_GROUP
+    COMBOBOX        102,4,94,220,106,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Nick Name:",111,4,112,38,8,NOT WS_GROUP
+    EDITTEXT        103,4,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Alternate Nick Name:",112,118,112,68,8,NOT WS_GROUP
+    EDITTEXT        104,118,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&User Name:",113,4,138,38,8,NOT WS_GROUP
+    EDITTEXT        105,4,148,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Description:",114,118,138,38,8,NOT WS_GROUP
+    EDITTEXT        106,118,148,106,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "&Open New Window",107,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFT | WS_GROUP | WS_TABSTOP,4,164,78,10
+    CONTROL         "&Invisible User Mode",116,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,118,164,78,10
+    CONTROL         "Use SOCKS &Proxy",117,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,4,178,74,10
+    PUSHBUTTON      "...",118,118,177,20,12,BS_CENTER
+    CONTROL         "",108,"Static",SS_ETCHEDHORZ | WS_GROUP,4,194,220,1
+    DEFPUSHBUTTON   "OK",IDOK,4,200,50,15,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,60,200,50,15
+    LTEXT           "&Servers:",109,4,4,27,8
+    CONTROL         "",101,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | 
+                    TVS_LINESATROOT | TVS_EDITLABELS | TVS_DISABLEDRAGDROP | 
+                    TVS_SHOWSELALWAYS | TVS_TRACKSELECT | WS_BORDER | 
+                    WS_TABSTOP,4,14,220,64,WS_EX_CLIENTEDGE
+    RTEXT           "(Right-click to edit servers)",115,139,80,84,8,NOT 
+                    WS_GROUP
+END
+
+IDR_USERS DIALOGEX 0, 0, 244, 213
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Users"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&User List:",101,4,4,30,8
+    LISTBOX         102,4,14,180,60,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",103,"Static",SS_ETCHEDHORZ,4,78,180,1
+    CONTROL         "&Notify when on IRC",104,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,4,84,77,10
+    RTEXT           "&Ignore:",105,97,87,23,8,NOT WS_GROUP
+    COMBOBOX        106,124,84,60,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "&Op in these channels:",107,4,102,70,8,NOT WS_GROUP
+    EDITTEXT        108,4,112,180,12,ES_AUTOHSCROLL
+    LTEXT           "&Ban from these channels:",109,4,130,81,8,NOT WS_GROUP
+    EDITTEXT        110,4,140,180,12,ES_AUTOHSCROLL
+    LTEXT           "No&tes:",111,4,158,22,8,NOT WS_GROUP
+    EDITTEXT        112,4,168,180,12,ES_AUTOHSCROLL
+    CONTROL         "",113,"Static",SS_ETCHEDHORZ,4,184,236,1
+    PUSHBUTTON      "&Add...",114,190,14,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "&Edit...",115,190,36,50,15,BS_CENTER
+    PUSHBUTTON      "&Delete",116,190,58,50,15,BS_CENTER
+    PUSHBUTTON      "OK",IDOK,4,192,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,60,192,50,15,BS_CENTER
+END
+
+IDR_PREFERENCES DIALOG DISCARDABLE  0, 0, 234, 234
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,215,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,179,215,50,14
+END
+
+IDD_ABOUT DIALOG DISCARDABLE  0, 0, 155, 126
+STYLE DS_MODALFRAME | DS_NOIDLEMSG | WS_POPUP | WS_CAPTION
+CAPTION "About Tomahawk IRC"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,53,108,50,14
+    ICON            IDR_MAINICON,IDC_STATIC,13,7,21,20,SS_REALSIZEIMAGE
+    CONTROL         "Tomahawk IRC Alpha1",IDC_STATIC,"Static",
+                    SS_LEFTNOWORDWRAP,57,11,74,8
+    CONTROL         "Tree1",IDC_TREE1,"SysTreeView32",TVS_HASBUTTONS | 
+                    TVS_HASLINES | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | 
+                    WS_BORDER | WS_TABSTOP,7,30,141,72
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINICON            ICON    DISCARDABLE     "xirclone.ico"
+IDI_TK                  ICON    DISCARDABLE     "tk.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TOOLBAR1            BITMAP  DISCARDABLE     "toolbar1.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOLBAR1 TOOLBAR DISCARDABLE  16, 16
+BEGIN
+    BUTTON      ID_BUTTON40002
+    BUTTON      ID_BUTTON40003
+    BUTTON      ID_BUTTON40004
+    BUTTON      ID_BUTTON40005
+    BUTTON      ID_BUTTON40006
+    BUTTON      ID_BUTTON40007
+    BUTTON      ID_BUTTON40008
+    BUTTON      ID_TOOLS_PREFS
+    BUTTON      ID_TOOLS_USERS
+    BUTTON      ID_WINDOW_CASCADE
+    BUTTON      ID_WINDOW_TILE_HORZ
+    BUTTON      ID_WINDOW_TILE_VERT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 122
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR1 ACCELERATORS DISCARDABLE 
+BEGIN
+    VK_F24,         ID_ACCEL40023,          VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CONNECT             "Connect"
+    IDS_DISCONN             "Disconnect"
+    IDS_PREFERENCES         "Preferences"
+    IDS_USERS               "Users"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Finnish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FIN)
+#ifdef _WIN32
+LANGUAGE LANG_FINNISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Palvelin"
+    BEGIN
+        MENUITEM "&Lue yhteys...",              ID_SERV_CONNECT
+        MENUITEM "&Katkaise yhteys",            ID_SERV_DISCONN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Lo&peta",                     ID_APP_EXIT
+    END
+    POPUP "&Työkalut"
+    BEGIN
+        MENUITEM "&Liity kanavalle...",         ID_TOOLS_JCHAN
+        MENUITEM "&Yksityiskeskustelu...",      ID_TOOLS_QUERY
+        MENUITEM "&DCC-keskustelu...",          ID_TOOLS_DCCCHAT
+        MENUITEM SEPARATOR
+        MENUITEM "Lähetä &tiedostoja...",       ID_TOOLS_DCCSEND
+        MENUITEM "&Finger...",                  ID_TOOLS_FINGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Asetukset",                  ID_TOOLS_PREFS
+        MENUITEM "&Käyttäjät",                  ID_TOOLS_USERS
+    END
+    POPUP "&Näytä"
+    BEGIN
+        MENUITEM "&Työkalupalkki",              ID_VIEW_TOOLBAR, CHECKED
+        MENUITEM "Tila&rivi",                   ID_VIEW_STATUS_BAR, CHECKED
+    END
+    POPUP "&Ikkuna"
+    BEGIN
+        MENUITEM "&Limittäin",                  ID_WINDOW_CASCADE
+        MENUITEM "&Allekkain",                  ID_WINDOW_TILE_HORZ
+        MENUITEM "&Vierekkäin",                 ID_WINDOW_TILE_VERT
+        MENUITEM "&Järjestä kuvakkeet",         ID_WINDOW_ARRANGE
+        MENUITEM SEPARATOR
+        MENUITEM "&Seuraava ikkuna",            ID_WINDOW_NEXT
+        MENUITEM "Sulje &kaikki ikkunat",       ID_WINDOW_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "Show C&onsole",               ID_WINDOW_SHOWCONSOLE
+        , CHECKED
+    END
+    POPUP "&Ohje", HELP
+    BEGIN
+        MENUITEM "Contents",                    ID_HELP_FINDER
+        MENUITEM "Search",                      ID_HELP_SEARCH
+        MENUITEM "Index",                       ID_HELP_INDEX
+        MENUITEM SEPARATOR
+        MENUITEM "&Tietoja...",                 ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDR_CONNECT DIALOGEX 0, 0, 228, 221
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Yhdistä palvelimeen:",110,4,84,80,8,NOT WS_GROUP
+    COMBOBOX        102,4,94,220,106,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Lempinimi:",111,4,112,80,8,NOT WS_GROUP
+    EDITTEXT        103,4,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Vaihtoehtoinen lempinimi:",112,118,112,80,8,NOT 
+                    WS_GROUP
+    EDITTEXT        104,118,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Käyttäjätunnus:",113,4,138,80,8,NOT WS_GROUP
+    EDITTEXT        105,4,148,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Nimi",114,118,138,80,8,NOT WS_GROUP
+    EDITTEXT        106,118,148,106,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "&Avaa uusi ikkuna",107,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFT | WS_GROUP | WS_TABSTOP,4,164,106,12
+    CONTROL         "N&äkymätön käyttäjä",116,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,118,164,106,12
+    CONTROL         "Käytä &SOCKS välityspalvelinta",117,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,178,110,12
+    PUSHBUTTON      "...",118,117,178,20,12,BS_CENTER
+    CONTROL         "",108,"Static",SS_ETCHEDHORZ | WS_GROUP,4,194,220,1
+    DEFPUSHBUTTON   "OK",IDOK,4,200,50,15,WS_GROUP
+    PUSHBUTTON      "Peruuta",IDCANCEL,60,200,50,15
+    LTEXT           "&Palvelimet:",109,4,4,80,8
+    CONTROL         "",101,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | 
+                    TVS_LINESATROOT | TVS_EDITLABELS | TVS_DISABLEDRAGDROP | 
+                    TVS_SHOWSELALWAYS | TVS_TRACKSELECT | WS_BORDER | 
+                    WS_TABSTOP,4,14,220,64,WS_EX_CLIENTEDGE
+    RTEXT           "(Muokkaa palvelimia oikealla nappulalla)",115,124,80,
+                    100,8,NOT WS_GROUP
+END
+
+IDR_PREFERENCES DIALOG DISCARDABLE  0, 0, 234, 234
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,215,50,14
+    PUSHBUTTON      "Peruuta",IDCANCEL,179,215,50,14
+END
+
+IDR_USERS DIALOGEX 0, 0, 244, 213
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Users"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&User List:",101,4,4,60,8
+    LISTBOX         102,4,14,180,60,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",103,"Static",SS_ETCHEDHORZ,4,78,180,1
+    CONTROL         "&Notify when on IRC",104,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,4,84,84,12
+    RTEXT           "&Ignore:",105,88,86,32,8,NOT WS_GROUP
+    COMBOBOX        106,124,84,60,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "&Op in these channels:",107,4,102,90,8,NOT WS_GROUP
+    EDITTEXT        108,4,112,180,12,ES_AUTOHSCROLL
+    LTEXT           "&Ban from these channels:",109,4,130,90,8,NOT WS_GROUP
+    EDITTEXT        110,4,140,180,12,ES_AUTOHSCROLL
+    LTEXT           "No&tes:",111,4,158,90,8,NOT WS_GROUP
+    EDITTEXT        112,4,168,180,12,ES_AUTOHSCROLL
+    CONTROL         "",113,"Static",SS_ETCHEDHORZ,4,184,236,1
+    PUSHBUTTON      "&Add...",114,190,14,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "&Edit...",115,190,36,50,15,BS_CENTER
+    PUSHBUTTON      "&Delete",116,190,58,50,15,BS_CENTER
+    PUSHBUTTON      "OK",IDOK,4,192,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "Cancel",2,60,192,50,15,BS_CENTER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CONNECT             "Lue yhteys"
+    IDS_DISCONN             "Katkaise yhteys"
+    IDS_PREFERENCES         "Asetukset"
+    IDS_USERS               "Käyttäjät"
+END
+
+#endif    // Finnish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Dutch (Belgium) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NLB)
+#ifdef _WIN32
+LANGUAGE LANG_DUTCH, SUBLANG_DUTCH_BELGIAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Server"
+    BEGIN
+        MENUITEM "&Verbinden...",               ID_SERV_CONNECT
+        MENUITEM "Verbinding ver&breken",       ID_SERV_DISCONN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Afsluiten",                  ID_APP_EXIT
+    END
+    POPUP "&Extra"
+    BEGIN
+        MENUITEM "&Kanaal Binnengaan...",       ID_TOOLS_JCHAN
+        MENUITEM "&Privé Gesprek...",           ID_TOOLS_QUERY
+        MENUITEM "&DCC Gesprek...",             ID_TOOLS_DCCCHAT
+        MENUITEM SEPARATOR
+        MENUITEM "&Bestanden verzenden...",     ID_TOOLS_DCCSEND
+        MENUITEM "&Finger...",                  ID_TOOLS_FINGER
+        MENUITEM SEPARATOR
+        MENUITEM "&Opties",                     ID_TOOLS_PREFS
+        MENUITEM "&Gebruikers",                 ID_TOOLS_USERS
+    END
+    POPUP "&Beeld"
+    BEGIN
+        MENUITEM "&Werkbalk",                   ID_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Statusbalk",                 ID_VIEW_STATUS_BAR, CHECKED
+    END
+    POPUP "&Venster"
+    BEGIN
+        MENUITEM "&Trapsgewijs schikken",       ID_WINDOW_CASCADE
+        MENUITEM "&Horizontaal schikken",       ID_WINDOW_TILE_HORZ
+        MENUITEM "&Verticaal schikken",         ID_WINDOW_TILE_VERT
+        MENUITEM "&Pictogrammen schikken",      ID_WINDOW_ARRANGE
+        MENUITEM SEPARATOR
+        MENUITEM "V&olgend venster\tCtrl+F6",   ID_WINDOW_NEXT
+        MENUITEM "Alles &sluiten",              ID_WINDOW_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "Show C&onsole",               ID_WINDOW_SHOWCONSOLE
+        , CHECKED
+    END
+    POPUP "&Help", HELP
+    BEGIN
+        MENUITEM "Contents",                    ID_HELP_FINDER
+        MENUITEM "Search",                      ID_HELP_SEARCH
+        MENUITEM "Index",                       ID_HELP_INDEX
+        MENUITEM SEPARATOR
+        MENUITEM "&Info...",                    ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDR_CONNECT DIALOGEX 0, 0, 228, 221
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Verbinden Met:",110,4,84,49,8,NOT WS_GROUP
+    COMBOBOX        102,4,94,220,106,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Nickname:",111,4,112,35,8,NOT WS_GROUP
+    EDITTEXT        103,4,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Alternatieve Nickname:",112,118,112,74,8,NOT WS_GROUP
+    EDITTEXT        104,118,122,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Gebruikersnaam:",113,4,138,54,8,NOT WS_GROUP
+    EDITTEXT        105,4,148,106,12,ES_AUTOHSCROLL
+    LTEXT           "&Omschrijving:",114,118,138,43,8,NOT WS_GROUP
+    EDITTEXT        106,118,148,106,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "N&ieuw venster openen",107,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFT | WS_GROUP | WS_TABSTOP,4,164,87,10
+    CONTROL         "On&zichtbare gebruikersmodus",116,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,118,164,109,10
+    CONTROL         "Gebruik SOCKS &Proxy",117,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,4,178,86,10
+    PUSHBUTTON      "...",118,117,178,20,12,BS_CENTER
+    CONTROL         "",108,"Static",SS_ETCHEDHORZ | WS_GROUP,4,194,220,1
+    DEFPUSHBUTTON   "OK",IDOK,4,200,50,15,WS_GROUP
+    PUSHBUTTON      "Annuleren",IDCANCEL,60,200,50,15
+    LTEXT           "&Servers:",109,4,4,27,8
+    CONTROL         "",101,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | 
+                    TVS_LINESATROOT | TVS_EDITLABELS | TVS_DISABLEDRAGDROP | 
+                    TVS_SHOWSELALWAYS | TVS_TRACKSELECT | WS_BORDER | 
+                    WS_TABSTOP,4,14,220,64,WS_EX_CLIENTEDGE
+    RTEXT           "(Rechts klikken om de servers te bewerken)",115,84,82,
+                    140,8,NOT WS_GROUP
+END
+
+IDR_PREFERENCES DIALOG DISCARDABLE  0, 0, 234, 234
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,215,50,14
+    PUSHBUTTON      "Annuleren",IDCANCEL,179,215,50,14
+END
+
+IDR_USERS DIALOGEX 0, 0, 244, 213
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Users"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Gebruikerslijst:",101,4,4,46,8
+    LISTBOX         102,4,14,180,60,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",103,"Static",SS_ETCHEDHORZ,4,78,180,1
+    CONTROL         "&Verwittigen wanneer op IRC",104,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,84,106,10
+    RTEXT           "&Negeren:",105,123,87,32,8,NOT WS_GROUP
+    COMBOBOX        106,159,85,60,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "&Ops geven in volgende kanalen:",107,4,102,104,8,NOT 
+                    WS_GROUP
+    EDITTEXT        108,4,112,180,12,ES_AUTOHSCROLL
+    LTEXT           "&Verbannen van volgende kanalen:",109,4,130,110,8,NOT 
+                    WS_GROUP
+    EDITTEXT        110,4,140,180,12,ES_AUTOHSCROLL
+    LTEXT           "O&pmerkingen:",111,4,158,45,8,NOT WS_GROUP
+    EDITTEXT        112,4,168,180,12,ES_AUTOHSCROLL
+    CONTROL         "",113,"Static",SS_ETCHEDHORZ,4,184,236,1
+    PUSHBUTTON      "&Toevoegen...",114,190,14,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "B&ewerken...",115,190,36,50,15,BS_CENTER
+    PUSHBUTTON      "Ver&wijderen",116,190,58,50,15,BS_CENTER
+    PUSHBUTTON      "OK",IDOK,4,192,50,15,BS_CENTER | WS_GROUP
+    PUSHBUTTON      "Annuleren",IDCANCEL,60,192,50,15,BS_CENTER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_CONNECT             "Verbinden"
+    IDS_DISCONN             "Verbinding verbreken"
+    IDS_PREFERENCES         "Opties"
+    IDS_USERS               "Gebruikers"
+END
+
+#endif    // Dutch (Belgium) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

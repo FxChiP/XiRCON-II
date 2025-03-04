@@ -16,14 +16,14 @@
 
 #if defined(_WIN32)
 #   if GUI_BUILD
-#	include "../Win32/GUI/IRCWindowsSystemFactory.hpp"
+#	include "../win_mdi/IRCWindowsSystemFactory.hpp"
 #   elif TUI_BUILD
-#	include "../Win32/TUI/IRCWindowsSystemFactory.hpp"
+#	include "../win_tui/IRCWindowsSystemFactory.hpp"
 #   else
 #	error "Bad macro logic!"
 #   endif
-#elif defined(XTERMINAL)
-#   include "../xterminal/IRCWindowsSystemFactory.hpp"
+#elif defined(FINALCUT)
+#   include "../unix_finalcut/IRCWindowsSystemFactory.hpp"
 #elif defined(JNI_TRUE)  // jni.h present
 #   include "../jni/IRCWindowsSystemFactory.hpp"
 #else
