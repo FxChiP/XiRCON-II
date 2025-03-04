@@ -102,7 +102,7 @@ IRCUserScriptProviderForTcl::IRCUserScriptProviderForTcl(
 	Tcl_MakeSafe(interp);
     }
 
-    // exit is not allowed is user scripts.
+    // exit is not allowed in user scripts.
     TclRenameCommand(interp, "exit", "");
 
 
@@ -305,7 +305,7 @@ IRCUserScriptProviderForTcl::AliasCmd(int objc, struct Tcl_Obj* const objv[])
     Tcl_Obj* resultPtr = Tcl_GetObjResult(interp);
 
     if (objc != 3) {
-	Tcl_WrongNumArgs(interp, 1, objv, "<event> <script>");
+	Tcl_WrongNumArgs(interp, 1, objv, "<alias> <script>");
 	return TCL_ERROR;
     }
 

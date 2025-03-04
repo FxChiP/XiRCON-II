@@ -25,6 +25,7 @@ proc icomp {a b} {
 ### behavior of the client.
 
 namespace eval ::IRC {
+
     package require msgcat
     namespace import ::msgcat::mc
 
@@ -63,6 +64,8 @@ namespace eval ::IRC {
 #	set origin [lindex [args] 0]
 #	set msg [lindex [args] 1]
 #	echo "[color highlight]<[color nick][nick][color highlight]>[color default] $msg" $origin
+#	raw "PRIVMSG $origin :[quote $msg]"
+#	complete
 #    }
 
     on NOTICE  {
