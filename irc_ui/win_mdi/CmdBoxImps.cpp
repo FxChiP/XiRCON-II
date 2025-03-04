@@ -177,7 +177,7 @@ CmdBoxWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case VK_RETURN:
 		{
 		    // TODO! revisit this static size
-		    WCHAR *szInput = new WCHAR [510];
+		    TCHAR *szInput = new TCHAR [510];
 		    std::u16string *s;
 		    GETTEXTEX gte;
 

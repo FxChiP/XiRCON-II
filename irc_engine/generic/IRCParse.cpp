@@ -35,8 +35,8 @@ IRCParse::IRCParse (Tcl_Obj *oLine)
 
 void IRCParse::Parseit(Tcl_Obj *oLine)
 {
-    register Tcl_UniChar *line = Tcl_GetUnicode(oLine);
-    register int pos1=0, pos2=0, srcStart=0, srcEnd=0;
+    Tcl_UniChar *line = Tcl_GetUnicode(oLine);
+    int pos1=0, pos2=0, srcStart=0, srcEnd=0;
     ObjectBuffer params;
     int paramCount=0;
 

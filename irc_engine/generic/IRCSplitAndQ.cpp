@@ -114,8 +114,8 @@ out:
 
 void IRCSplitAndQ::check4CTCPs (Tcl_Obj **trailingParam)
 {
-    register int ctcpStartMarker = -1, ctcpEndMarker, ctcpLastEndMarker = 0;
-    register int len, pos;
+    int ctcpStartMarker = -1, ctcpEndMarker, ctcpLastEndMarker = 0;
+    int len, pos;
     Tcl_UniChar *string;
     Tcl_Obj *firstHalf, *secondHalf;
 
@@ -171,7 +171,7 @@ void IRCSplitAndQ::check4CTCPs (Tcl_Obj **trailingParam)
 
 void IRCSplitAndQ::buildCtcpEvent (Tcl_Obj *ctcpMsg)
 {
-    register int pos, pos1 = 0, pos2 = -1;
+    int pos, pos1 = 0, pos2 = -1;
     int len;
     ObjectBuffer params;
     Tcl_UniChar *string;
@@ -235,8 +235,8 @@ void IRCSplitAndQ::buildCtcpEvent (Tcl_Obj *ctcpMsg)
 
 void IRCSplitAndQ::unQuote (Tcl_Obj **ctcpTag)
 {
-    register int pos, pos1, len;
-    register Tcl_UniChar *string;
+    int pos, pos1, len;
+    Tcl_UniChar *string;
     Tcl_Obj *firstHalf, *secondHalf;
 
     string = Tcl_GetUnicode(*ctcpTag);
@@ -346,12 +346,12 @@ void IRCSplitAndQ::unQuote (Tcl_Obj **ctcpTag)
 
 void IRCSplitAndQ::check4Encodings(Tcl_Obj **trailingParam)
 {
-    register int len = Tcl_GetCharLength(*trailingParam);
-    register Tcl_UniChar *ustr = Tcl_GetUnicode(*trailingParam);
+    int len = Tcl_GetCharLength(*trailingParam);
+    Tcl_UniChar *ustr = Tcl_GetUnicode(*trailingParam);
     int pos;
     Tcl_Encoding enc = (Tcl_Encoding) -1;
     Tcl_Obj *firstHalf, *secondHalf;
-    register int parseFrmChar, parseEndChar = 0, parseStart = 0;
+    int parseFrmChar, parseEndChar = 0, parseStart = 0;
 
     // find an opening ctcp/2 format character (^F)
     for (pos = 0, parseFrmChar = -1; pos < len; pos++) {
