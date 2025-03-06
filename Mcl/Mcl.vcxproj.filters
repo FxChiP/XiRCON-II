@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{b1ecce4e-8694-41ca-8152-d454f63349b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{a3ed5281-904e-4ce1-a2a2-e5a52b37b83a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CMcl.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclAutoLock.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclAutoPtr.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclCritSec.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclEvent.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclGlobal.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclKernel.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclLinkedLists.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclMailbox.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclMonitor.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclMutex.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclSemaphore.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclSharedMemory.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclThread.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclWaitableCollection.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMclWaitableObject.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CMclAutoLock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclAutoPtr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclCritSec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclGlobal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclKernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclMailbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclMutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclSemaphore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclSharedMemory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMclWaitableCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

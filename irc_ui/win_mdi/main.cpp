@@ -40,7 +40,7 @@ XircPanic TCL_VARARGS_DEF(const char *, arg1)
     const char *format;
     
     format = TCL_VARARGS_START(const char *, arg1, argList);
-    vsprintf(buf, format, argList);
+    vsprintf_s(buf, format, argList);
 
     MessageBeep(MB_ICONSTOP);
     MessageBoxA(NULL, buf, "Fatal Error in XiRCON",
@@ -140,8 +140,18 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
     Tcl = TclEventSystem::Instance();
     new TclUp;
 
+    INITCOMMONCONTROLSEX iccce;
+    iccce.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    iccce.dwICC =
+	    ICC_LISTVIEW_CLASSES |
+	    ICC_TREEVIEW_CLASSES |
+	    ICC_BAR_CLASSES |
+	    ICC_HOTKEY_CLASS |
+	    ICC_USEREX_CLASSES |
+	    ICC_STANDARD_CLASSES;
+
     // This is actually an OS function.
-    ::InitCommonControls();
+    ::InitCommonControlsEx(&iccce);
 
     hAccelTbl = ::LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR1));
 
@@ -193,7 +203,8 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
     isDown.Wait(INFINITE);
 
     // post a WM_QUIT to fall into Tcl_Finalize and shutdown the thread
-    // TODO! Tcl->ShutDown();
+    Tcl->ShutDown();
+
     return (int) msg.wParam;
 }
 

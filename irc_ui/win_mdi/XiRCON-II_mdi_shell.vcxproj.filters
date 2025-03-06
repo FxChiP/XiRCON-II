@@ -71,6 +71,9 @@
     <Image Include="resources\xirclone.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="resources\tk.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\xircon.rc">
@@ -140,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="..\generic\ViewBoxCommonImp.hpp">
       <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

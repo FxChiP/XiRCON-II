@@ -46,6 +46,7 @@ class TclEventSystemIntBase
 {
 public:
     virtual int QueueJob (const TclAsyncJob *ai) = 0;
+    virtual void ShutDown(void) = 0;
 };
 
 
@@ -76,6 +77,11 @@ public:
     int QueueJob (const TclAsyncJob *aj) const
     {
 	return privateImp->QueueJob(aj);
+    }
+
+    void ShutDown(void) const
+    {
+	return privateImp->ShutDown();
     }
 
     ~TclEventSystem ()

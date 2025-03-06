@@ -73,7 +73,7 @@ findTcl (const char *minVer, int exact, int dbgOnly)
     static char tclLibFullPath[MAX_PATH];
     char *savedPos;
     char *pos1, *pos2;
-    char *prefix = "\\bin\\tcl";
+    const char *prefix = "\\bin\\tcl";
     WIN32_FIND_DATAA hFFData;
     HANDLE hFind;
     int i = 0;
@@ -281,7 +281,7 @@ static void
 buildTail (char *pos, const char *ver)
 {
     const char *pos2;
-    char *shLibExt = ".dll";
+    const char *shLibExt = ".dll";
 
     // append version w/o decimal
     pos2 = ver;
@@ -311,7 +311,7 @@ static void
 buildWildTail (char *pos)
 {
     char *pos2;
-    char *shLibExt = ".dll";
+    const char *shLibExt = ".dll";
 
     // just append the major version
     *pos++ = *_minVer;

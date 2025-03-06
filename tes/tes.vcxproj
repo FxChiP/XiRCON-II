@@ -18,35 +18,45 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\generic\TclEventSystemInt.cpp" />
+    <ClCompile Include="src\win\winFindTcl.cpp" />
+    <ClCompile Include="src\win\winTclEventSystemInt.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\TclEventSystem.hpp" />
+    <ClInclude Include="src\generic\TclEventSystemInt.hpp" />
+    <ClInclude Include="src\win\winTclEventSystemInt.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{aa27f843-d303-4c0b-985a-2331b730005f}</ProjectGuid>
-    <RootNamespace>XiRCONIImdishell</RootNamespace>
+    <ProjectGuid>{72076a3c-3d91-4229-b31e-f7360deb3d81}</ProjectGuid>
+    <RootNamespace>tes1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -70,21 +80,18 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\Mcl\include;C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\tes\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\Mcl\include;C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\tes\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -94,11 +101,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -108,15 +118,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);GUI_BUILD;USE_TCL_STUBS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);USE_TCL_STUBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Mcl\include;$(SolutionDir)\irc_ui\generic;C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Mcl\include;C:\ActiveTcl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);C:\ActiveTcl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Mcl.lib;tes.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -125,71 +136,20 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);GUI_BUILD;USE_TCL_STUBS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);USE_TCL_STUBS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Mcl\include;$(SolutionDir)\irc_ui\generic;C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Mcl\include;C:\ActiveTcl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);C:\ActiveTcl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Mcl.lib;tes.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\generic\CmdBoxCommonImp.cpp" />
-    <ClCompile Include="..\generic\IRCWindows.cpp" />
-    <ClCompile Include="..\generic\IRCWindowsItclAdapter.cpp" />
-    <ClCompile Include="BlankBoxImps.cpp" />
-    <ClCompile Include="ChanBoxImps.cpp" />
-    <ClCompile Include="CmdBoxImps.cpp" />
-    <ClCompile Include="DCCChatBoxImps.cpp" />
-    <ClCompile Include="FrameWndProc.cpp" />
-    <ClCompile Include="IRCWindowsSystemFactory.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="NickListBoxImps.cpp" />
-    <ClCompile Include="QueryBoxImps.cpp" />
-    <ClCompile Include="StatBoxImps.cpp" />
-    <ClCompile Include="ViewBoxImps.cpp" />
-    <ClCompile Include="Win32TextLine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resources\tk.ico" />
-    <Image Include="resources\toolbar1.bmp" />
-    <Image Include="resources\xirclone.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\xircon.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\generic\BlankBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\ChanBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\CmdBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\DCCChatBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\IRCTextLine.hpp" />
-    <ClInclude Include="..\generic\IRCWindows.hpp" />
-    <ClInclude Include="..\generic\NickListBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\QueryBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\StatBoxCommonImp.hpp" />
-    <ClInclude Include="..\generic\ViewBoxCommonImp.hpp" />
-    <ClInclude Include="BlankBoxImps.hpp" />
-    <ClInclude Include="ChanBoxImps.hpp" />
-    <ClInclude Include="CmdBoxImps.hpp" />
-    <ClInclude Include="DCCChatBoxImps.hpp" />
-    <ClInclude Include="FrameWndProc.hpp" />
-    <ClInclude Include="IRCWindowsSystemFactory.hpp" />
-    <ClInclude Include="NickListBoxImps.hpp" />
-    <ClInclude Include="QueryBoxImps.hpp" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="StatBoxImps.hpp" />
-    <ClInclude Include="ViewBoxImps.hpp" />
-    <ClInclude Include="Win32TextLine.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

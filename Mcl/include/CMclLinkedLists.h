@@ -256,11 +256,11 @@ public:
     CMclQueue(CMclQueue &cpy);
 
     virtual BOOL Put( T & rData) {
-        return PutOnTailOfList(rData);
+        return CMclLinkedList<T>::PutOnTailOfList(rData);
     };
 
     virtual BOOL Get( T & rData, DWORD dwTimeout = INFINITE, CMclEvent *pInterrupt = NULL) {
-        return GetFromHeadOfList( rData, dwTimeout, pInterrupt);
+        return CMclLinkedList<T>::GetFromHeadOfList( rData, dwTimeout, pInterrupt);
     };
 
     DWORD Status(void) {
@@ -280,11 +280,11 @@ public:
     CMclStack(CMclStack &cpy);
 
     virtual BOOL Push( T & rData) {
-        return PutOnHeadOfList(rData);
+        return CMclLinkedList<T>::PutOnHeadOfList(rData);
     };
 
     virtual BOOL Pop( T & rData, DWORD dwTimeout = INFINITE, CMclEvent *pInterrupt = NULL) {
-        return GetFromHeadOfList( rData, dwTimeout, pInterrupt);
+        return CMclLinkedList<T>::GetFromHeadOfList( rData, dwTimeout, pInterrupt);
     };
 
     DWORD Status(void) {

@@ -71,7 +71,7 @@ private:
 		    0);
 #endif
 	    // load it.
-	    hTclMod = LoadLibrary(library);
+	    hTclMod = LoadLibraryA(library);
 
 	    if (hTclMod == 0L)
 	    {
@@ -170,7 +170,7 @@ private:
 	{
 	    if (exceptRec.ExceptionCode != TES_PANIC_UNWIND) {
 		// Something from Tcl's execution tossed a big one.
-		wsprintf(buffer,
+		wsprintfA(buffer,
 			"Tcl has crashed with exception [0x%X] (%s) "
 			"at address 0x%X", exceptRec.ExceptionCode,
 			GetExceptionString(exceptRec.ExceptionCode),
@@ -183,9 +183,9 @@ private:
 	return exceptRec.ExceptionCode;
     }
 
-    LPTSTR GetExceptionString( DWORD dwCode )
+    LPCTSTR GetExceptionString( DWORD dwCode )
     {
-#	define EXCEPTION(x) case EXCEPTION_##x: return #x;
+#	define EXCEPTION(x) case EXCEPTION_##x: return TEXT(#x);
 
 	switch (dwCode)
 	{
@@ -216,10 +216,10 @@ private:
 	// If not one of the "known" exceptions, try to get the string
 	// from NTDLL.DLL's message table.
 
-	static CHAR szBuffer[512] = { 0 };
+	static TCHAR szBuffer[512] = { 0 };
 
 	FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
-		GetModuleHandle("NTDLL.DLL"), dwCode, 0, szBuffer,
+		GetModuleHandle(TEXT("NTDLL.DLL")), dwCode, 0, szBuffer,
 		sizeof(szBuffer), 0);
 
 	return szBuffer;
@@ -254,12 +254,12 @@ TclEventSystemPlatInt::ShutDown (void)
 	CMclIsValidHandle(TclEventLoopThread.GetHandle()) &&
 	exitcode == STILL_ACTIVE)
     {
-	DWORD dwWait;
-
 	// Tell the Tcl notifier to close down.
 	PostThreadMessage(TclEventLoopThread->GetThreadId(), WM_QUIT, 0L, 0L);
+
 	// block waiting for the thread to close.
-	dwWait = TclEventLoopThread->Wait(100);
+	DWORD dwWait = TclEventLoopThread->Wait(100);
+
 	// If we timeout, just kill it as the last resort.
 	if (CMclWaitTimeout(dwWait)) {
 	    TclEventLoopThread->Terminate(666);

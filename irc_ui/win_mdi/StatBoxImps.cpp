@@ -77,13 +77,13 @@ AllWin32StatBoxImp::Echo (char16_t *text, size_t len)
 void
 AllWin32StatBoxImp::SetTitle (char16_t *text, size_t len)
 {
-    int length;
-    TCHAR *space = NULL;
-    length = ::WideCharToMultiByte(CP_OEMCP, 0, (LPWCH)text, len, space, 0, NULL, NULL);
-    space = new TCHAR[length];
-    ::WideCharToMultiByte(CP_OEMCP, 0, (LPWCH)text, len, space, length, NULL, NULL);
-    ::SetWindowText(pGUI->GetHwnd(), space);
-    delete space;
+    //int length;
+    //LPSTR *space = NULL;
+    //length = ::WideCharToMultiByte(CP_OEMCP, 0, (LPCWCH)text, len, space, 0, NULL, NULL);
+    //space = new CHAR[length];
+    //::WideCharToMultiByte(CP_OEMCP, 0, (LPCWCH)text, len, space, length, NULL, NULL);
+    ::SetWindowText(pGUI->GetHwnd(), reinterpret_cast<LPWCH>(text));
+    //delete space;
 }
 
 bool AllWin32StatBoxImp::first = true;

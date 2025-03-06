@@ -191,7 +191,7 @@ CmdBoxWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			reinterpret_cast<LPARAM>(szInput));
 
 		    SetWindowText(hwnd, TEXT(""));
-		    s = new std::u16string(szInput);
+		    s = new std::u16string(reinterpret_cast<char16_t*>(szInput));
 		    pCmdBoxImp->AddHist(s);
 		    //pCmdBoxImp->Input(buf);
 		    // 
@@ -248,14 +248,14 @@ CmdBoxWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			pCmdBoxImp->bHistSaveTemp = false;
 			GetWindowTextW(hwnd, p, len + 1);
 			if (pCmdBoxImp->sHistoryTemp) delete pCmdBoxImp->sHistoryTemp;
-			pCmdBoxImp->sHistoryTemp = new std::u16string(p);
+			pCmdBoxImp->sHistoryTemp = new std::u16string(reinterpret_cast<char16_t*>(p));
 			delete [] p;
 		    }
 		    hist = pCmdBoxImp->GetHist(AllWin32CmdBoxImp::up);
 		    if (hist) {
 			SETTEXTEX stx;
 			stx.flags = ST_DEFAULT;
-			stx.codepage = 1200;
+			stx.codepage = 1200; //unicode, in UTF-16
 			::SendMessage(
 			    hwnd, EM_SETTEXTEX,
 			    reinterpret_cast<WPARAM>(&stx),

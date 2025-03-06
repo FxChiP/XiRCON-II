@@ -21,7 +21,7 @@
 #include <wchar.h>
 #endif
 
-#include "TclEventSystem.hpp"
+//#include "TclEventSystem.hpp"
 
 // Be very restrictive about the minimum acceptable version of Tcl.
 // Compiling requires 8.1.0+, but running requires 8.4a2+ for the needed
@@ -39,7 +39,7 @@ class TclEventSystemInt : public TclEventSystemIntBase
 {
 public:
     int QueueJob (const TclAsyncJob *ai);
-    virtual void ShutDown (void) = 0;
+    void ShutDown (void);
     virtual int  Q_Get (const TclAsyncJob *&aj) = 0;
     virtual void Q_Put (const TclAsyncJob *aj) = 0;
 

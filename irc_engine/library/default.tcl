@@ -60,13 +60,13 @@ namespace eval ::IRC {
 	complete
     }
 
-#    alias PRIVMSG {
-#	set origin [lindex [args] 0]
-#	set msg [lindex [args] 1]
-#	echo "[color highlight]<[color nick][nick][color highlight]>[color default] $msg" $origin
-#	raw "PRIVMSG $origin :[quote $msg]"
-#	complete
-#    }
+    alias PRIVMSG {
+	set dest [lindex [args] 0]
+	set msg [lindex [args] 1]
+	echo "[color highlight]<[color nick][nick][color highlight]>[color default] $msg" $dest
+	say $dest $msg
+	complete
+    }
 
     on NOTICE  {
 	set dest [lindex [args] 0]
@@ -93,7 +93,15 @@ namespace eval ::IRC {
 	complete
     }
 
-    on PING    {
+    alias NOTICE {
+	set dest [lindex [args] 0]
+	set msg [lindex [args] 1]
+	echo "[color highlight]-[color nick][nick][color highlight]-[color notice] $msg" $dest
+	notice $dest $msg
+	complete
+    }
+
+    on PING {
 	set data [raw_args]
 	echo "[mc {ping?pong!}] $data" status
 	raw "pong $data"

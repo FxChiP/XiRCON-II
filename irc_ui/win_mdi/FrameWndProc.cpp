@@ -1,7 +1,7 @@
 #include "FrameWndProc.hpp"
 #include <commctrl.h>
 #include "resources/resource.h"
-//#include <afxres.h>
+#include <afxres.h>
 
 #define HELPFILE TEXT("xircon-ii.hlp")
 
