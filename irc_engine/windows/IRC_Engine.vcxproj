@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;$(SolutionDir)\irc_engine\generic</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\Tcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;$(SolutionDir)\irc_engine\generic</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);C:\ActiveTcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;$(SolutionDir)\irc_engine\generic</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\Tcl\include;$(SolutionDir)\cpptcl;$(SolutionDir)\ctcp2_parser\generic;$(SolutionDir)\irc_engine\generic</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\ActiveTcl\lib;C:\ActiveTcl\lib\itcl4.2.3;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Tcl\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ctcp2_parser.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -136,7 +136,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\ActiveTcl\lib;C:\ActiveTcl\lib\itcl4.2.3;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Tcl\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ctcp2_parser.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
