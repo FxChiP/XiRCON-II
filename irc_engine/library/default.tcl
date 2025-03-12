@@ -63,7 +63,11 @@ namespace eval ::IRC {
     alias PRIVMSG {
 	set dest [lindex [args] 0]
 	set msg [lindex [args] 1]
-	echo "[color highlight]<[color nick][nick][color highlight]>[color default] $msg" $dest
+	if {[ischannel $dest]} {
+	    echo "[color highlight]<[color nick][nick][color highlight]>[color default] $msg" $dest
+	} else {
+	    echo "[color highlight]*[color nick][nick][color highlight]*[color default] $msg" $dest
+	}
 	say $dest $msg
 	complete
     }

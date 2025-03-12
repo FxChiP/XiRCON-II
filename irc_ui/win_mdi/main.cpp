@@ -80,8 +80,6 @@ public:
         if (Tcl_EvalFile(globalInterp, "tkcon.tcl") != TCL_OK) {
 	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
 	}
-
-	//Tcl_PkgProvideEx(globalInterp, "tomahawk", "0.1", API);
     }
 };
 
@@ -125,20 +123,16 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 		switch (tolower(*(argvUTF[arg] + 1)))
 		{
 		    case 'l':	// -l[ib] <library> : use this Tcl library
-				// ex:  tomahawk.exe -L "tcl86.dll" or
-				//      tomahawk.exe -L "c:\\progra~1\\tcl\\bin\\tcl90.dll"
+				// ex:  xircon-ii.exe -L "tcl86.dll" or
+				//      xircon-ii.exe -L "c:\\progra~1\\tcl\\bin\\tcl90.dll"
 			tclLibUTF = argvUTF[++arg];
 			break;
 		    case 'r':	// -r[c] <rcScript> : use this rcscript
-				// ex:  tomahawk.exe -r "c:/mySpecialRC.tcl"
+				// ex:  xircon-ii.exe -r "c:/mySpecialRC.tcl"
 			rcScript = argvUTF[++arg];
 			break;
 		}
 	    }
-
-    // now crank-up Tcl in it's own thread
-    Tcl = TclEventSystem::Instance();
-    new TclUp;
 
     INITCOMMONCONTROLSEX iccce;
     iccce.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -182,12 +176,27 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 	    hInstance, NULL);
 
     if (hFrame == 0L) {
-	// TODO! Tcl->ShutDown();
 	::ExitProcess(1);
     }
 
     ::ShowWindow(hFrame, nCmdShow);
     ::UpdateWindow(hFrame);
+
+    // Do we have an entry in the ini file for a Tcl dll?
+    if (!tclLibUTF) {
+	// TODO! check ini file
+	// tclLibUTF = ...
+    }
+
+    // now crank-up Tcl in it's own thread.  Use this tcl dll if specified
+    // on the commandline (first) or ini file (second).
+    Tcl = TclEventSystem::Instance(tclLibUTF);
+
+    // Send Tcl it's first job of creating the global interp and 
+    // setting up the environment for the internal IRC_UserInterface
+    // extension.
+    new TclUp;
+
 
     while (::GetMessage(&msg, NULL, 0, 0)) {
 	if (!::TranslateMDISysAccel(hClient, &msg) &&
@@ -197,13 +206,16 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 	}
     }
 
+    // Delete our global interp
     new TclDown(isDown);
 
     // block waiting for the job to finish.
     isDown.Wait(INFINITE);
 
-    // post a WM_QUIT to fall into Tcl_Finalize and shutdown the thread
+    // post a WM_QUIT to Tcl's notifier to 
+    // fall into Tcl_Finalize and shutdown the thread
     Tcl->ShutDown();
+    delete Tcl;
 
     return (int) msg.wParam;
 }
