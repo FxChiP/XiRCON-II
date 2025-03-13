@@ -15,6 +15,7 @@
  * compare and swap functions
  */
 
+#if 0
 #if !defined(_MSC_VER)
 static inline char CAS (volatile void * addr, volatile void * value, void * newvalue) 
 {
@@ -82,6 +83,7 @@ static __inline char CAS2 (volatile void * addr, volatile void * v1, volatile lo
     return c;
 }
 #endif
+#endif //0
 
 
 /* Bitmask macros. */
