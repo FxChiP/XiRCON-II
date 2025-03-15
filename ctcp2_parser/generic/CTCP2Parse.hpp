@@ -30,7 +30,6 @@
 #ifndef INC_CTCP2Parse_hpp__
 #define INC_CTCP2Parse_hpp__
 
-#include "tcl.h"
 #include <string>
 #include <vector>
 

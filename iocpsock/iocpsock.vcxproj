@@ -24,7 +24,16 @@
     <ClCompile Include="iocpsock_lolevel.c" />
     <ClCompile Include="linkedlist.c" />
     <ClCompile Include="tclWinError.c" />
+    <ClCompile Include="ws2apltalk.c" />
+    <ClCompile Include="ws2atm.c" />
+    <ClCompile Include="ws2decnet.c" />
+    <ClCompile Include="ws2ipx.c" />
+    <ClCompile Include="ws2irda.c" />
+    <ClCompile Include="ws2isotp4.c" />
+    <ClCompile Include="ws2netbios.c" />
     <ClCompile Include="ws2tcp.c" />
+    <ClCompile Include="ws2udp.c" />
+    <ClCompile Include="ws2vines.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="iocpsock.rc" />

@@ -12,7 +12,7 @@ CMclSharedMemory::CMclSharedMemory( LONG lSize, LPCTSTR lpName,
                                                                     m_lpSharedMemory(NULL),
                                                                     m_bIsCreator(FALSE),
                                                                     m_dwStatus(NO_ERROR) {
-    m_hMapping = ::CreateFileMapping( (HANDLE) 0xFFFFFFFF, lpSharedMemoryAttributes, PAGE_READWRITE, 0, lSize, lpName);
+    m_hMapping = ::CreateFileMapping( INVALID_HANDLE_VALUE, lpSharedMemoryAttributes, PAGE_READWRITE, 0, lSize, lpName);
     if (CMclIsValidHandle(m_hMapping)) {
         m_dwStatus = GetLastError();
         if (m_dwStatus == ERROR_ALREADY_EXISTS) {
