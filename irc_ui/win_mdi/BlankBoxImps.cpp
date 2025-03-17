@@ -82,6 +82,7 @@ LRESULT CALLBACK
 BlankBoxWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
     LPMDICREATESTRUCT lpCreateParams;
+	int cx, cy;
 
     AllWin32BlankBoxImp *pBlank = reinterpret_cast <AllWin32BlankBoxImp*>
 	    (::GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -136,10 +137,10 @@ BlankBoxWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		 * need to move the whole window.  Calc the
 		 * additions to get us there.
 		 */
-		wParam += 2 * GetSystemMetrics(SM_CXEDGE) + 3;
-		lParam += GetSystemMetrics(SM_CYCAPTION) +
-			(2 * GetSystemMetrics(SM_CYEDGE) + 3);
-		::SetWindowPos(hwnd, NULL, 0, 0, wParam, lParam,
+		cx = (int)wParam + (2 * GetSystemMetrics(SM_CXEDGE) + 3);
+		cy = (int)lParam + (GetSystemMetrics(SM_CYCAPTION) +
+			(2 * GetSystemMetrics(SM_CYEDGE) + 3));
+		::SetWindowPos(hwnd, NULL, 0, 0, cx, cy,
 			SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 	    }
 	    return 0;
