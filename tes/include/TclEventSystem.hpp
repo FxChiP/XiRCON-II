@@ -45,14 +45,9 @@ public:
 class TclEventSystemIntBase
 {
 public:
-    virtual int QueueJob (const TclAsyncJob *ai) = 0;
+    virtual int QueueJob (TclAsyncJob *ai) = 0;
     virtual void ShutDown(void) = 0;
 };
-
-
-// Exception code to be used by the fatal Tcl_PanicProc
-//
-#define TES_PANIC_UNWIND	0x666
 
 
 // Singleton design pattern to ensure there's only one instance
@@ -62,26 +57,24 @@ class TclEventSystem
 public:
     // Creates the instance on the first call.
     static const TclEventSystem *Instance (
-	const char *tclVer,	    // version requested.
-	int exact,		    // only?
-	Tcl_PanicProc *fatal,	    // fatal one (should end with
-				    //  RaiseException(TES_PANIC_UNWIND)).
-	Tcl_PanicProc *nfatal,	    // non-fatal one.
-	const char *exeName = 0L);  // executable name (for
-				    // Tcl_FindExecutable) can be empty.
+	const char *libToUse,		//  Tcl library to load.
+	Tcl_PanicProc* fatal);		//  fatal message proc	
 
     // Used to grab the one and only instance of the class.
     static const TclEventSystem *Instance (void);
 
     // Send a Job "packet" to Tcl.
-    int QueueJob (const TclAsyncJob *aj) const
+    int QueueJob (TclAsyncJob *aj) const
     {
 	return privateImp->QueueJob(aj);
     }
 
+    // Unwinds the notifier, event loop, and cleans up Tcl.
     void ShutDown(void) const
     {
-	return privateImp->ShutDown();
+	privateImp->ShutDown();
+	delete m_instance;
+	m_instance = 0L;
     }
 
     ~TclEventSystem ()
@@ -91,13 +84,10 @@ public:
     };
 
 protected:
-    TclEventSystem (
-	const char *tclVer,
-	int exact,
-	Tcl_PanicProc *fatal,
-	Tcl_PanicProc *nfatal,
-	const char *exeName);
-
+    TclEventSystem(
+	const char* libToUse,
+	Tcl_PanicProc* fatal
+    );
 private:
     static TclEventSystem *m_instance;
     TclEventSystemIntBase *privateImp;

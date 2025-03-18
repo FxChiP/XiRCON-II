@@ -43,7 +43,7 @@ XircPanic TCL_VARARGS_DEF(const char *, arg1)
     vsprintf_s(buf, format, argList);
 
     MessageBeep(MB_ICONSTOP);
-    MessageBoxA(NULL, buf, "Fatal Error in XiRCON",
+    MessageBoxA(NULL, buf, "Fatal Error in XiRCON-II",
 	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
 #ifdef _MSC_VER
     DebugBreak();
@@ -72,7 +72,7 @@ public:
 	}
 	Tcl_SourceRCFile(globalInterp);
 	Gui_irc_Init(globalInterp);
-	Tcl_StaticPackage(globalInterp, "IRC_UserInterface", Gui_irc_Init, Gui_irc_Init);
+	tclStubsPtr->tcl_StaticPackage(globalInterp, "IRC_UserInterface", Gui_irc_Init, Gui_irc_Init);
 
 	// Source some stuff.
 	Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
@@ -100,13 +100,18 @@ public:
 };
 
 
-int WINAPI
-WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
+int APIENTRY
+wWinMain(
+    _In_     HINSTANCE	hInst, 
+    _In_opt_ HINSTANCE	hPrevInstance,
+    _In_     LPWSTR	lpCmdLine,
+    _In_     int	nCmdShow)
 {
     MSG msg;
     WNDCLASSEX wc;
     int argc, arg;
-    char **argvUTF, *tclLibUTF = 0L;
+    char **argvUTF;
+    const char *tclLibUTF = ".\\Tcl\\Bin\\tcl86t.dll";	//default location
     CMclEvent isDown;
 
     // set global.
@@ -176,7 +181,7 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 	    hInstance, NULL);
 
     if (hFrame == 0L) {
-	::ExitProcess(1);
+	return EXIT_FAILURE;
     }
 
     ::ShowWindow(hFrame, nCmdShow);
@@ -190,11 +195,11 @@ WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 
     // now crank-up Tcl in it's own thread.  Use this tcl dll if specified
     // on the commandline (first) or ini file (second).
-    Tcl = TclEventSystem::Instance(tclLibUTF);
+    Tcl = TclEventSystem::Instance(tclLibUTF, XircPanic);
 
     // Send Tcl it's first job of creating the global interp and 
     // setting up the environment for the internal IRC_UserInterface
-    // extension.
+    // extension and the external IRC_Engine
     new TclUp;
 
 

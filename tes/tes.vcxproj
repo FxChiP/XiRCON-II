@@ -20,7 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\generic\TclEventSystemInt.cpp" />
-    <ClCompile Include="src\win\winFindTcl.cpp" />
+    <ClCompile Include="src\win\winFindTcl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\win\winTclEventSystemInt.cpp" />
   </ItemGroup>
   <ItemGroup>

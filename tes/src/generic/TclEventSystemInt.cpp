@@ -27,14 +27,11 @@ TclEventSystem *TclEventSystem::m_instance = 0L;
 
 const
 TclEventSystem *TclEventSystem::Instance (
-    const char *tclVer,
-    int exact,
-    Tcl_PanicProc *fatal,
-    Tcl_PanicProc *nfatal,
-    const char *appfile)
+    const char *libToUse,
+    Tcl_PanicProc *fatal)
 {
     if (m_instance == 0L) {
-	m_instance = new TclEventSystem(tclVer, exact, fatal, nfatal, appfile);
+	m_instance = new TclEventSystem(libToUse, fatal);
     }
     return m_instance;
 }
@@ -47,18 +44,15 @@ TclEventSystem *TclEventSystem::Instance (void)
 }
 
 TclEventSystem::TclEventSystem (
-    const char *tclVer,
-    int exact,
-    Tcl_PanicProc *fatal,
-    Tcl_PanicProc *nfatal,
-    const char *appfile)
+    const char *libToUse,
+    Tcl_PanicProc *fatal)
 {
-    privateImp = new TclEventSystemPlatInt(tclVer, exact, fatal, nfatal, appfile);
+    privateImp = new TclEventSystemPlatInt(libToUse, fatal);
 }
 
 
 int
-TclEventSystemInt::QueueJob(const TclAsyncJob *aj)
+TclEventSystemInt::QueueJob(TclAsyncJob *aj)
 {
     if (m_hAsync != 0L) {
 	Q_Put(aj);

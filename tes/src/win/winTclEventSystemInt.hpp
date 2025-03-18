@@ -9,18 +9,13 @@ class TclEventLoop;
 class TclEventSystemPlatInt : public TclEventSystemInt
 {
 public:
-    TclEventSystemPlatInt (
-	const char *tclVer,
-	int exact,
-	Tcl_PanicProc *fatal,
-	Tcl_PanicProc *nfatal,
-	const char *appfile);
+    TclEventSystemPlatInt (const char *libToLoad, Tcl_PanicProc *fatal);
     ~TclEventSystemPlatInt ();
     virtual void ShutDown (void);
-    virtual int  Q_Get(const TclAsyncJob *&aj);
-    virtual void Q_Put(const TclAsyncJob *aj);
+    virtual int  Q_Get(TclAsyncJob *&aj);
+    virtual void Q_Put(TclAsyncJob *aj);
 private:
-    CMclQueue<const TclAsyncJob *> workQ;
+    CMclQueue<TclAsyncJob *> workQ;
     CMclThreadAutoPtr TclEventLoopThread;
     TclEventLoop *loop;
 };

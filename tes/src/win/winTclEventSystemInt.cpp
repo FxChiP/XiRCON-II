@@ -38,15 +38,12 @@ public:
     TclEventLoop (
 	    Tcl_AsyncHandler *_token,
 	    CMclEvent &_ready,
-	    const char *_app,
-	    const char *_tclVer,
-	    int _exact,
+	    const char *_libToUse,
 	    TclEventSystemPlatInt* _that,
-	    Tcl_PanicProc *_fatal,
-	    Tcl_PanicProc *_nfatal
-	)
-	: done(0), token(_token), ready(_ready), app(_app), tclVer(_tclVer),
-	  exact(_exact), that(_that), fatal(_fatal), nfatal(_nfatal)
+	    Tcl_PanicProc *_fatal
+    )
+	: done(0), token(_token), ready(_ready), libToUse(_libToUse),
+	  that(_that), fatal(_fatal), hTclMod(NULL)
     {
     }
     void BreakOut (void)
@@ -60,16 +57,20 @@ private:
 	LPFN_createInterpProc createInterpProc;
 	Tcl_Interp *interp;
 	char appname[MAX_PATH+1];
-	char *library;
+	const char *library;
 
 
 	try {
+#if 0
 	    library = findTcl(tclVer, exact,
 #ifdef _DEBUG
 		    1);
 #else
 		    0);
 #endif
+#endif
+	    library = libToUse;
+
 	    // load it.
 	    hTclMod = LoadLibraryA(library);
 
@@ -95,14 +96,14 @@ private:
 	    }
 
 	    interp = createInterpProc();
-	    if (Tcl_InitStubs(interp, tclVer, exact) == 0L)
+	    if (Tcl_InitStubs(interp, NULL, 0) == 0L)
 	    {
 		throw std::string(Tcl_GetStringResult(interp));
 	    }
 	}
 	catch (std::string &err)
 	{
-	    nfatal("Couldn't load Tcl: %s", err.c_str());
+	    fatal("Couldn't load Tcl: %s", err.c_str());
 	    return 0x666;
 	}
 
@@ -110,18 +111,14 @@ private:
 	Tcl_SetPanicProc(fatal);
 
 	// Discover the calling application.
-	if (app == 0L) {
-	    GetModuleFileNameA(0L, appname, sizeof(appname));
-	    app = appname;
-	}
-
-	_ASSERTE(app != 0L || *app != '\0');
-	Tcl_FindExecutable(app);
+	GetModuleFileNameA(0L, appname, sizeof(appname));
+	tclStubsPtr->tcl_FindExecutable(appname);
 
 	// we're done initializing the core, and now don't need this
 	// interp anymore.
 	Tcl_DeleteInterp(interp);
 
+	// Create the async token so we can get back in to this thread
         *token = Tcl_AsyncCreate(TclEventSystemInt::MainAsyncProc, that);
 
 	// Now that the async token is ready, unblock the wait in the
@@ -168,7 +165,7 @@ private:
 	    exceptRec = *(GetExceptionInformation())->ExceptionRecord,
 	    EXCEPTION_EXECUTE_HANDLER)
 	{
-	    if (exceptRec.ExceptionCode != TES_PANIC_UNWIND) {
+	    if (exceptRec.ExceptionCode != 0x666) {
 		// Something from Tcl's execution tossed a big one.
 		wsprintfA(buffer,
 			"Tcl has crashed with exception [0x%X] (%s) "
@@ -177,7 +174,7 @@ private:
 			exceptRec.ExceptionAddress);
 		// We don't need RaiseException() for this call.  We're
 		// already unwound.
-		nfatal(buffer);
+		fatal(buffer);
 	    }
 	}
 	return exceptRec.ExceptionCode;
@@ -225,16 +222,13 @@ private:
 	return szBuffer;
     }
 
-    int done;
+    LONG volatile done;
     HMODULE hTclMod;
     Tcl_AsyncHandler *token;
     CMclEvent &ready;
-    const char *app;
-    const char *tclVer;
-    int exact;
+    const char *libToUse;
     TclEventSystemPlatInt *that;
     Tcl_PanicProc *fatal;
-    Tcl_PanicProc *nfatal;
 };
 
 
@@ -254,7 +248,7 @@ TclEventSystemPlatInt::ShutDown (void)
 	CMclIsValidHandle(TclEventLoopThread.GetHandle()) &&
 	exitcode == STILL_ACTIVE)
     {
-	// Tell the Tcl notifier to close down.
+	// Awake the Tcl notifier and tell it to close down.
 	PostThreadMessage(TclEventLoopThread->GetThreadId(), WM_QUIT, 0L, 0L);
 
 	// block waiting for the thread to close.
@@ -272,19 +266,16 @@ TclEventSystemPlatInt::ShutDown (void)
 
 
 TclEventSystemPlatInt::TclEventSystemPlatInt (
-    const char *tclVer,
-    int exact,
-    Tcl_PanicProc *fatal,
-    Tcl_PanicProc *nfatal,
-    const char *appfile)
+    const char *libToUse,
+    Tcl_PanicProc *fatal)
 {
     CMclEvent ready;
 
     // kickstart Tcl's thread.
     // from now on, all access to Tcl is through QueueJob()
     TclEventLoopThread = new CMclThread (
-	    loop = new TclEventLoop(&m_hAsync, ready, appfile, tclVer,
-		exact, this, fatal, nfatal));
+	    loop = new TclEventLoop(&m_hAsync, ready, libToUse,
+		this, fatal));
 
     // block waiting until the Async token is created.
     ready.Wait(INFINITE);
@@ -297,13 +288,13 @@ TclEventSystemPlatInt::~TclEventSystemPlatInt()
 }
 
 int
-TclEventSystemPlatInt::Q_Get(const TclAsyncJob *&aj)
+TclEventSystemPlatInt::Q_Get(TclAsyncJob *&aj)
 {
     return workQ.Get(aj,0);
 }
 
 void
-TclEventSystemPlatInt::Q_Put(const TclAsyncJob *aj)
+TclEventSystemPlatInt::Q_Put(TclAsyncJob *aj)
 {
     workQ.Put(aj);
 }

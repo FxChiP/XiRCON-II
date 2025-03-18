@@ -33,15 +33,15 @@
 #   error "You need the Tcl 8.1.0 headers (or above) from Scriptics for this"
 #endif
 
-extern char *findTcl (const char *minVer, int exact, int dbgOnly);
 
 class TclEventSystemInt : public TclEventSystemIntBase
 {
 public:
-    int QueueJob (const TclAsyncJob *ai);
-    void ShutDown (void);
-    virtual int  Q_Get (const TclAsyncJob *&aj) = 0;
-    virtual void Q_Put (const TclAsyncJob *aj) = 0;
+    TclEventSystemInt() : m_hAsync(NULL) {};
+    int QueueJob (TclAsyncJob *ai);
+    virtual void ShutDown(void) = 0;
+    virtual int  Q_Get (TclAsyncJob *&aj) = 0;
+    virtual void Q_Put (TclAsyncJob *aj) = 0;
 
     static int MainAsyncProc (ClientData cData, Tcl_Interp *interp, int code);
     static int MainEventProc (Tcl_Event *evPtr, int flags);
