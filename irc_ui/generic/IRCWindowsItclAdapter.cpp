@@ -63,7 +63,7 @@ public:
 	NewItclCmd("irc-ui-menu",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-nicklist",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-hotkey",	&IRCWindowsItclAdapter::NotImplementedCmd);
-	NewItclCmd("irc-ui-alias",	&IRCWindowsItclAdapter::NotImplementedCmd);
+//	NewItclCmd("irc-ui-alias",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-channel",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-query",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-chat",	&IRCWindowsItclAdapter::NotImplementedCmd);
@@ -612,7 +612,7 @@ Gui_irc_Init (Tcl_Interp *interp)
     }
 #endif
 #ifdef USE_ITCL_STUBS
-    if (Itcl_InitStubs(interp, "3.1", 0) == NULL) {
+    if (Itcl_InitStubs(interp, "4.2-", 0) == NULL) {
 	return TCL_ERROR;
     }
 #endif

@@ -1,3 +1,4 @@
+tk_messageBox -message "hello" -type ok
 package require Itcl
 load IRC_Engine.dll
 

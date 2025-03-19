@@ -64,19 +64,21 @@ public:
 	Tcl_SetPanicProc(XircPanic);
 	globalInterp = Tcl_CreateInterp();
 	
-	Tcl_SetVar(globalInterp, "tcl_rcFileName", rcScript, TCL_GLOBAL_ONLY);
-	Tcl_SetVar(globalInterp, "tcl_interactive", "1", TCL_GLOBAL_ONLY);
+	//Tcl_SetVar(globalInterp, "tcl_rcFileName", rcScript, TCL_GLOBAL_ONLY);
+	//Tcl_SetVar(globalInterp, "tcl_interactive", "1", TCL_GLOBAL_ONLY);
 
 	if (Tcl_Init(globalInterp) != TCL_OK) {
 	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
 	}
-	Tcl_SourceRCFile(globalInterp);
-	Gui_irc_Init(globalInterp);
+	//Tcl_SourceRCFile(globalInterp);
+	if (Gui_irc_Init(globalInterp) != TCL_OK) {
+	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
+	}
 	tclStubsPtr->tcl_StaticPackage(globalInterp, "IRC_UserInterface", Gui_irc_Init, Gui_irc_Init);
 
 	// Source some stuff.
-	//Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
-	//Tcl_SetVar(globalInterp, "argv", "xircon.tcl", TCL_GLOBAL_ONLY);
+	Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
+	Tcl_SetVar(globalInterp, "argv", "xircon.tcl", TCL_GLOBAL_ONLY);
         if (Tcl_EvalFile(globalInterp, "tkcon.tcl") != TCL_OK) {
 	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
 	}

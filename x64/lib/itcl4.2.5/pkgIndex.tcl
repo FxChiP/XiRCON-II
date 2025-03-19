@@ -9,6 +9,6 @@ if {[package vsatisfies [package provide Tcl] 9.0-]} {
 	    [list load [file join $dir tcl9itcl425.dll] Itcl]
 } else {
     package ifneeded itcl 4.2.5 \
-	    [list load [file join $dir itcl425.dll] Itcl]
+	    [list load [file join $dir itcl425t.dll] Itcl]
 }
 package ifneeded Itcl 4.2.5 [list package require -exact itcl 4.2.5]
