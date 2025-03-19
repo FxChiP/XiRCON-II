@@ -79,7 +79,7 @@ public:
 
     ~TclEventSystem ()
     {
-	delete privateImp;
+	//delete privateImp;
 	m_instance = 0L;
     };
 

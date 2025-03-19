@@ -74,6 +74,8 @@ private:
 	    // load it.
 	    hTclMod = LoadLibraryA(library);
 
+	    DWORD er = GetLastError();
+
 	    if (hTclMod == 0L)
 	    {
 		std::string err(library);

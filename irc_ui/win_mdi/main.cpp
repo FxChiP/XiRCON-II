@@ -46,7 +46,7 @@ XircPanic TCL_VARARGS_DEF(const char *, arg1)
     MessageBoxA(NULL, buf, "Fatal Error in XiRCON-II",
 	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
 #ifdef _MSC_VER
-    DebugBreak();
+    //DebugBreak();
 #endif
     ExitProcess(1);
 }
@@ -75,8 +75,8 @@ public:
 	tclStubsPtr->tcl_StaticPackage(globalInterp, "IRC_UserInterface", Gui_irc_Init, Gui_irc_Init);
 
 	// Source some stuff.
-	Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
-	Tcl_SetVar(globalInterp, "argv", "xircon.tcl", TCL_GLOBAL_ONLY);
+	//Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
+	//Tcl_SetVar(globalInterp, "argv", "xircon.tcl", TCL_GLOBAL_ONLY);
         if (Tcl_EvalFile(globalInterp, "tkcon.tcl") != TCL_OK) {
 	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
 	}
@@ -111,7 +111,11 @@ wWinMain(
     WNDCLASSEX wc;
     int argc, arg;
     char **argvUTF;
-    const char *tclLibUTF = ".\\Tcl\\Bin\\tcl86t.dll";	//default location
+#ifdef _DEBUG
+    const char* tclLibUTF = "tcl86tg.dll";	    //default location
+#elif
+    const char* tclLibUTF = "C:\\Users\\davygrvy\\XiRCON-II\\x64\\Release\\Tcl\\bin\\tcl86t.dll";   //default location
+#endif
     CMclEvent isDown;
 
     // set global.
@@ -220,7 +224,7 @@ wWinMain(
     // post a WM_QUIT to Tcl's notifier to 
     // fall into Tcl_Finalize and shutdown the thread
     Tcl->ShutDown();
-    delete Tcl;
+    //delete Tcl;
 
     return (int) msg.wParam;
 }

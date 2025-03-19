@@ -137,7 +137,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;IOCPSOCK1_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BUILD_iocp</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;USE_TCL_STUBS;BUILD_iocp;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BUILD_iocp</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -155,7 +155,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;IOCPSOCK1_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BUILD_iocp</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;USE_TCL_STUBS;BUILD_iocp;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BUILD_iocp</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
