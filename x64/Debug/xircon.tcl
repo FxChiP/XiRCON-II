@@ -1,5 +1,5 @@
-tk_messageBox -message "hello" -type ok
 package require Itcl
+puts [package require IRC_UserInterface]
 load IRC_Engine.dll
 
 
@@ -56,7 +56,6 @@ itcl::class IRC::ui {
 #	method window {} @irc-ui-window
 	method menu {} @irc-ui-menu
 	method hotkey {} @irc-ui-hotkey
-	method alias {} @irc-ui-alias
 	method channel {} @irc-ui-channel
 	method query {} @irc-ui-query
 	method chat {} @irc-ui-chat

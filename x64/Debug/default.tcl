@@ -26,7 +26,7 @@ proc icomp {a b} {
 
 namespace eval ::IRC {
 
-    package require msgcat
+    package require msgcat 1.6
     namespace import ::msgcat::mc
 
     ### Load our message catalog for multi-lingual messages.

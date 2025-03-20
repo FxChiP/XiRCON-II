@@ -79,7 +79,8 @@ public:
 	// Source some stuff.
 	Tcl_SetVar(globalInterp, "argc", "1", TCL_GLOBAL_ONLY);
 	Tcl_SetVar(globalInterp, "argv", "xircon.tcl", TCL_GLOBAL_ONLY);
-        if (Tcl_EvalFile(globalInterp, "tkcon.tcl") != TCL_OK) {
+	Tcl_SetVar(globalInterp, "argv0", "tkcon.tcl", TCL_GLOBAL_ONLY);
+	if (Tcl_EvalFile(globalInterp, "tkcon.tcl") != TCL_OK) {
 	    Tcl_Panic(Tcl_GetStringResult(globalInterp));
 	}
     }

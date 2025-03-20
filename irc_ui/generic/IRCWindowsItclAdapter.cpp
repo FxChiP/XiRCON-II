@@ -63,7 +63,6 @@ public:
 	NewItclCmd("irc-ui-menu",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-nicklist",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-hotkey",	&IRCWindowsItclAdapter::NotImplementedCmd);
-//	NewItclCmd("irc-ui-alias",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-channel",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-query",	&IRCWindowsItclAdapter::NotImplementedCmd);
 	NewItclCmd("irc-ui-chat",	&IRCWindowsItclAdapter::NotImplementedCmd);
@@ -320,28 +319,6 @@ private:
     }
 
     int HotkeyCmd (int objc, struct Tcl_Obj * const objv[])
-    {
-	ItclObject *ItclObj;
-	IRCUi *ui;
-
-	// Get the Itcl object.
-	//
-	if (GetItclObj(&ItclObj, objv[0]) != TCL_OK) return TCL_ERROR;
-
-	// Get the IRCUi instance associated to this Itcl object.
-	//
-	if (IRCUis.Find(ItclObj, &ui) != TCL_OK) {
-	    Tcl_SetObjResult(interp,
-		    Tcl_NewStringObj("IRCUi instance lost!", -1));
-	    return TCL_ERROR;
-	}
-
-	//ui->???
-
-	return TCL_ERROR;
-    }
-
-    int AliasCmd (int objc, struct Tcl_Obj * const objv[])
     {
 	ItclObject *ItclObj;
 	IRCUi *ui;
