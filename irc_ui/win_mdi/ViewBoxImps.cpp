@@ -30,7 +30,7 @@ class RichEditCTCP2Action : protected CTCP2Parse
 {
 public:
     RichEditCTCP2Action(HWND reCtrl, std::u16string *line)
-	: CTCP2Parse(), hRE(reCtrl)
+	: CTCP2Parse(), hRE(reCtrl), changed(false)
     {
 	GETTEXTLENGTHEX gtlen;
 	LRESULT length;
@@ -81,7 +81,7 @@ public:
 	    ::SendMessage(
 		    hRE, EM_SETTEXTEX,
 		    reinterpret_cast<WPARAM>(&stx),
-		    reinterpret_cast<LPARAM>(U"\n")
+		    reinterpret_cast<LPARAM>(u"\n")
 		    );
 	}
 
@@ -213,9 +213,9 @@ private:
 	//}
     }
 
-    virtual int ParseExtension (std::u16string *string, int *offset, int *endoffset)
+    virtual int ParseExtension (std::u16string *string, size_t *offset, size_t *endoffset)
     {
-	int index, start;
+	size_t index, start;
 	char16_t ch;
 
 	if (*offset < *endoffset) {
@@ -224,14 +224,14 @@ private:
 		case 'T':
 		    start = (*offset)++;
 		    ch = string->at(*offset);
-		    if (string->at(*offset) >= U'0' && string->at(*offset) <= U'9') {
-			if (string->at((*offset)+1) >= U'0' && string->at((*offset)+1) <= U'9') {
+		    if (string->at(*offset) >= u'0' && string->at(*offset) <= u'9') {
+			if (string->at((*offset)+1) >= u'0' && string->at((*offset)+1) <= u'9') {
 			    // two digit
-			    index = (((string->at(*offset) - U'0') * 10) + (string->at((*offset)+1) - U'0'));
+			    index = (((string->at(*offset) - u'0') * 10) + (string->at((*offset)+1) - u'0'));
 			    *offset += 2;
 			} else {
 			    // one digit.
-			    index = string->at(*offset) - U'0';
+			    index = string->at(*offset) - u'0';
 			    (*offset)++;
 			}
 			if (index > 16) {
@@ -328,7 +328,7 @@ private:
 
 AllWin32ViewBoxImp::AllWin32ViewBoxImp
     (HWND parent, CMclQueue<std::u16string *> &echoQ)
-    : m_echoQ(echoQ)
+    : m_echoQ(echoQ), font(NULL)
 {
     CHARFORMAT2 defFmt;
     PARAFORMAT2 paraFmt;

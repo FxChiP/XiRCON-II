@@ -11,6 +11,16 @@
 #include "Cmcl.h"
 
 
+/*
+* If you want your application to use visual styles, you must add an application
+* manifest or compiler directive that indicates that ComCtl32.dll version 6 should
+* be used if it is available.
+*/
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+
 // -------------  globals  -----------------
 const TclEventSystem *Tcl;
 HINSTANCE hInstance;
