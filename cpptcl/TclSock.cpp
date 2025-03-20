@@ -775,6 +775,11 @@ Socket::GetPort(Tcl_Interp *interp, const char *string, unsigned short *port)
 
     Tcl_DStringInit(&ds);
 
+    if (string == NULL) {
+	*port = 0;
+	return TCL_OK;
+    }
+
     // We use a Tcl_DString to get around the missing constant-ness
     // of TclSockGetPort().  I don't want my code to *need* write
     // permission.
