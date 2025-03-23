@@ -92,3 +92,14 @@ test parser-3.2 {bad form -- no command, extra space} {
     set err [catch {IRC::testparse {:nick!user@host }} msg]
     list $err $msg
 } {1 {}}
+
+
+#
+# don't misinterpret IPv6 addies
+#
+
+test parser-4.1 {process an IPv6 address correctly} {
+    set capture [IRC::testparse {:nick!user@2001:6b0:78::101 privmsg #somechan :la la la la}]
+    lrange $capture 0 3
+} {nick!user@2001:6b0:78::101 nick user 2001:6b0:78::101}
+

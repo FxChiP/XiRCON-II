@@ -7,6 +7,8 @@
  *
  *  In Tcl, one char != one character because strings in char form
  *  are encoded in utf-8.
+ * 
+ *  Although today, it is UTF-16.
  *
  * ----------------------------------------------------------------------
  * RCS: @(#) $Id: IRCParse.cpp,v 1.16 2003/01/13 20:55:48 davygrvy Exp $
@@ -70,13 +72,13 @@ void IRCParse::Parseit(Tcl_Obj *oLine)
 	pos1 = srcEnd;
 
 	// search backwards for a token.
-	while (line[pos1] != u'@' && line[pos1] != u':') pos1--;
+	while (line[pos1] != u'@' && srcStart < pos1) pos1--;
 
 	// set the host of the event
 	Tcl_DecrRefCount(oHost);
 	Tcl_IncrRefCount(oHost = Tcl_NewUnicodeObj(line + pos1 + 1, pos2 - pos1));
 
-	if (line[pos1] == u':') {
+	if (pos1 == srcStart) {
 	    // if we're done, nick = host, too.
 	    Tcl_DecrRefCount(oNick);
 	    Tcl_IncrRefCount(oNick = oHost);
