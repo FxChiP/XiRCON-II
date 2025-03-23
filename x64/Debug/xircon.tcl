@@ -1,5 +1,5 @@
 package require Itcl
-puts [package require IRC_UserInterface]
+package require IRC_UserInterface
 load IRC_Engine.dll
 
 

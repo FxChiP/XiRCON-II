@@ -365,7 +365,7 @@ AllWin32ViewBoxImp::AllWin32ViewBoxImp
 	    CFM_UNDERLINE |
 	    CFM_BOLD |
 	    CFM_COLOR |
-//	    CFM_SIZE |
+	    CFM_SIZE |
 	    CFM_PROTECTED |
 	    CFM_WEIGHT |
 	    0;		// zero gets or'd with above
@@ -390,12 +390,35 @@ AllWin32ViewBoxImp::AllWin32ViewBoxImp
     // make sure auto URL detection is off; I don't like it.
     ::SendMessage(hwndViewBox, EM_AUTOURLDETECT, FALSE, 0);
 
-    // we want courier new and ~12 point.
-    _tcscpy_s(defFmt.szFaceName, 32, /*"code2001"*/ TEXT("Courier New"));
+    defFmt.bPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+
+    _tcscpy_s(defFmt.szFaceName, 32,
+	//TEXT("code2001")
+	//TEXT("Courier New")
+	TEXT("Roboto Mono")
+	//TEXT("Atkinson Hyperlegible Mono Extr")
+    );
 
     //defFmt.yHeight = -MulDiv(18, GetDeviceCaps(hDC, LOGPIXELSY), 72);
-    //defFmt.yHeight = 512;
-    defFmt.wWeight = FW_EXTRALIGHT;
+    defFmt.yHeight = 256;  // twips
+    defFmt.wWeight = FW_SEMIBOLD;
+    /*
+	FW_DONTCARE
+	FW_THIN
+	FW_EXTRALIGHT
+	FW_ULTRALIGHT
+	FW_LIGHT
+	FW_NORMAL
+	FW_REGULAR
+	FW_MEDIUM
+	FW_SEMIBOLD
+	FW_DEMIBOLD
+	FW_BOLD
+	FW_EXTRABOLD
+	FW_ULTRABOLD
+	FW_HEAVY
+	FW_BLACK
+	*/
 
     // light grey text color
     defFmt.crTextColor = RGB(192, 192, 192);

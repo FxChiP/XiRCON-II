@@ -5,7 +5,7 @@
 
 #define HELPFILE TEXT("xircon-ii.hlp")
 
-// use message crackers
+// use message crackers!
 #include <windowsx.h>
 
 /* globals */
