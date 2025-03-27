@@ -826,3 +826,12 @@ proc tcl::CopyDirectory {action src dest} {
     }
     return
 }
+
+
+	# TEAPOT LINK BOOT BEGIN -*- tcl -*-
+	# Copyright (C) 2006-2007 ActiveState Software Inc.
+	if {![interp issafe] && ![catch {package require platform}]} {
+	    package require activestate::teapot::link
+	    ::activestate::teapot::link::setup
+	}
+	# TEAPOT LINK BOOT END
