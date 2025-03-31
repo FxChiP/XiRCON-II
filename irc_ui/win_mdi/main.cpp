@@ -29,7 +29,7 @@ HWND hFrame;
 HWND hStatBar;
 HWND hToolBar;
 HACCEL hAccelTbl = NULL;
-const TCHAR *szDisplayName = TEXT("XiRCON-II Alpha5 : " __TIMESTAMP__ " PDT");
+const TCHAR *szDisplayName = TEXT("XiRCON-II Alpha6: " __TIMESTAMP__ " PDT");
 
 extern "C" Tcl_AppInitProc Gui_irc_Init;
 

@@ -79,6 +79,12 @@ public:
 	// TODO: finish me!
 	return IRCUserScriptProvider::NOTCOMPLETED;
     }
+    IRCUserScriptProvider::CompletionStatus
+    RunAlias(const IRCParse* line)
+    {
+	return IRCUserScriptProvider::NOTCOMPLETED;
+    }
+
 };
 
 IRCUserScriptProviderForPerl::IRCUserScriptProviderForPerl(

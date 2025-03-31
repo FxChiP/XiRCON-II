@@ -73,13 +73,11 @@ public:
     void ShutDown(void) const
     {
 	privateImp->ShutDown();
-	delete m_instance;
-	m_instance = 0L;
     }
 
     ~TclEventSystem ()
     {
-	//delete privateImp;
+	delete privateImp;
 	m_instance = 0L;
     };
 

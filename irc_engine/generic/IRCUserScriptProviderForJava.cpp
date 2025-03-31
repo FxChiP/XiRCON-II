@@ -450,6 +450,13 @@ public:
 	// TODO: finish me!
 	return IRCUserScriptProvider::NOTCOMPLETED;
     }
+
+    IRCUserScriptProvider::CompletionStatus
+	RunAlias(const IRCParse* line)
+    {
+	return NOTCOMPLETED;
+    }
+
 };
 
 IRCUserScriptProviderForJavaPrivateImp::ConnectionHash *

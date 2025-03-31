@@ -34,3 +34,10 @@ IRCUserScriptProviderForDLL::IncomingEvent (const IRCParse *line)
 {
     return NOTCOMPLETED;
 }
+
+IRCUserScriptProvider::CompletionStatus
+IRCUserScriptProviderForDLL::RunAlias (const IRCParse* line)
+{
+    return NOTCOMPLETED;
+}
+

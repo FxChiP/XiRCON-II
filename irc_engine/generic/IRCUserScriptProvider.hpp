@@ -31,7 +31,8 @@ public:
     virtual ~IRCUserScriptProvider() {};
 
     enum CompletionStatus {NOTCOMPLETED, COMPLETED, COMPLETED_WITHERROR};
-    virtual CompletionStatus IncomingEvent (const IRCParse *line) = 0;
+    virtual CompletionStatus IncomingEvent (const IRCParse* line) = 0;
+    virtual CompletionStatus RunAlias (const IRCParse* line) = 0;
     inline int Status() { return status; }
     inline const char *GetTraceBack() { return traceBack; }
 };
@@ -44,7 +45,8 @@ public:
 class IRCUserScriptProviderNub
     : public IRCUserScriptProvider
 {
-    virtual CompletionStatus IncomingEvent (const IRCParse *line);
+    virtual CompletionStatus IncomingEvent(const IRCParse* line);
+    virtual CompletionStatus RunAlias(const IRCParse* line);
 };
 
 extern IRCUserScriptProviderNub Nub;
@@ -94,7 +96,8 @@ public:
 	    int useSafe = 0);
 
     virtual ~IRCUserScriptProviderForTcl();
-    virtual CompletionStatus IncomingEvent (const IRCParse *line);
+    virtual CompletionStatus IncomingEvent (const IRCParse* line);
+    virtual CompletionStatus RunAlias (const IRCParse* line);
 };
 
 
@@ -128,7 +131,8 @@ public:
 	    Tcl_Interp *globalInterp);
 
     virtual ~IRCUserScriptProviderForDLL();
-    virtual CompletionStatus IncomingEvent (const IRCParse *line);
+    virtual CompletionStatus IncomingEvent (const IRCParse* line);
+    virtual CompletionStatus RunAlias (const IRCParse* line);
 };
 
 
@@ -142,7 +146,8 @@ class IRCUserScriptProviderPrvImpBase
 {
 public:
     virtual ~IRCUserScriptProviderPrvImpBase() {};
-    virtual IRCUserScriptProvider::CompletionStatus IncomingEvent(const IRCParse *line) = 0;
+    virtual IRCUserScriptProvider::CompletionStatus IncomingEvent(const IRCParse* line) = 0;
+    virtual IRCUserScriptProvider::CompletionStatus RunAlias(const IRCParse* line) = 0;
 };
 
 /*
@@ -170,9 +175,13 @@ public:
 	delete _imp;
     }
 
-    virtual CompletionStatus IncomingEvent(const IRCParse *line)
+    virtual CompletionStatus IncomingEvent(const IRCParse* line)
     {
 	return _imp->IncomingEvent(line);
+    }
+    virtual CompletionStatus RunAlias(const IRCParse* line)
+    {
+	return _imp->RunAlias(line);
     }
 };
 
@@ -204,9 +213,13 @@ public:
 	delete _imp;
     }
 
-    virtual CompletionStatus IncomingEvent(const IRCParse *line)
+    virtual CompletionStatus IncomingEvent(const IRCParse* line)
     {
 	return _imp->IncomingEvent(line);
+    }
+    virtual CompletionStatus RunAlias(const IRCParse* line)
+    {
+	return _imp->RunAlias(line);
     }
 };
 
@@ -238,9 +251,13 @@ public:
 	delete _imp;
     }
 
-    virtual CompletionStatus IncomingEvent(const IRCParse *line)
+    virtual CompletionStatus IncomingEvent(const IRCParse* line)
     {
 	return _imp->IncomingEvent(line);
+    }
+    virtual CompletionStatus RunAlias(const IRCParse* line)
+    {
+	return _imp->RunAlias(line);
     }
 };
 

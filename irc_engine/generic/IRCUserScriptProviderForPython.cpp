@@ -131,6 +131,11 @@ public:
 	// TODO!
 	return 0;
     }
+    virtual CompletionStatus RunAlias(const IRCParse* line)
+    {
+	return IRCUserScriptProvider::NOTCOMPLETED;
+    }
+
 
 };
 

@@ -89,7 +89,7 @@ AllWin32StatBoxImp::SetTitle (char16_t *text, size_t len)
 bool AllWin32StatBoxImp::first = true;
 
 
-AllWin32StatBoxThreadedGUI::AllWin32StatBoxThreadedGUI ()
+AllWin32StatBoxThreadedGUI::AllWin32StatBoxThreadedGUI () :hBrush(0),hwndStatBox(0),pCmd(0),pView(0)
 {
 }
 

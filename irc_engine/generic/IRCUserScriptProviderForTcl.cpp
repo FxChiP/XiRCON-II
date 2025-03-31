@@ -276,6 +276,13 @@ IRCUserScriptProviderForTcl::IncomingEvent (const IRCParse *line)
     return Completed;
 }
 
+IRCUserScriptProvider::CompletionStatus
+IRCUserScriptProviderForTcl::RunAlias (const IRCParse* line)
+{
+    return Completed;
+}
+
+
 int
 IRCUserScriptProviderForTcl::OnCmd(int objc, struct Tcl_Obj * const objv[])
 {

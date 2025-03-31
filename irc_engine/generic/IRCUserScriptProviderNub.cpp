@@ -7,3 +7,9 @@ IRCUserScriptProviderNub::IncomingEvent (const IRCParse *line)
 {
     return NOTCOMPLETED;
 }
+
+IRCUserScriptProvider::CompletionStatus
+IRCUserScriptProviderNub::RunAlias (const IRCParse* line)
+{
+    return NOTCOMPLETED;
+}
